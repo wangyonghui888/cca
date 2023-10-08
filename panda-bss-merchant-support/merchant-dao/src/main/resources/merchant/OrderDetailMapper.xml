@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 用户表(t_user) -->
+<mapper namespace="com.panda.sport.merchant.mapper.OrderDetailMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="OrderDetailMap" type="com.panda.sport.merchant.common.po.bss.OrderDetailPO">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="bet_no" property="betNo" jdbcType="VARCHAR"/>
+        <result column="order_no" property="orderNo" jdbcType="VARCHAR"/>
+        <result column="uid" property="uid" jdbcType="BIGINT"/>
+        <result column="play_options_id" property="playOptionsId" jdbcType="BIGINT"/>
+        <result column="sport_id" property="sportId" jdbcType="INTEGER"/>
+        <result column="sport_name" property="sportName" jdbcType="VARCHAR"/>
+        <result column="play_id" property="playId" jdbcType="INTEGER"/>
+        <result column="play_name" property="playName" jdbcType="VARCHAR"/>
+        <result column="match_id" property="matchId" jdbcType="BIGINT"/>
+        <result column="match_name" property="matchName" jdbcType="VARCHAR"/>
+        <result column="match_type" property="matchType" jdbcType="VARCHAR"/>
+        <result column="bet_time" property="betTime" jdbcType="BIGINT"/>
+        <result column="market_id" property="marketId" jdbcType="BIGINT"/>
+        <result column="market_type" property="marketType" jdbcType="VARCHAR"/>
+        <result column="market_value" property="marketValue" jdbcType="VARCHAR"/>
+        <result column="match_info" property="matchInfo" jdbcType="VARCHAR"/>
+        <result column="bet_amount" property="betAmount" jdbcType="BIGINT"/>
+        <result column="odds_value" property="oddsValue" jdbcType="DOUBLE"/>
+        <result column="market_type_finally" property="marketTypeFinally" jdbcType="VARCHAR"/>
+        <result column="odd_finally" property="oddFinally" jdbcType="VARCHAR"/>
+        <result column="accept_bet_odds" property="acceptBetOdds" jdbcType="INTEGER"/>
+        <result column="max_win_amount" property="maxWinAmount" jdbcType="BIGINT"/>
+        <result column="bet_status" property="betStatus" jdbcType="INTEGER"/>
+        <result column="score_benchmark" property="scoreBenchmark" jdbcType="VARCHAR"/>
+        <result column="play_options" property="playOptions" jdbcType="VARCHAR"/>
+        <result column="play_options_range" property="playOptionName" jdbcType="VARCHAR"/>
+        <result column="match_process_id" property="matchProcessId" jdbcType="BIGINT"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="tournament_id" property="tournamentId" jdbcType="BIGINT"/>
+        <result column="is_result" property="result" jdbcType="INTEGER"/>
+        <result column="bet_result" property="betResult" jdbcType="INTEGER"/>
+        <result column="play_option_name" property="playOptionName" jdbcType="VARCHAR"/>
+        <result column="addition" property="addition" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <!-- 表所有字段 -->
+    <sql id="allColumns">
+        id,
+        bet_no,
+        order_no,
+        uid,
+        play_options_id,
+        sport_id,
+        sport_name,
+        play_id,
+        play_name,
+        match_id,
+        match_name,
+        match_type,
+        bet_time,
+        market_id,
+        market_type,
+        market_value,
+        match_info,
+        bet_amount,
+        odds_value,
+        market_type_finally,
+        odd_finally,
+        accept_bet_odds,
+        max_win_amount,
+        bet_status,
+        score_benchmark,
+        play_options,
+        play_options,
+        match_process_id,
+        remark,
+        tournament_id,
+        is_result,
+        bet_result,
+        play_option_name,
+        addition
+    </sql>
+
+
+    <select id="selectList" resultType="com.panda.sport.merchant.common.vo.api.BetDetailApiVo">
+        SELECT  
+            match_id as 'matchId',
+            tournament_id as 'tournamentId',
+            match_name as 'matchName',
+           <!--
+            order_no as 'orderId',
+            bet_time as 'betTime',
+            bet_amount as 'betAmount',
+            -->
+            sport_name as 'sportName',
+            match_type as 'matchType'
+    FROM
+        t_order_detail t
+         where t.order_no=#{orderId}
+        AND t.create_time <![CDATA[ > ]]> #{startTime}
+    </select>
+
+</mapper>

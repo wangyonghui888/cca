@@ -1,0 +1,1 @@
+ALTER TABLE admin_permission   ADD name_en varchar(255) AFTER name;

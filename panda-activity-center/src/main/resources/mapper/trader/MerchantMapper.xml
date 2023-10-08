@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.center.mapper.trader.MerchantMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.panda.center.entity.Merchant">
+        <id column="id" property="id"/>
+        <result column="account" property="account"/>
+        <result column="top_id" property="topId"/>
+        <result column="top_account" property="topAccount"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="parent_account" property="parentAccount"/>
+        <result column="sort_level" property="sortLevel"/>
+        <result column="deph" property="deph"/>
+        <result column="transfer_type" property="transferType"/>
+        <result column="create_time" property="createTime"/>
+        <result column="status" property="status"/>
+        <result column="bet_rate" property="betRate"/>
+        <result column="remark" property="remark"/>
+        <result column="rate_remark" property="rateRemark"/>
+        <result column="rate_cycle" property="rateCycle"/>
+        <result column="rate_day" property="rateDay"/>
+        <result column="rate_pattern" property="ratePattern"/>
+        <result column="rate_way" property="rateWay"/>
+        <result column="secret_key" property="secretKey"/>
+        <result column="password" property="password"/>
+        <result column="m_type" property="mType"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        account,
+        top_id,
+        top_account,
+        parent_id,
+        parent_account,
+        sort_level,
+        deph,
+        transfer_type,
+        create_time,
+        status,
+        bet_rate,
+        remark,
+        rate_remark,
+        rate_cycle,
+        rate_day,
+        rate_pattern,
+        rate_way,
+        secret_key,
+        password,
+        m_type
+    </sql>
+
+    <select id="getMerchantTree" resultType="com.panda.center.vo.MerchantTree">
+        select m.id, m.id as merchantCode, m.account as merchantName, m.parent_id
+        from tbl_merchant m
+        <where>
+            m.status = 1
+            <if test="tag != null and tag != ''">
+                and m.m_type = #{tag}
+            </if>
+            <if test="account != null and account != ''">
+                and m.account like concat('%', #{account}, '%')
+            </if>
+        </where>
+        order by m.create_time
+    </select>
+</mapper>

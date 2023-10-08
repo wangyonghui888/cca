@@ -1,0 +1,16 @@
+----业务报表库 tybss_report
+ALTER TABLE user_order_all
+    ADD INDEX `idx_firstbetdate`(`first_bet_date`) USING BTREE;
+
+ALTER TABLE user_order_all
+    ADD INDEX `idx_registertime`(`register_time`) USING BTREE;
+
+--业务报表库 tybss_merchant_common
+CREATE TABLE r_match_user_middle_info  (
+                                           `order_count` int(8) NOT NULL COMMENT '注单数',
+                                           `match_id` bigint(20) NOT NULL COMMENT '赛事id',
+                                           `user_id` bigint(20) NOT NULL COMMENT '用户id',
+                                           `begin_time` bigint(20) COMMENT '比赛开始时间',
+                                           INDEX `idx_begin_time`(`begin_time`) USING BTREE COMMENT '赛事开始时间',
+                                           UNIQUE INDEX `idx_match_user`(`user_id`, `match_id`) USING BTREE COMMENT '赛事id，用户id唯一索引'
+);

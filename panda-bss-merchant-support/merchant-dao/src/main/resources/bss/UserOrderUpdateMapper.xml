@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.panda.sport.bss.mapper.UserOrderUpdateMapper">
+    <update id="updateUserOrderTime" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" separator=";">
+            update t_user
+        set
+                modify_time = unix_timestamp(now()) * 1000
+            <if test="item != null">
+                ,last_bet_time =#{item.lastBetTime,jdbcType=BIGINT}
+            </if>
+            where uid = #{item.uid,jdbcType=BIGINT}
+        </foreach>
+    </update>
+
+    <update id="updateUserSevenOrder" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" separator=";">
+            update t_user
+        set
+                modify_time = unix_timestamp(now()) * 1000
+            <if test="item != null">
+                ,seven_day_profit_amount =#{item.profitAmount,jdbcType=DECIMAL},
+                seven_day_bet_amount=#{item.validBetAmount,jdbcType=DECIMAL}
+            </if>
+            where uid = #{item.uid,jdbcType=BIGINT}
+        </foreach>
+    </update>
+
+    <update id="updateUserSevenOrderLast1" parameterType="java.util.List">
+        UPDATE
+            t_user tu
+        set tu.seven_day_bet_amount    = 0,
+            tu.seven_day_profit_amount = 0
+        where (tu.last_bet_time <![CDATA[ < ]]>  (unix_timestamp(now()) * 1000 - 6 * 24 * 60 * 60 * 1000) and
+               tu.last_bet_time > (unix_timestamp(now()) * 1000 - 7 * 24 * 60 * 60 * 1000))
+    </update>
+
+    <update id="batchUpdateUserBetAmount" parameterType="java.util.List">
+        <foreach collection="list" separator=";" item="item">
+            update t_user set bet_amount =#{item.betAmount},total_tickets=#{item.validTickets}
+            ,settled_bet_amount=#{item.settleOrderAmount},profit=#{item.settleProfit},modify_time = unix_timestamp(now()) * 1000
+            where uid = #{item.userId}
+        </foreach>
+    </update>
+
+    <update id="updateUserAllLifeData" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" separator=";">
+            update t_user
+        set
+                modify_time = unix_timestamp(now()) * 1000
+            <if test="item != null">
+                ,bet_amount = #{item.validBetAmount,jdbcType=DECIMAL},
+                total_tickets = #{item.validTickets,jdbcType=INTEGER},
+                settled_bet_amount = #{item.settledBetAmount,jdbcType=DECIMAL},
+                profit = #{item.settleProfit,jdbcType=DECIMAL}
+            </if>
+            where uid = #{item.uid,jdbcType=BIGINT}
+        </foreach>
+    </update>
+
+    <insert id="upsertUserVip">
+        INSERT INTO t_user_vip (uid, merchantCode, importtype, createTime, updateTime)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.uid}, #{item.merchantCode}, #{item.importtype}, UNIX_TIMESTAMP(CURRENT_TIMESTAMP(3)) * 1000, UNIX_TIMESTAMP(CURRENT_TIMESTAMP(3)) * 1000)
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+        updateTime=UNIX_TIMESTAMP(CURRENT_TIMESTAMP(3)) * 1000
+    </insert>
+
+    <select id="countVipUser" resultType="java.lang.Integer">
+        select count(*)
+        FROM t_user_vip tuv
+        WHERE 1=1
+        <if test="null != uid and '' != uid">
+            AND tuv.uid = #{uid}
+        </if>
+    </select>
+
+    <select id="selectVipUserByMerchantcode" resultType="com.panda.sport.merchant.common.vo.user.UserVipVO">
+        select uid, merchantCode
+        FROM t_user_vip tuv
+        WHERE 1=1
+        <if test="null != merchantCode and '' != merchantCode">
+            AND tuv.merchantCode = #{merchantCode}
+        </if>
+    </select>
+
+    <update id="updateUserVip">
+        UPDATE t_user
+        SET is_test = 2,
+        modify_time = unix_timestamp(now())*1000
+        where uid in
+        <foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+            #{item.uid}
+        </foreach>
+    </update>
+
+
+    <select id="findDisableUserInfo" resultType="com.panda.sport.merchant.common.vo.user.UserVipVO">
+        select t.uid,
+               t.username      as  userName,
+               t.merchant_code as merchantCode
+        FROM t_user t
+        WHERE t.disabled=1
+            and uid in
+            <foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+                #{item.uid}
+            </foreach>
+        <if test="null != merchantCode and '' != merchantCode">
+            AND t.merchant_code = #{merchantCode}
+        </if>
+    </select>
+
+    <update id="upsertUserDisabled">
+        UPDATE t_user
+        SET disabled = #{disabled},
+            modify_time = unix_timestamp(now())*1000
+        <if test="null != remark and '' != remark">
+            ,remark = #{remark}
+        </if>
+        where uid in
+        <foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+            #{item.uid}
+        </foreach>
+    </update>
+
+    <update id="upsertUserDisabled2Allow">
+        UPDATE t_user
+        SET disabled = #{disabled},
+          modify_time = unix_timestamp(now())*1000
+        <if test="null != remark and '' != remark">
+            ,remark = #{remark}
+        </if>
+        where  uid in
+            <foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+                #{item.uid}
+            </foreach>
+        <if test="null != disabled and 0 == disabled">
+            AND disabled NOT IN (0,1)
+        </if>
+    </update>
+
+    <update id="upsertUserToDisabled">
+        UPDATE t_user
+        SET disabled = #{disabled},
+        modify_time = unix_timestamp(now())*1000
+        where uid in
+        <foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <update id="updateDisabled">
+        UPDATE t_user
+        SET disabled    = #{disabled},
+            modify_time = unix_timestamp(now()) * 1000
+        where uid = #{userId}
+    </update>
+
+    <select id="isVipUser" resultType="java.lang.Integer">
+        select is_test
+        FROM t_user u
+        WHERE u.uid = #{userId}
+    </select>
+
+    <update id="batchUpdateAllowListUserFlag">
+        update t_user u SET u.disabled = #{disabled},modify_time = unix_timestamp(now())*1000
+        where 1=1
+        <if test="disabled != null and disabled == 0">
+            AND u.disabled NOT IN (0,1)
+        </if>
+        <if test="userId != null">
+            AND u.uid = #{userId}
+        </if>
+        <if test="userIdList != null and userIdList.size() > 0">
+            AND u.uid  in
+            <foreach item='option' index='index' collection='userIdList' open='(' separator=','
+                     close=')'>
+                #{option}
+            </foreach>
+        </if>
+
+    </update>
+</mapper>

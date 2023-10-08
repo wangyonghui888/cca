@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.panda.sport.backup.mapper.BackupUserLevelMapper">
+
+    <resultMap id="resultMap" type="com.panda.sport.merchant.common.po.bss.TUserLevel">
+        <result column="level_id" property="levelId"/>
+        <result column="level_name" property="levelName"/>
+        <result column="create_time" property="createTime"/>
+        <result column="status" property="status"/>
+        <result column="bg_color" property="bgColor"/>
+        <result column="color" property="color"/>
+        <result column="extra_margin" property="extraMargin"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+                level_id,
+                level_name,
+                create_time,
+                status,
+                bg_color,
+                color,
+                extra_margin
+    </sql>
+
+
+
+</mapper>

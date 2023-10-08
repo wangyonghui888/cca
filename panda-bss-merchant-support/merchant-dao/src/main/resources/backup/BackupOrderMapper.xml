@@ -1,0 +1,850 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.panda.sport.backup.mapper.BackupOrderMapper">
+    <resultMap id="betOrderMap" type="com.panda.sport.merchant.common.vo.api.BetApiVo">
+        <id property="orderNo" column="order_no"/>
+        <result property="userName" column="username"/>
+        <result property="currency" column="currency_code"/>
+        <result property="merchantCode" column="merchant_code"/>
+        <result property="orderStatus" column="order_status"/>
+        <result property="betCount" column="product_count"/>
+        <result property="seriesType" column="series_type"/>
+        <result property="seriesValue" column="series_value"/>
+        <result property="orderAmount" column="order_amount_total"/>
+        <result property="outcome" column="out_come"/>
+        <result column="settle_amount" property="settleAmount"/>
+        <result column="profit_amount" property="profitAmount"/>
+        <result column="pre_bet_amount" property="preBetAmount"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+        <result column="settle_time" property="settleTime"/>
+        <result column="settle_times" property="settleTimes"/>
+        <result column="device_type" property="deviceType"/>
+        <result column="ip" property="ip"/>
+        <result column="device_imei" property="deviceImei"/>
+        <collection property="detailList" ofType="com.panda.sport.merchant.common.vo.api.BetDetailApiVo">
+            <id property="betNo" column="bet_no"/>
+            <result column="bet_amount" property="betAmount"/>
+            <result column="play_options_id" property="playOptionsId"/>
+            <result column="play_options" property="playOptions"/>
+            <result column="play_option_name" property="playOptionName"/>
+            <result column="play_name" property="playName"/>
+            <result column="play_id" property="playId"/>
+            <result column="match_id" property="matchId"/>
+            <result column="begin_time" property="beginTime"/>
+            <result column="match_name" property="matchName"/>
+            <result column="match_type" property="matchType"/>
+            <result column="market_type" property="marketType"/>
+            <result column="market_value" property="marketValue"/>
+            <result column="match_info" property="matchInfo"/>
+            <result column="sport_name" property="sportName"/>
+            <result column="sport_id" property="sportId"/>
+            <result column="tournament_id" property="tournamentId"/>
+            <result column="odds_value" property="oddsValue"/>
+            <result column="odd_finally" property="oddFinally"/>
+            <result column="bet_result" property="betResult"/>
+            <result column="cancel_type" property="cancelType"/>
+            <result column="score_benchmark" property="scoreBenchmark"/>
+            <result column="settle_score" property="settleScore"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="matchInfoMap" type="com.panda.sport.merchant.common.vo.api.MatchVO">
+        <result column="match_id" property="matchId"/>
+        <result column="match_info_zs" property="matchInfoZs"/>
+        <result column="match_info_en" property="matchInfoEn"/>
+        <result column="sport_name_zs" property="sportNameZs"/>
+        <result column="sport_name_en" property="sportNameEn"/>
+        <result column="tournament_name_zs" property="tournamentNameZs"/>
+        <result column="tournament_name_en" property="tournamentNameEn"/>
+        <result column="begin_time_zs" property="beginTimeZs"/>
+        <result column="begin_time_en" property="beginTimeEn"/>
+    </resultMap>
+
+    <insert id="batchInfomationOf2TimesOrderDTO" parameterType="java.util.List">
+        INSERT INTO t_order_times_settle_info(
+        `uid` 						,
+        `negative_amount` 			,
+        `amount` 					,
+        `match_id` 					,
+        `begin_time` 				,
+        `last_change_amount` 		,
+        `last_change_time` 			,
+        `last_after_change_amount` 	,
+        `first_change_amount` 		,
+        `first_change_time` 		,
+        `first_change_before_amount`,
+        `create_time` 				,
+        `modify_time` 				,
+        `username` 					,
+        `merchant_code` 			,
+        `merchant_name` 			,
+        `order_no` 					,
+        `match_info` 				,
+        `match_name` 				,
+        `play_name` 				,
+        `play_option_name`			,
+        `remark`
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.uid},
+            #{item.negativeAmount},
+            #{item.amount},
+            #{item.matchId},
+            #{item.beginTime},
+            #{item.lastChangeAmount},
+            #{item.lastChangeTime},
+            #{item.lastAfterChangeAmount},
+            #{item.firstChangeAmount},
+            #{item.firstChangeTime},
+            #{item.firstChangeBeforeAmount},
+            #{item.createTime},
+            #{item.modifyTime},
+            #{item.username},
+            #{item.merchantCode},
+            #{item.merchantName},
+            #{item.orderNo},
+            #{item.matchInfo},
+            #{item.matchName},
+            #{item.playName},
+            #{item.playOptionName},
+            #{item.remark}
+            )
+        </foreach>
+    </insert>
+
+    <select id="countlBetListByUpdateTime" resultType="Integer">
+        select count(*)
+        from t_order s
+        <if test="merchantCode !=null">
+                 left join t_user u on u.uid = s.uid
+        </if>
+        where s.modify_time <![CDATA[ >= ]]> #{startTimeL}
+          and s.modify_time <![CDATA[ <= ]]> #{endTimeL}
+          <if test="merchantCode !=null">
+           and u.merchant_code = #{merchantCode}
+          </if>
+    </select>
+
+    <select id="queryAllBetListByUpdateTime" resultMap="betOrderMap">
+        SELECT u.username,
+               u.merchant_code,
+               u.currency_code,
+               o.uid,
+               o.create_time,
+               od.bet_no,
+               od.sport_id,
+               od.tournament_id,
+               od.sport_name,
+               od.match_type,
+               od.market_type,
+               od.market_value,
+               od.play_name,
+               od.play_options_id,
+               od.match_id,
+               od.match_name,
+               od.match_info,
+               od.odds_value / 100000                        odds_value,
+               od.odd_finally,
+               od.bet_amount / 100                           bet_amount,
+               od.order_no,
+               od.play_option_name,
+               od.bet_result,
+               od.settle_score,
+               ROUND(o.original_order_amount_total / 100, 2) order_amount_total,
+               o.original_product_amount_total / 100         product_amount_total,
+                ROUND(o.original_pre_bet_amount  / 100, 2)               pre_bet_amount,
+               o.product_count,
+               o.order_status,
+               o.series_type,
+               o.series_value,
+               o.modify_time,
+               o.rmb_exchange_rate,
+               s.out_come,
+               s.original_settle_amount / 100                settle_amount,
+               s.original_profit_amount / 100                profit_amount,
+               s.settle_time,
+               mi.begin_time
+        FROM `t_order_detail` od
+                 RIGHT JOIN (SELECT *
+                             FROM `t_order` s1
+                             WHERE s1.modify_time <![CDATA[ >= ]]> #{startTimeL}
+                               AND s1.modify_time <![CDATA[ <= ]]> #{endTimeL}
+                             <if test="merchantCode !=null">
+                               and s1.merchant_id = (select id from t_merchant where merchant_code = #{merchantCode})
+                             </if>
+                             ORDER BY s1.id DESC
+                             LIMIT #{start}, #{size}) o ON o.order_no = od.order_no
+                 LEFT JOIN t_settle s ON s.order_no = o.order_no and s.last_settle = 1
+                 LEFT JOIN s_match_info mi ON mi.id = od.match_id
+                 LEFT JOIN t_user u ON u.uid = od.uid
+    </select>
+
+    <select id="countSettleOrderListBackUp" resultType="Integer">
+        select count(*)
+        from t_settle s
+        join  t_user u  on  u.uid = s.uid
+        where s.create_time <![CDATA[ >= ]]> #{startTimeL}
+          and s.create_time <![CDATA[ <= ]]> #{endTimeL}
+          and s.last_settle = 1
+          and s.out_come in (2, 3, 4, 5, 6)
+          and s.bet_amount > 0
+        <if test="merchantCode !=null">
+            and  u.merchant_code = #{merchantCode}
+        </if>
+        <if test="vipLevel !=null">
+          and s.order_no in (select o.order_no
+                             from t_order o
+                             where o.modify_time <![CDATA[ >= ]]> #{startTimeL}
+                               and o.modify_time <![CDATA[ <= ]]> #{endTimeL}
+                               and o.order_status = 1
+                               and o.vip_level = 1
+                             <if test="merchantCode !=null">
+                               and o.merchant_id = (select id from t_merchant where merchant_code = #{merchantCode})
+                              </if>)
+        </if>
+    </select>
+
+    <select id="countTicketListBackUp" resultType="Integer">
+        select count(1)
+        from tybss_report.t_ticket s
+        where s.order_status = 1
+        and s.settle_time  <![CDATA[ >= ]]> #{startTimeL}
+        and s.settle_time <![CDATA[ <= ]]> #{endTimeL}
+        <if test="vipLevel !=null">
+            and s.vip_level = 1
+        </if>
+        <if test="merchantCode !=null">
+            and s.merchant_code = #{merchantCode}
+        </if>
+    </select>
+
+    <select id="queryTicketListBackUp" resultMap="betOrderMap">
+        SELECT s.username,
+               s.merchant_code,
+               s.currency_code,
+               s.uid,
+               s.create_time,
+               s.modify_time,
+               od.bet_no,
+               od.sport_id,
+               od.tournament_id,
+               od.sport_name,
+               od.match_type,
+               od.market_type,
+               od.market_value,
+               od.play_name,
+               od.play_id,
+               od.play_options,
+               od.play_options_id,
+               od.match_id,
+               od.match_name,
+               od.match_info,
+               od.odds_value / 100000                                                                        odds_value,
+               od.odd_finally,
+               od.bet_amount / 100                                                                           bet_amount,
+               od.order_no,
+               od.play_option_name,
+               od.bet_result,
+               od.cancel_type,
+               (CASE
+                    WHEN od.match_type = 2
+                        THEN od.score_benchmark END)                                                         score_benchmark,
+               od.settle_score,
+               ROUND(s.original_order_amount_total / 100, 2)                                                 order_amount_total,
+               s.original_order_amount_total / 100                                                           product_amount_total,
+               s.product_count,
+               s.order_status,
+               s.series_type,
+               s.series_value,
+               s.device_type,
+               s.ip,
+               ROUND(s.original_pre_bet_amount / 100, 2)                                                     pre_bet_amount,
+               s.device_imei,
+               s.out_come,
+               s.original_settle_amount / 100                                                                settle_amount,
+               s.original_profit_amount / 100                                                                profit_amount,
+               s.settle_time,
+               s.settle_times,
+               IFNULL((CASE
+                           WHEN od.match_type = 3 and s.manager_code not in (3, 4) THEN (select match_end_time
+                                                                                         from s_outright_match_info
+                                                                                         where id = od.match_id)
+                           WHEN s.manager_code not in (3, 4) THEN (SELECT t2.begin_time
+                                                                   from s_match_info t2
+                                                                   where od.match_id = t2.id)
+                           WHEN s.manager_code = 3 THEN (select t1.begin_time
+                                                         from s_virtual_match_info t1
+                                                         where t1.id = od.match_id)
+                           WHEN s.manager_code = 4 THEN (select t1.start_time
+                                                         from s_esport_matches t1
+                                                         where t1.id = od.match_id) end), od.create_time) as begin_time
+        FROM tybss_report.`t_ticket_detail` od
+                 RIGHT JOIN (select s1.uid,
+                                    s1.order_no,
+                                    s1.manager_code,
+                                    s1.original_order_amount_total,
+                                    s1.original_pre_bet_amount,
+                                    s1.out_come,
+                                    s1.settle_time,
+                                    s1.settle_times,
+                                    s1.original_settle_amount,
+                                    s1.original_profit_amount,
+                                    s1.settle_type,
+                                    s1.product_count,
+                                    s1.order_status,
+                                    s1.series_type,
+                                    s1.series_value,
+                                    s1.device_type,
+                                    s1.ip,
+                                    s1.device_imei,
+                                    s1.currency_code,
+                                    s1.create_time,
+                                    s1.username,
+                                    s1.merchant_code,
+                                    s1.modify_time
+                             FROM tybss_report.`t_ticket` s1
+                             where s1.settle_time <![CDATA[ >= ]]> #{startTimeL}
+                               AND s1.settle_time <![CDATA[ <= ]]> #{endTimeL}
+                             <if test="merchantCode !=null">
+                               and s1.merchant_code = #{merchantCode}
+                             </if>
+                             <if test="vipLevel !=null">
+                               and s1.vip_level = 1
+                             </if>
+                             LIMIT #{start}, #{size}) s ON s.order_no = od.order_no
+
+    </select>
+
+    <select id="querySettleOrderListBackUp" resultMap="betOrderMap">
+        SELECT u.username,
+               u.merchant_code,
+               o.currency_code,
+               o.uid,
+               o.create_time,
+               o.modify_time,
+               od.bet_no,
+               od.sport_id,
+               od.tournament_id,
+               od.sport_name,
+               od.match_type,
+               od.market_type,
+               od.market_value,
+               od.play_name,
+               od.play_id,
+               od.play_options,
+               od.play_options_id,
+               od.match_id,
+               od.match_name,
+               od.match_info,
+               od.odds_value / 100000                                                odds_value,
+               od.odd_finally,
+               od.bet_amount / 100                                                   bet_amount,
+               od.order_no,
+               od.play_option_name,
+               od.bet_result,
+               od.cancel_type,
+               (CASE
+                    WHEN od.match_type = 2
+                        THEN od.score_benchmark END)                                 score_benchmark,
+               od.settle_score,
+               ROUND(o.original_order_amount_total / 100, 2)                         order_amount_total,
+               o.original_product_amount_total / 100                                 product_amount_total,
+               o.product_count,
+               o.order_status,
+               o.series_type,
+               o.series_value,
+               o.device_type,
+               o.ip,
+               ROUND(o.original_pre_bet_amount / 100, 2)                             pre_bet_amount,
+               o.device_imei,
+               s.out_come,
+               s.original_settle_amount / 100                                        settle_amount,
+               s.original_profit_amount / 100                                        profit_amount,
+               s.settle_time,
+               s.settle_times,
+                IFNULL((CASE
+                    WHEN od.match_type = 3  and o.manager_code not in (3, 4) THEN (select match_end_time
+                                                                                      from s_outright_match_info
+                                                                                      where id = od.match_id)
+                    WHEN o.manager_code not in (3, 4) THEN (SELECT t2.begin_time
+                                                            from s_match_info t2
+                                                            where od.match_id = t2.id)
+                    WHEN o.manager_code = 3 THEN (select t1.begin_time
+                                                  from s_virtual_match_info t1
+                                                  where t1.id = od.match_id)
+                    WHEN o.manager_code = 4 THEN (select t1.start_time
+                                                  from s_esport_matches t1
+                                                  where t1.id = od.match_id) end),od.bet_time) as begin_time
+        FROM `t_order_detail` od
+                 RIGHT JOIN (SELECT s1.id,
+                                    s1.uid,
+                                    s1.order_no,
+                                    s1.create_time,
+                                    s1.bet_amount,
+                                    s1.out_come,
+                                    s1.settle_time,
+                                    s1.settle_times,
+                                    s1.original_settle_amount,
+                                    s1.original_profit_amount,
+                                    s1.settle_type
+                             FROM `t_settle` s1
+                             join t_user u on u.uid = s1.uid
+                             where s1.last_settle = 1
+                               AND s1.create_time <![CDATA[ >= ]]> #{startTimeL}
+                               and s1.out_come in (2, 3, 4, 5, 6)
+                               and s1.bet_amount > 0
+                               AND s1.create_time <![CDATA[ <= ]]> #{endTimeL}
+                                <if test="merchantCode !=null">
+                                  and  u.merchant_code = #{merchantCode}
+                                </if>
+                             <if test="vipLevel !=null">
+                               and s1.order_no in (select order_no
+                                                   from t_order
+                                                   where modify_time <![CDATA[ >= ]]> #{startTimeL}
+                                                     and modify_time <![CDATA[ <= ]]> #{endTimeL}
+                                                     and order_status = 1
+                                                     and vip_level = 1
+                                                   <if test="merchantCode !=null">
+                                                     and merchant_id = (select id from t_merchant where merchant_code = #{merchantCode})
+                                                   </if>)
+                             </if>
+                             ORDER BY s1.id desc
+                                 LIMIT #{start}, #{size}) s ON s.order_no = od.order_no
+                 LEFT JOIN t_order o on s.order_no = o.order_no
+                 LEFT JOIN t_user u ON u.uid = od.uid
+    </select>
+
+    <select id="getBetDetailBackUp" resultMap="betOrderMap">
+        SELECT u.username,
+               u.merchant_code,
+               u.currency_code,
+               o.uid,
+               o.create_time,
+               o.modify_time,
+               od.bet_no,
+               od.sport_id,
+               od.tournament_id,
+               od.sport_name,
+               od.match_type,
+               od.market_type,
+               od.market_value,
+               od.play_name,
+               od.play_id,
+               od.play_options,
+               od.play_options_id,
+               od.match_id,
+               od.match_name,
+               od.match_info,
+               od.odds_value / 100000                                                odds_value,
+               od.odd_finally,
+               od.bet_amount / 100                                                   bet_amount,
+               od.order_no,
+               od.play_option_name,
+               od.bet_result,
+               od.cancel_type,
+               (CASE
+                    WHEN od.match_type = 2
+                        THEN od.score_benchmark END)                                 score_benchmark,
+               od.settle_score,
+               ROUND(o.original_order_amount_total / 100, 2)                         order_amount_total,
+               o.original_product_amount_total / 100                                 product_amount_total,
+               ROUND(o.original_pre_bet_amount / 100, 2)                             pre_bet_amount,
+               o.product_count,
+               o.order_status,
+               o.series_type,
+               o.series_value,
+               o.device_type,
+               o.ip,
+               o.device_imei,
+               s.out_come,
+               s.original_settle_amount / 100                                        settle_amount,
+               s.original_profit_amount / 100                                        profit_amount,
+               s.settle_time,
+               s.settle_times,
+                IFNULL((CASE
+                    WHEN od.match_type = 3 and o.manager_code not in (3, 4) THEN (select match_end_time
+                                                                                  from s_outright_match_info
+                                                                                  where id = od.match_id)
+                    WHEN o.manager_code not in (3, 4) THEN (SELECT t2.begin_time
+                                                            from s_match_info t2
+                                                            where od.match_id = t2.id)
+                    WHEN o.manager_code = 3 THEN (select t1.begin_time
+                                                  from s_virtual_match_info t1
+                                                  where t1.id = od.match_id)
+                    WHEN o.manager_code = 4 THEN (select t1.start_time
+                                                  from s_esport_matches t1
+                                                  where t1.id = od.match_id) end),od.bet_time) as begin_time
+        FROM t_order o
+                 LEFT JOIN t_order_detail od ON o.order_no = od.order_no
+                 LEFT JOIN t_user u ON o.uid = u.uid
+                 LEFT JOIN t_settle s ON (s.order_no = o.order_no and s.last_settle = 1)
+        WHERE o.order_no = #{orderNo}
+        <if test="merchantCode != null">
+          AND u.merchant_code = #{merchantCode}
+        </if>
+    </select>
+
+    <select id="countBetListBackUp" resultType="Integer">
+        SELECT count(o.order_no)
+        FROM t_order o
+        WHERE o.merchant_id = (select id from t_merchant where merchant_code = #{merchantCode})
+        <if test="userName != null">
+          and o.uid = (select uid from t_user where username = #{userName} and merchant_code = #{merchantCode})
+        </if>
+        <if test="orderBy == 1">
+          AND o.create_time <![CDATA[ >= ]]> #{startTime}
+          AND o.create_time <![CDATA[ <= ]]> #{endTime}
+        </if>
+        <if test="orderBy == 2">
+          AND o.modify_time <![CDATA[ >= ]]> #{startTime}
+          AND o.modify_time <![CDATA[ <= ]]> #{endTime}
+        </if>
+        <if test="orderStatus != null">
+          AND o.order_status = #{orderStatus}
+        </if>
+        <if test="sportId != null or tournamentId != null">
+          AND o.order_no in (select distinct order_no
+                               from t_order_detail
+                            <where>
+                                <if test="sportId != null">
+                                     sport_id = #{sportId}
+                                </if>
+                                <if test="tournamentId != null">
+                                 and tournament_id = #{tournamentId}
+                                </if>
+                            </where>)
+        </if>
+    </select>
+
+    <select id="queryBetListBackUp" resultMap="betOrderMap">
+        SELECT u.username,
+               u.merchant_code,
+               o.currency_code,
+               o.uid,
+               o.create_time,
+               o.modify_time,
+               od.bet_no,
+               od.sport_id,
+               od.tournament_id,
+               od.sport_name,
+               od.match_type,
+               od.market_type,
+               od.market_value,
+               od.play_name,
+               od.play_id,
+               od.play_options,
+               od.play_options_id,
+               od.match_id,
+               od.match_name,
+               od.match_info,
+               od.odds_value / 100000                                                odds_value,
+               od.odd_finally,
+               od.bet_amount / 100                                                   bet_amount,
+               od.order_no,
+               od.play_option_name,
+               od.bet_result,
+               od.cancel_type,
+               (CASE
+                    WHEN od.match_type = 2
+                        THEN od.score_benchmark END)                                 score_benchmark,
+               od.settle_score,
+               ROUND(o.original_order_amount_total / 100, 2)                         order_amount_total,
+               o.original_product_amount_total / 100                                 product_amount_total,
+               o.product_count,
+               o.order_status,
+               o.series_type,
+               o.series_value,
+               o.device_type,
+               o.ip,
+               ROUND(o.original_pre_bet_amount / 100, 2)                             pre_bet_amount,
+               o.device_imei,
+               s.out_come,
+               s.original_settle_amount / 100                                        settle_amount,
+               s.original_profit_amount / 100                                        profit_amount,
+               s.settle_time,
+               s.settle_times,
+                IFNULL((CASE
+                    WHEN od.match_type = 3 and o.manager_code not in (3, 4) THEN (select match_end_time
+                                                                                  from s_outright_match_info
+                                                                                  where id = od.match_id)
+                    WHEN o.manager_code not in (3, 4) THEN (SELECT t2.begin_time
+                                                            from s_match_info t2
+                                                            where od.match_id = t2.id)
+                    WHEN o.manager_code = 3 THEN (select t1.begin_time
+                                                  from s_virtual_match_info t1
+                                                  where t1.id = od.match_id)
+                    WHEN o.manager_code = 4 THEN (select t1.start_time
+                                                  from s_esport_matches t1
+                                                  where t1.id = od.match_id) end),od.bet_time) as begin_time
+        FROM `t_order_detail` od
+                 RIGHT JOIN (SELECT o1.id,
+                                    o1.uid,
+                                    o1.order_no,
+                                    o1.create_time,
+                                    o1.original_order_amount_total,
+                                    o1.original_product_amount_total,
+                                    o1.product_count,
+                                    o1.series_type,
+                                    o1.series_value,
+                                    o1.ip,
+                                    o1.ip_area,
+                                    o1.device_type,
+                                    o1.device_imei,
+                                    o1.currency_code,
+                                    o1.remark,
+                                    o1.order_status,
+                                    o1.modify_time,
+                                    o1.manager_code,
+                                    o1.original_pre_bet_amount
+                             FROM `t_order` o1
+                             where o1.merchant_id = (select id from t_merchant where merchant_code = #{merchantCode})
+                            <if test="userName != null">
+                               and o1.uid = (select uid from t_user where username = #{userName} and merchant_code = #{merchantCode})
+                            </if>
+                            <if test="orderBy == 1">
+                               AND o1.create_time <![CDATA[ >= ]]> #{startTime}
+                               AND o1.create_time <![CDATA[ < ]]> #{endTime}
+                            </if>
+                            <if test="orderBy == 2">
+                               AND o1.modify_time <![CDATA[ >= ]]> #{startTime}
+                               AND o1.modify_time <![CDATA[ < ]]> #{endTime}
+                            </if>
+                            <if test="orderStatus != null">
+                               AND o1.order_status = #{orderStatus}
+                            </if>
+                            <if test="sportId != null or tournamentId != null">
+                               AND o1.order_no in (select distinct order_no
+                                                   from t_order_detail
+                                                <where>
+                                                    <if test="sportId != null">
+                                                         sport_id = #{sportId}
+                                                    </if>
+                                                    <if test="tournamentId != null">
+                                                     and tournament_id = #{tournamentId}
+                                                    </if>
+                                                </where>)
+                            </if>
+                             ORDER BY o1.id DESC
+                                 LIMIT #{start}, #{size}) o ON o.order_no = od.order_no
+                 LEFT JOIN t_settle s ON (s.order_no = o.order_no and s.last_settle = 1 and s.bet_amount > 0 and
+                                          s.out_come in (2, 3, 4, 5, 6))
+                 left join t_user u on o.uid = u.uid
+    </select>
+
+    <select id="queryBetListBackUpByLg" resultMap="betOrderMap">
+        SELECT u.username,
+               u.merchant_code,
+               o.currency_code,
+               o.uid,
+               o.create_time,
+               o.modify_time,
+               od.bet_no,
+               od.sport_id,
+               od.tournament_id,
+               (case
+                    when i.order_no is not null then
+                        (case when 'en' = #{language} then i.sport_name_en else i.sport_name_zs end)
+                    else od.sport_name end)                                          sport_name,
+               od.match_type,
+               od.market_type,
+               od.market_value,
+               (case
+                    when i.order_no is not null then
+                        (case when 'en' = #{language} then i.play_name_en else i.play_name_zs end)
+                    else od.play_name end)                                           play_name,
+               od.play_id,
+               od.play_options,
+               od.play_options_id,
+               od.match_id,
+               (case
+                    when i.order_no is not null then
+                        (case when 'en' = #{language} then i.tournament_name_en else i.tournament_name_zs end)
+                    else od.match_name end)                                          match_name,
+               (case
+                    when i.order_no is not null then
+                        (case when 'en' = #{language} then i.match_info_en else i.match_info_zs end)
+                    else od.match_info end)                                          match_info,
+               od.odds_value / 100000                                                odds_value,
+               od.odd_finally,
+               od.bet_amount / 100                                                   bet_amount,
+               od.order_no,
+               (case
+                    when i.order_no is not null then
+                        (case when 'en' = #{language} then i.playoption_en else i.playoption_zs end)
+                    else od.play_option_name end)                                    play_option_name,
+               od.bet_result,
+               (CASE
+                    WHEN od.match_type = 2
+                        THEN od.score_benchmark END)                                 score_benchmark,
+               od.settle_score,
+               ROUND(o.original_order_amount_total / 100, 2)                         order_amount_total,
+               o.original_product_amount_total / 100                                 product_amount_total,
+               o.product_count,
+               o.order_status,
+               o.series_type,
+               o.series_value,
+               o.device_type,
+               od.cancel_type,
+               o.ip,
+               ROUND(o.original_pre_bet_amount / 100, 2)                             pre_bet_amount,
+               o.device_imei,
+               s.out_come,
+               s.original_settle_amount / 100                                        settle_amount,
+               s.original_profit_amount / 100                                        profit_amount,
+               s.settle_time,
+               s.settle_times,
+                IFNULL((CASE
+                    WHEN od.match_type = 3 and o.manager_code not in (3, 4) THEN (select match_end_time
+                                                                                  from s_outright_match_info
+                                                                                  where id = od.match_id)
+                    WHEN o.manager_code not in (3, 4) THEN (SELECT t2.begin_time
+                                                            from s_match_info t2
+                                                            where od.match_id = t2.id)
+                    WHEN o.manager_code = 3 THEN (select t1.begin_time
+                                                  from s_virtual_match_info t1
+                                                  where t1.id = od.match_id)
+                    WHEN o.manager_code = 4 THEN (select t1.start_time
+                                                  from s_esport_matches t1
+                                                  where t1.id = od.match_id) end),od.bet_time) as begin_time
+        FROM `t_order_detail` od
+                 RIGHT JOIN (SELECT o1.id,
+                                    o1.uid,
+                                    o1.order_no,
+                                    o1.create_time,
+                                    o1.original_order_amount_total,
+                                    o1.original_product_amount_total,
+                                    o1.product_count,
+                                    o1.series_type,
+                                    o1.series_value,
+                                    o1.ip,
+                                    o1.ip_area,
+                                    o1.device_type,
+                                    o1.device_imei,
+                                    o1.currency_code,
+                                    o1.remark,
+                                    o1.order_status,
+                                    o1.modify_time,
+                                    o1.manager_code,
+                                    o1.original_pre_bet_amount
+                             FROM `t_order` o1
+                             where o1.merchant_id = (select id from t_merchant where merchant_code = #{merchantCode})
+                            <if test="userName != null">
+                               and o1.uid = (select uid from t_user where username = #{userName} and merchant_code = #{merchantCode})
+                            </if>
+                            <if test="orderBy == 1">
+                               AND o1.create_time <![CDATA[ >= ]]> #{startTime}
+                               AND o1.create_time <![CDATA[ < ]]> #{endTime}
+                            </if>
+                            <if test="orderBy == 2">
+                               AND o1.modify_time <![CDATA[ >= ]]> #{startTime}
+                               AND o1.modify_time <![CDATA[ < ]]> #{endTime}
+                            </if>
+                            <if test="orderStatus != null">
+                               AND o1.order_status = #{orderStatus}
+                            </if>
+                            <if test="sportId != null or tournamentId != null">
+                               AND o1.order_no in (select distinct order_no
+                                                   from t_order_detail
+                                                <where>
+                                                    <if test="sportId != null">
+                                                         sport_id = #{sportId}
+                                                    </if>
+                                                    <if test="tournamentId != null">
+                                                     and tournament_id = #{tournamentId}
+                                                    </if>
+                                                </where>)
+                            </if>
+                             ORDER BY o1.id DESC
+                                 LIMIT #{start}, #{size}) o ON o.order_no = od.order_no
+                 LEFT JOIN t_settle s ON (s.order_no = o.order_no and s.last_settle = 1 and s.bet_amount > 0 and
+                                          s.out_come in (2, 3, 4, 5, 6))
+                 left join t_order_internationalize i on od.bet_no = i.bet_no and od.order_no = i.order_no
+                 left join t_user u on o.uid = u.uid
+    </select>
+    <select id="queryOneOrderOverLimitInfo" parameterType="java.lang.String"
+            resultType="com.panda.sport.merchant.common.vo.OrderOverLimitVO">
+        select order_no as orderNo, remark
+        from t_order_over_limit_info
+        where order_no = #{orderNo}
+    </select>
+
+    <select id="queryOrderOverLimitInfos" parameterType="List"
+            resultType="com.panda.sport.merchant.common.vo.OrderOverLimitVO">
+        select order_no as orderNo, remark from t_order_over_limit_info where order_no in
+        (
+        <foreach collection="list" item="item" index="index" separator=",">
+            #{item}
+        </foreach>
+        )
+    </select>
+    <select id="select2TimesOrderInfo"
+            resultType="com.panda.sport.merchant.common.dto.InfomationOf2TimesOrderDTO">
+        SELECT tu.uid                                                  'uid',
+                tu.username                                             'username',
+                tm.merchant_code                                        'merchant_code',
+                tm.merchant_name                                        'merchant_name',
+                c.order_no                                              'order_no',
+                c.negative_amount / 100                                 'diff_negative_amount',
+                u.amount / 100                                          'amount',
+                od.match_id                                             'match_id',
+                od.match_info                                           'match_info',
+                od.match_name                                           'match_name',
+                od.play_name                                            'play_name',
+                od.play_option_name                                     'play_option_name',
+                od.remark                                               'change_reason',
+                FROM_UNIXTIME(s.begin_time / 1000, '%Y-%m-%d %H:%i:%s') 'begin_time',
+                c.last_change_amount / 100                              'last_change_amount',
+                c.last_change_time                                      'last_change_time',
+                c.last_after_change_amount / 100                        'last_after_change_amount',
+                c.first_change_amount / 100                             'first_change_amount',
+                c.first_change_time                                     'first_change_time',
+                c.first_change_before_amount / 100                      'first_change_before_amount'
+        FROM (
+                 SELECT b.*
+                 FROM (
+                          SELECT t1.uid,
+                                 t1.order_no,
+                                 LAST_VALUE(t1.change_amount) OVER w    last_change_amount,
+                                  FROM_UNIXTIME((LAST_VALUE(t1.create_time) OVER w) / 1000,
+                                                '%Y-%m-%d %H:%i:%s')     last_change_time,
+                                 LAST_VALUE(t1.after_transfer) OVER w   last_after_change_amount,
+                                  FIRST_VALUE(t1.change_amount) OVER w   first_change_amount,
+                                  FROM_UNIXTIME((FIRST_VALUE(t1.create_time) OVER w) / 1000,
+                                                '%Y-%m-%d %H:%i:%s')     first_change_time,
+                                 FIRST_VALUE(t1.current_balance) OVER w first_change_before_amount,
+                                  LAST_VALUE(t1.change_amount) OVER w -  FIRST_VALUE(t1.change_amount) OVER w   negative_amount
+                          FROM t_account_change_history t1
+                                   INNER JOIN t_settle ts ON t1.order_no = ts.order_no
+                              AND ts.last_settle = 1
+                              AND ts.bet_amount > 0
+                              AND ts.create_time 	<![CDATA[ >= ]]> unix_timestamp(date_format(now() - interval #{start} day, '%Y-%m-%d 00:00:00')) * 1000
+                              AND ts.create_time 	<![CDATA[ < ]]>  unix_timestamp(date_format(now() - interval #{end} day, '%Y-%m-%d 00:00:00')) * 1000
+                              AND t1.biz_type IN (4, 5, 9, 10, 12)
+                          window w AS ( PARTITION BY t1.order_no ORDER BY t1.create_time ) ) b
+                 WHERE b.last_change_time <![CDATA[ <> ]]> b.first_change_time) c
+                 LEFT JOIN t_order_detail od ON od.order_no = c.order_no
+                 LEFT JOIN s_match_info s ON od.match_id = s.id
+                 LEFT JOIN t_account u ON u.uid = c.uid
+                 LEFT JOIN t_user tu ON tu.uid = u.uid
+                 LEFT JOIN t_merchant tm ON tm.merchant_code = tu.merchant_code
+    </select>
+
+    <select id="selectMatchInfo" resultMap="matchInfoMap">
+        SELECT
+            t2.match_id,
+            t2.match_info_zs,
+            t2.match_info_en,
+            t2.sport_name_zs,
+            t2.sport_name_en,
+            t2.tournament_name_zs,
+            t2.tournament_name_en,
+            FROM_UNIXTIME(t1.begin_time / 1000, '%Y-%m-%d %H:%i:%s') begin_time_zs,
+            DATE_FORMAT(FROM_UNIXTIME(t1.begin_time / 1000), '%W, %M %e, %Y at %h:%i %p') begin_time_en
+        FROM s_match_info t1 left join t_order_internationalize t2 on t1.id = t2.match_id
+        where t1.id = #{matchId} limit 1
+    </select>
+</mapper>

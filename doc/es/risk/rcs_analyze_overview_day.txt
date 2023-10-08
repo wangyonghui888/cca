@@ -1,0 +1,144 @@
+put http://lan-es75.sportxxxr1pub.com/rcs_analyze_overview_day
+{
+    "mappings": {
+      "properties": {
+        "orderYear": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "ignore_above": 256,
+              "type": "keyword"
+            }
+          }
+        },
+        "matchDate": {
+          "type": "long"
+        },
+        "profitAmount": {
+          "type": "double"
+        },
+        "matchType": {
+          "type": "long"
+        },
+        "orderWeek": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "ignore_above": 256,
+              "type": "keyword"
+            }
+          }
+        },
+        "matchBetTimes": {
+          "type": "long"
+        },
+        "profitPoint": {
+          "type": "double"
+        },
+        "amountGtFiveThousandCount": {
+          "type": "long"
+        },
+        "sid": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "ignore_above": 256,
+              "type": "keyword"
+            }
+          }
+        },
+        "betOrderNums": {
+          "type": "long"
+        },
+        "playId": {
+          "type": "long"
+        },
+        "amountGtTenThousandCount": {
+          "type": "long"
+        },
+        "amountGtTenThousandCcount": {
+          "type": "long"
+        },
+        "merchantId": {
+          "type": "long"
+        },
+        "tournamentId": {
+          "type": "long"
+        },
+        "tournamentName": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "ignore_above": 256,
+              "type": "keyword"
+            }
+          }
+        },
+        "perCapitaOrderAmount": {
+          "type": "float"
+        },
+        "amountGtTwoThousandCount": {
+          "type": "long"
+        },
+        "merchantCode": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "ignore_above": 256,
+              "type": "keyword"
+            }
+          }
+        },
+        "betOrderAmount": {
+          "type": "double"
+        },
+        "perCapitaOrderNums": {
+          "type": "long"
+        },
+        "playName": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "ignore_above": 256,
+              "type": "keyword"
+            }
+          }
+        },
+
+
+        "amountGtOneThousandCount": {
+          "type": "long"
+        },
+        "settledBetAmount": {
+          "type": "double"
+        },
+        "orderPhase": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "ignore_above": 256,
+              "type": "keyword"
+            }
+          }
+        },
+        "sportId": {
+          "type": "long"
+        },
+        "perBetOrderNums": {
+          "type": "long"
+        },
+        "sportName": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "ignore_above": 256,
+              "type": "keyword"
+            }
+          }
+        },
+        "amountLtOneThousandCount": {
+          "type": "long"
+        }
+      }
+    }
+  }

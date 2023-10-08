@@ -1,0 +1,1 @@
+UPDATE merchant.`admin_menu` SET `name` = '商户信息管理' WHERE `admin_menu`.`id` = 3;

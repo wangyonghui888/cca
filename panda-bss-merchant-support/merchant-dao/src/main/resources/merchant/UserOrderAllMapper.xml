@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 用户表(t_user) -->
+<mapper namespace="com.panda.sport.merchant.mapper.UserOrderAllMapper">
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.panda.sport.merchant.common.po.merchant.UserOrderAllPO">
+        <result column="user_id" property="userId"/>
+        <result column="user_name" property="userName"/>
+        <result column="merchant_code" property="merchantCode"/>
+        <result column="order_amount" property="betNum"/>
+        <result column="bet_amount" property="betAmount"/>
+        <result column="profit" property="profit"/>
+        <result column="profit_rate" property="profitRate"/>
+        <result column="last_login" property="lastLogin"/>
+        <result column="last_bet" property="lastBet"/>
+        <result column="merchant_name" property="merchantName"/>
+        <result column="register_time" property="registerTime"/>
+        <result column="order_limit_20per" property="orderLimit20per"/>
+        <result column="order_limit_20to50" property="orderLimit20to50"/>
+        <result column="order_limit_50to80" property="orderLimit50to80"/>
+        <result column="order_limit_80per" property="orderLimit80per"/>
+        <result column="profit_order_num" property="profitOrderNum"/>
+        <!--        <result column="profit_order_rate" property="profitOrderRate" />-->
+        <!--        <result column="achieve_amount_num" property="achieveAmountNum" />-->
+        <!--        <result column="achieve_amount_rate" property="achieveAmountRate" />-->
+        <result column="refuse_order_num" property="refuseOrderNum"/>
+        <result column="refuse_order_amount" property="refuseOrderAmount"/>
+        <result column="cancel_order_num" property="cancelOrderNum"/>
+        <result column="cancel_order_amount" property="cancelOrderAmount"/>
+        <result column="greterThan2_num" property="greterThan2Num"/>
+        <result column="lessThan2_num" property="lessThan2Num"/>
+        <result column="soccer_num" property="soccerNum"/>
+        <result column="basketball_num" property="basketballNum"/>
+        <result column="others_num" property="othersNum"/>
+        <result column="series_num" property="seriesNum"/>
+        <!--        <result column="soccer_handicap_num" property="soccerHandicapNum" />-->
+        <!--        <result column="soccer_overunder_num" property="soccerOverunderNum" />-->
+        <result column="basketball_handicap_num" property="basketballHandicapNum"/>
+        <result column="basketball_overunder_num" property="basketballOverunderNum"/>
+        <!--        <result column="soccer_handicap_main" property="soccerHandicapMain" />-->
+        <!--        <result column="soccer_handicap_second" property="soccerHandicapSecond" />-->
+        <!--        <result column="soccer_overunder_main" property="soccerOverunderMain" />-->
+        <!--        <result column="soccer_overunder_second" property="soccerOverunderSecond" />-->
+        <result column="balance" property="balance"/>
+        <result column="level_id" property="levelId"/>
+        <result column="settle_amount" property="settleAmount"/>
+    </resultMap>
+
+    <!-- 表所有字段 -->
+    <sql id="allColumns">
+                user_id,
+                user_name,
+                merchant_code,
+                order_amount,
+                bet_amount/100,
+                profit/100,
+                profit_rate,
+                last_login,
+                last_bet,
+                merchant_name,
+                register_time,
+                order_limit_20per,
+                order_limit_20to50,
+                order_limit_50to80,
+                order_limit_80per,
+                profit_order_num,
+                refuse_order_num,
+                refuse_order_amount,
+                cancel_order_num,
+                cancel_order_amount,
+                greterThan2_num,
+                lessThan2_num,
+                soccer_num,
+                basketball_num,
+                others_num,
+                series_num,
+                basketball_handicap_num,
+                basketball_overunder_num,
+                balance,
+                level_id,
+                settle_amount/100
+    </sql>
+
+    <select id="selectByUser" resultType="com.panda.sport.merchant.common.po.merchant.UserOrderAllPO">
+        SELECT user_id                  userId,
+               user_name                userName,
+               merchant_code            merchantCode,
+               order_amount             betNum,
+               bet_amount / 100         betAmount,
+               profit / 100             profit,
+               profit_rate              profitRate,
+               last_login               lastLogin,
+               last_bet                 lastBet,
+               merchant_name            merchantName,
+               register_time            registerTime,
+               order_limit_20per        orderLimit20per,
+               order_limit_20to50       orderLimit20to50,
+               order_limit_50to80       orderLimit50to80,
+               order_limit_80per        orderLimit80per,
+               profit_order_num         profitOrderNum,
+               refuse_order_num         refuseOrderNum,
+               refuse_order_amount      refuseOrderAmount,
+               cancel_order_num         cancelOrderNum,
+               cancel_order_amount      cancelOrderAmount,
+               greterThan2_num          greterThan2Num,
+               lessThan2_num            lessThan2Num,
+               soccer_num               soccerNum,
+               basketball_num           basketballNum,
+               others_num               othersNum,
+               series_num               seriesNum,
+               basketball_handicap_num  basketballHandicapNum,
+               basketball_overunder_num basketballOverunderNum,
+               balance,
+               level_id                 levelId,
+               settle_amount / 100      settleAmount
+        FROM `user_order_all`
+        WHERE user_id = #{userId}
+    </select>
+
+    <select id="queryUserBetList" parameterType="com.panda.sport.merchant.common.vo.UserOrderVO"
+            resultType="com.panda.sport.merchant.common.po.merchant.UserOrderAllPO">
+        SELECT
+            user_id userId,
+            user_name userName,
+            merchant_code merchantCode,
+            order_amount betNum,
+            bet_amount/100 betAmount,
+            profit/100 profit,
+            profit_rate profitRate,
+            last_login lastLogin,
+            last_bet lastBet,
+            merchant_name merchantName
+        FROM
+            user_order_all
+       <where>
+           <if test="userId != null">
+            user_id = #{userId}
+           </if>
+           <if test="userName != null">
+            user_name = #{userName}
+           </if>
+           <if test="merchantName != null">
+               AND merchant_name LIKE CONCAT('%',#{merchantName},'%')
+           </if>
+           <if test="merchantCode != null">
+               AND merchant_code = #{merchantCode}
+           </if>
+           <if test="merchantCodeList != null">
+               AND merchant_code in
+                <foreach collection="merchantCodeList" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+           </if>
+           <if test="userIdList != null">
+               AND user_id in
+                <foreach collection="userIdList" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+           </if>
+       </where>
+    </select>
+
+    <insert id="batchUpsert">
+            INSERT INTO user_order_all (user_id,last_update,user_name,merchant_code,order_amount,valid_bet_amount,bet_amount,profit,last_login,last_bet,merchant_name,register_time,
+            profit_order_num,refuse_order_num,refuse_order_amount,cancel_order_num,cancel_order_amount,
+            all_num,greterThan2_num,lessThan2_num,soccer_num,basketball_num,others_num,series_num,
+            basketball_handicap_num,basketball_overunder_num,balance,level_id,settle_amount,valid_order_num,first_bet_date)
+            values
+            <foreach collection="list" item="item" separator=",">
+                (#{item.userId},#{lastUpdate},#{item.userName},#{item.merchantCode},#{item.orderAmount},#{item.validBetAmount},#{item.betAmount},#{item.profit},#{item.lastLogin},
+                #{item.lastBet},#{item.merchantName},#{item.registerTime},
+                #{item.profitOrderNum},#{item.refuseOrderNum},#{item.refuseOrderAmount},#{item.cancelOrderNum},#{item.cancelOrderAmount},
+                #{item.allNum},#{item.greterThan2Num},#{item.lessThan2Num},#{item.soccerNum},#{item.basketballNum},#{item.othersNum},#{item.seriesNum},
+                #{item.basketballHandicapNum},#{item.basketballOverunderNum},#{item.balance},#{item.levelId},#{item.settleAmount},#{item.validOrderNum},#{lastUpdate})
+            </foreach>
+            ON DUPLICATE KEY UPDATE
+            user_id=values(user_id),
+            last_update=values(last_update), order_amount=order_amount+values(order_amount), valid_bet_amount=valid_bet_amount+values(valid_bet_amount),
+            bet_amount=bet_amount+values(bet_amount),profit=profit+values(profit),last_login=values(last_login),last_bet=values(last_bet),
+            profit_order_num=profit_order_num+values(profit_order_num),
+            refuse_order_num=refuse_order_num+values(refuse_order_num),
+            refuse_order_amount=refuse_order_amount+values(refuse_order_amount),
+            cancel_order_num=cancel_order_num+values(cancel_order_num),
+            cancel_order_amount=cancel_order_amount+values(cancel_order_amount),
+            all_num=all_num+values(all_num),
+            greterThan2_num=greterThan2_num+values(greterThan2_num),
+            lessThan2_num=lessThan2_num+values(lessThan2_num),
+            soccer_num=soccer_num+values(soccer_num),
+            basketball_num=basketball_num+values(basketball_num),
+            others_num=others_num+values(others_num),
+            series_num=series_num+values(series_num),
+            basketball_handicap_num=basketball_handicap_num+values(basketball_handicap_num),
+            basketball_overunder_num=basketball_overunder_num+values(basketball_overunder_num),
+            basketball_overunder_num=basketball_overunder_num+values(basketball_overunder_num),
+            balance = values(balance),
+            level_id = values(level_id),
+            settle_amount=settle_amount+values(settle_amount),
+            valid_order_num=valid_order_num+values(valid_order_num)
+     </insert>
+
+</mapper>

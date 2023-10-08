@@ -1,0 +1,1617 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.backup83.mapper.Backup83OrderMixV2Mapper">
+    <resultMap id="betOrderMap" type="com.panda.sport.merchant.common.vo.merchant.OrderSettle">
+        <id property="orderNo" column="order_no"/>
+        <id property="id" column="id"/>
+        <result column="uid" property="uid"/>
+        <result column="username" property="userName"/>
+        <result column="fake_name" property="fakeName"/>
+        <result column="user_level" property="userLevel"/>
+        <result column="order_status" property="orderStatus"/>
+        <result column="bet_count" property="betCount"/>
+        <result column="product_count" property="betCount"/>
+        <result column="series_type" property="seriesType"/>
+        <result column="series_value" property="seriesValue"/>
+        <result column="merchant_code" property="merchantCode"/>
+        <result column="transfer_mode" property="transferMode"/>
+        <result column="original_order_amount_total" property="orderAmountTotal"/>
+        <result column="order_amount_total" property="localBetAmount"/>
+        <result column="ip" property="ip"/>
+        <result column="ip_area" property="ipArea"/>
+        <result column="device_type" property="deviceType"/>
+        <result column="device_imei" property="deviceImei"/>
+        <result column="currency_code" property="currencyCode"/>
+        <result column="out_come" property="outcome"/>
+        <result column="order_status" property="orderStatus"/>
+        <result column="product_amount_total" property="productAmountTotal"/>
+        <result column="settle_amount" property="localSettleAmount"/>
+        <result column="original_settle_amount" property="settleAmount"/>
+        <result column="original_profit_amount" property="profitAmount"/>
+        <result column="profit_amount" property="localProfitAmount"/>
+        <result column="pre_bet_amount" property="preBetAmount"/>
+        <result column="create_time" property="createTime"/>
+        <result column="settle_time" property="settleTime"/>
+        <result column="settle_type" property="settleType"/>
+        <result column="merchant_name" property="merchantName"/>
+        <result column="merchant_code" property="merchantCode"/>
+        <result column="manager_code" property="managerCode"/>
+        <result column="ac_code" property="acCode"/>
+        <result column="remark" property="remark"/>
+        <result column="pre_settle" property="preSettle"/>
+
+        <collection property="orderDetailList" ofType="com.panda.sport.merchant.common.vo.merchant.OrderSettleDetail">
+            <id property="betNo" column="bet_no"/>
+            <result column="market_id" property="marketId"/>
+            <result column="play_options_id" property="playOptionsId"/>
+            <result column="play_options" property="playOptions"/>
+            <result column="bet_amount" property="localBetAmount"/>
+            <result column="original_bet_amount" property="betAmount"/>
+            <result column="play_option_name" property="playOptionName"/>
+            <result column="play_name" property="playName"/>
+            <result column="original_play" property="originalPlay"/>
+            <result column="match_id" property="matchId"/>
+            <result column="match_manage_id" property="matchManageId"/>
+            <result column="match_name" property="matchName"/>
+            <result column="tournament_name" property="tournamentName"/>
+            <result column="match_type" property="matchType"/>
+            <result column="market_type" property="marketType"/>
+            <result column="market_value" property="marketValue"/>
+            <result column="match_info" property="matchInfo"/>
+            <result column="score" property="matchScore"/>
+            <result column="settle_score" property="settleScore"/>
+            <result column="risk_event" property="riskEvent"/>
+            <result column="home_name" property="homeName"/>
+            <result column="away_name" property="awayName"/>
+            <result column="sport_name" property="sportName"/>
+            <result column="sport_id" property="sportId"/>
+            <result column="play_id" property="playId"/>
+            <result column="odds_value" property="oddsValue"/>
+            <result column="odd_finally" property="oddFinally"/>
+            <result column="bet_result" property="betResult"/>
+            <result column="bet_status" property="betStatus"/>
+            <result column="modify_time" property="settleTime"/>
+            <result column="begin_time" property="beginTime"/>
+            <result column="phase" property="phase"/>
+            <result column="score_benchmark" property="scoreBenchmark"/>
+            <result column="od_remark" property="remark"/>
+            <result column="cancel_type" property="cancelType"/>
+            <result column="trade_type" property="tradeType"/>
+            <result column="batch_no" property="batchNo"/>
+            <result column="leg_order" property="legOrder"/>
+            <result column="match_day" property="matchDay"/>
+            <result column="child_play_id" property="childPlayId"/>
+            <result column="settle_times" property="settleTimes"/>
+        </collection>
+    </resultMap>
+    <resultMap id="betPreOrderMap" type="com.panda.sport.merchant.common.vo.merchant.PreOrderSettle">
+            <id property="orderNo" column="order_no"/>
+            <id property="id" column="id"/>
+            <result column="uid" property="uid"/>
+            <result column="username" property="userName"/>
+             <result column="fake_name" property="fakeName"/>
+            <result column="order_status" property="orderStatus"/>
+            <result column="bill_status" property="billStatus"/>
+            <result column="product_count" property="productCount"/>
+            <result column="series_type" property="seriesType"/>
+            <result column="series_value" property="seriesValue"/>
+            <result column="product_amount_total" property="productAmountTotal"/>
+            <result column="order_amount_total" property="localBetAmount"/>
+            <result column="device_type" property="deviceType"/>
+            <result column="ip" property="ip"/>
+            <result column="remark" property="remark"/>
+            <result column="merchant_id" property="merchantId"/>
+            <result column="del_flag" property="delFlag"/>
+            <result column="create_time" property="createTime"/>
+            <result column="create_user" property="createUser"/>
+            <result column="modify_user" property="modifyUser"/>
+            <result column="currency_code" property="currencyCode"/>
+            <result column="ip_area" property="ipArea"/>
+            <result column="device_imei" property="deviceImei"/>
+            <result column="max_win_amount" property="maxWinAmount"/>
+            <result column="full_bet" property="fullBet"/>
+            <result column="expect_profit" property="expectProfit"/>
+            <result column="user_level" property="userLevel"/>
+            <result column="vip_level" property="vipLevel"/>
+            <result column="lang_code" property="langCode"/>
+            <result column="original_max_win_amount" property="originalMaxWinAmount"/>
+            <result column="original_order_amount_total" property="orderAmountTotal"/>
+            <result column="original_product_amount_total" property="originalProductAmountTotal"/>
+            <result column="rmb_exchange_rate" property="rmbExchangeRate"/>
+            <result column="ac_code" property="acCode"/>
+            <result column="jump_from" property="jumpFrom"/>
+            <result column="pre_order_status" property="preOrderStatus"/>
+            <result column="preOrderStatusName" property="preOrderStatusName"/>
+        <collection property="preOrderSettleDetail" ofType="com.panda.sport.merchant.common.vo.merchant.PreOrderSettleDetail">
+            <id  column="bet_no" property="betNo"/>
+            <result column="order_no" property="orderNo"/>
+            <result column="uid" property="uid"/>
+            <result column="play_options_id" property="playOptionsId"/>
+            <result column="sport_id" property="sportId"/>
+            <result column="sport_name" property="sportName"/>
+            <result column="play_id" property="playId"/>
+            <result column="match_id" property="matchId"/>
+            <result column="match_name" property="matchName"/>
+            <result column="match_type" property="matchType"/>
+            <result column="bet_time" property="betTime"/>
+            <result column="market_id" property="marketId"/>
+            <result column="market_type" property="marketType"/>
+            <result column="market_value" property="marketValue"/>
+            <result column="match_info" property="matchInfo"/>
+            <result column="bet_amount" property="betAmount"/>
+            <result column="odds_value" property="oddsValue"/>
+            <result column="market_type_finally" property="marketTypeFinally"/>
+            <result column="odd_finally" property="oddFinally"/>
+            <result column="accept_bet_odds" property="acceptBetOdds"/>
+            <result column="max_win_amount" property="maxWinAmount"/>
+            <result column="bet_status" property="betStatus"/>
+            <result column="score_benchmark" property="scoreBenchmark"/>
+            <result column="play_options" property="playOptions"/>
+            <result column="del_flag" property="delFlag"/>
+            <result column="remark" property="remark"/>
+            <result column="create_time" property="createTime"/>
+            <result column="begin_time" property="beginTime"/>
+            <result column="create_user" property="createUser"/>
+            <result column="modify_user" property="modifyUser"/>
+            <result column="modify_time" property="modifyTime"/>
+            <result column="tournament_id" property="tournamentId"/>
+            <result column="bet_result" property="betResult"/>
+            <result column="addition" property="addition"/>
+            <result column="bet_all_result" property="betAllResult"/>
+            <result column="settle_score" property="settleScore"/>
+            <result column="tournament_level" property="tournamentLevel"/>
+            <result column="market_main" property="marketMain"/>
+            <result column="pre_data_sourse" property="preDataSourse"/>
+            <result column="live_data_sourse" property="liveDataSourse"/>
+            <result column="cancel_type" property="cancelType"/>
+            <result column="place_num" property="placeNum"/>
+            <result column="original_bet_amount" property="originalBetAmount"/>
+            <result column="original_max_win_amount" property="originalMaxWinAmount"/>
+            <result column="pre_order_detail_status" property="preOrderDetailStatus"/>
+            <result column="play_option_name" property="playOptionName"/>
+            <result column="play_name" property="playName"/>
+        </collection>
+    </resultMap>
+    <resultMap id="orderMap" type="com.panda.sport.merchant.common.vo.user.OrderVO">
+        <id column="id" property="id"/>
+        <id column="uid" property="uid"/>
+        <id column="order_no" property="orderNo"/>
+        <result column="order_status" property="orderStatus"/>
+        <result column="product_count" property="seriesSum"/>
+        <result column="series_type" property="seriesType"/>
+        <result column="settle_type" property="settleType"/>
+        <result column="series_value" property="seriesValue"/>
+        <result column="order_amount_total" property="orderAmountTotal"/>
+        <result column="pre_bet_amount" property="preBetAmount"/>
+        <result column="max_win_amount" property="maxWinAmount"/>
+        <result column="manager_code" property="managerCode"/>
+        <result column="create_time" property="betTime"/>
+        <result column="modify_time" property="modifyTime"/>
+        <result column="create_time_str" property="betTimeStr"/>
+        <result column="modify_time_str" property="modifyTimeStr"/>
+        <result column="out_come" property="outcome"/>
+        <result column="settle_amount" property="backAmount"/>
+        <result column="settle_amount" property="settledAmount"/>
+        <result column="profit_amount" property="profitAmount"/>
+        <result column="settle_time" property="settleTime"/>
+        <result column="addition" property="addition"/>
+        <result column="market_type" property="marketType"/>
+        <result column="lang_code" property="langCode"/>
+        <result column="ac_code" property="acCode"/>
+        <result column="pre_settle" property="preSettle"/>
+        <result column="pre_order" property="preOrder"/>
+        <collection property="detailList" ofType="com.panda.sport.merchant.common.vo.user.OrderDetailVO">
+            <id property="betNo" column="bet_no"/>
+            <result column="score_benchmark" property="scoreBenchmark"/>
+            <result column="play_options" property="playOptions"/>
+            <result column="match_type" property="matchType"/>
+            <result column="market_value" property="marketValue"/>
+            <result column="market_id" property="marketId"/>
+            <result column="match_id" property="matchId"/>
+            <result column="begin_time" property="beginTime"/>
+            <result column="bet_result" property="betResult"/>
+            <result column="settle_score" property="settleScore"/>
+            <result column="play_option_name" property="playOptionName"/>
+            <result column="sport_id" property="sportId"/>
+            <result column="tournament_id" property="tournamentId"/>
+            <result column="sport_name" property="sportName"/>
+            <result column="play_id" property="playId"/>
+            <result column="play_name" property="playName"/>
+            <result column="risk_event" property="riskEvent"/>
+            <result column="odd_finally" property="oddFinally"/>
+            <result column="odds_value" property="oddsValue"/>
+            <result column="match_name" property="matchName"/>
+            <result column="match_info" property="matchInfo"/>
+            <result column="cancel_type" property="cancelType"/>
+            <result column="place_num" property="placeNum"/>
+            <result column="match_over" property="matchOver"/>
+
+            <result column="score" property="score"/>
+            <result column="phase" property="phase"/>
+            <result column="closing_time" property="closingTime"/>
+            <result column="outright_year" property="outrightYear"/>
+            <result column="first_num" property="firstNum"/>
+            <result column="second_num" property="secondNum"/>
+            <result column="home_name" property="homeName"/>
+            <result column="away_name" property="awayName"/>
+            <result column="play_options_id" property="playOptionsId"/>
+            <result column="bet_status" property="betStatus"/>
+            <result column="bet_amount" property="betAmount"/>
+            <result column="market_type" property="marketType"/>
+            <result column="pic_url" property="tournamentPic"/>
+            <result column="batch_no" property="batchNo"/>
+            <result column="child_play_id" property="childPlayId"/>
+        </collection>
+    </resultMap>
+
+    <select id="queryBetOrderList" parameterType="com.panda.sport.merchant.common.vo.BetOrderV2VO"
+            resultMap="betOrderMap">
+        SELECT
+        o.uid,
+        o.create_time,
+        o.id,
+        o.remark,
+        ROUND(o.order_amount_total / 100, 2)          order_amount_total,
+        ROUND(o.original_order_amount_total / 100, 2) original_order_amount_total,
+        ROUND(o.pre_bet_amount / 100, 2)              pre_bet_amount,
+        ROUND(o.product_amount_total / 100, 2)        product_amount_total,
+        ROUND(o.pre_bet_amount / 100, 2)              pre_bet_amount,
+        o.product_count,
+        o.series_type,
+        o.series_value,
+        o.manager_code,
+        o.ac_code,
+        o.ip,
+        o.ip_area,
+        o.device_type,
+        o.device_imei,
+        s.out_come,
+        o.order_status,
+        o.pre_settle,
+        ROUND(s.settle_amount / 100, 2)               settle_amount,
+        ROUND(s.profit_amount / 100, 2)               profit_amount,
+        ROUND(s.original_profit_amount / 100, 2)      original_profit_amount,
+        ROUND(s.original_settle_amount / 100, 2)      original_settle_amount,
+        s.settle_time,
+        s.settle_type,
+        od.create_user,
+        od.bet_no,
+        od.sport_id,
+        od.play_id,
+        (case
+        when i.order_no is not null then
+        (case when 'en' = #{language} then i.sport_name_en else i.sport_name_zs end)
+        else od.sport_name end)                  sport_name,
+        od.match_type,
+        od.market_type,
+        od.play_options,
+        ROUND(od.bet_amount / 100, 2)                 bet_amount,
+        ROUND(od.original_bet_amount / 100, 2)        original_bet_amount,
+        od.market_value,
+        od.settle_times,
+        od.play_name                                                       original_play,
+        (case
+        when i.order_no is not null then
+        (case when 'en' = #{language} then i.play_name_en else i.play_name_zs end)
+        else od.play_name end)                   play_name,
+        od.play_options_id,
+        od.match_id,
+        (case
+        when i.order_no is not null then
+        (case when 'en' = #{language} then i.tournament_name_en else i.tournament_name_zs end)
+        else od.match_name end)                  tournament_name,
+        od.match_name,
+        (case
+        when i.order_no is not null then
+        (case when 'en' = #{language} then i.match_info_en else i.match_info_zs end)
+        else od.match_info end)                  match_info,
+        od.odds_value / 100000                        odds_value,
+        od.odd_finally,
+        od.order_no,
+        (case
+        when i.order_no is not null then
+        (case when 'en' = #{language} then i.playoption_en else i.playoption_zs end)
+        else od.play_option_name end)            play_option_name,
+        od.bet_result,
+        od.bet_status,
+        od.remark                                     od_remark,
+        od.cancel_type,
+        od.settle_score,
+        od.trade_type,
+        od.risk_event,
+        od.market_id,
+        od.child_play_id,
+        (CASE
+        WHEN od.sport_id in (1, 2) and od.match_type = 2
+        THEN od.score_benchmark END)         score_benchmark,
+        (CASE
+        WHEN o.manager_code not in (3,4) THEN (SELECT CONCAT(@a := ifNULL(t2.begin_time, 0),
+        @w := t2.match_manage_id,
+        @c := ifNULL(t2.score, '0'),
+        @f := ifNULL(sl1.${language}, '0'),
+        @g := ifNULL(sl2.${language}, '0'))
+        from s_match_info t2
+        left join s_language sl1 on sl1.name_code = t2.home_name_code
+        left join s_language sl2 on sl2.name_code = t2.away_name_code
+        where od.match_id = t2.id)
+        WHEN o.manager_code = 3 THEN (select CONCAT(@a := ifNULL(t1.begin_time, 0),
+        @w := t1.match_manage_id,
+        @c := ifNULL(t1.score_result, '0'),
+        @f := ifNULL(sl1.zs, '0'),
+        @g := ifNULL(sl2.zs, '0'))
+        from s_virtual_match_info t1
+        left join s_language sl1 on sl1.name_code = t1.home_name_code
+        left join s_language sl2 on sl2.name_code = t1.away_name_code
+        where t1.id = od.match_id)
+        WHEN o.manager_code = 4 THEN (select CONCAT(@a := ifNULL(t1.start_time, 0),
+        @w := t1.id,
+        @c := ifNULL(t1.score, '0'),
+        @f := ifNULL(sl1.zs, '0'),
+        @g := ifNULL(sl2.zs, '0'))
+        from s_esport_matches t1
+        left join s_esport_language sl1 on sl1.name_code = t1.home_name_code
+        left join s_esport_language sl2 on sl2.name_code = t1.away_name_code
+        where t1.id = od.match_id) end)
+        as                                        temp,
+        @w  as                                        match_manage_id,
+        @a  as                                        begin_time,
+        @c  as                                        score,
+        @f  as                                        home_name,
+        @g  as                                        away_name
+        FROM `t_order_detail` od
+        RIGHT JOIN (SELECT o2.id,
+        o2.uid,
+        o2.order_no,
+        o2.create_time,
+        o2.order_amount_total,
+        o2.pre_bet_amount,
+        o2.original_order_amount_total,
+        o2.product_amount_total,
+        o2.product_count,
+        o2.series_type,
+        o2.series_value,
+        o2.ip,
+        o2.ip_area,
+        o2.device_type,
+        o2.device_imei,
+        o2.currency_code,
+        o2.remark,
+        o2.order_status,
+        o2.ac_code,
+        o2.manager_code,
+        o2.pre_settle
+        FROM `t_order` o2 join (SELECT o1.id  FROM `t_order` o1
+        where o1.create_time <![CDATA[ >= ]]> #{startTimeL}
+        <if test="endTimeL != null">
+            AND o1.create_time <![CDATA[ < ]]> #{endTimeL}
+        </if>
+        <if test="currency != null">
+            AND o1.currency_code = #{currency}
+        </if>
+        <if test="enablePreSettle != null and enablePreSettle == true">
+            and o1.pre_bet_amount > 0
+        </if>
+        <if test="seriesType != null and seriesType==1">
+            and o1.series_type = 1
+        </if>
+        <if test="seriesType != null and seriesType==2">
+            AND o1.series_type <![CDATA[ <> ]]> 1
+        </if>
+        <if test="userId != null">
+            AND o1.uid = #{userId}
+        </if>
+        <if test="userIdList != null and userIdList.size() > 0">
+            AND o1.uid in
+            <foreach item='option' index='index' collection='userIdList' open='(' separator=','
+                     close=')'>
+                #{option}
+            </foreach>
+        </if>
+        <if test="ip != null">
+            AND o1.ip = #{ip}
+        </if>
+        <if test="managerCode != null and managerCode==3">
+            AND o1.manager_code = 3
+        </if>
+        <if test="managerCode != null and managerCode==4">
+            AND o1.manager_code != 3
+        </if>
+        <if test="managerCode != null and managerCode==5">
+            AND o1.ac_code is not null
+        </if>
+        <if test="orderNo != null">
+            AND o1.order_no = #{orderNo}
+        </if>
+        <if test="orderNoList != null and orderNoList.size() > 0">
+            AND o1.order_no in
+            <foreach item='option' index='index' collection='orderNoList' open='(' separator=','
+                     close=')'>
+                #{option}
+            </foreach>
+        </if>
+        <if test="minBetAmount != null">
+            AND o1.order_amount_total <![CDATA[ >= ]]>#{minBetAmount}
+        </if>
+        <if test="maxBetAmount != null">
+            AND o1.order_amount_total <![CDATA[ <= ]]> #{maxBetAmount}
+        </if>
+        <if test="orderStatus != null">
+            AND o1.order_status = #{orderStatus}
+        </if>
+        <if test="orderStatusList != null and orderStatusList.size() > 0">
+            AND o1.order_status in
+            <foreach item='option' index='index' collection='orderStatusList' open='(' separator=','
+                     close=')'>
+                #{option}
+            </foreach>
+        </if>
+        <if test="merchantId != null">
+            and o1.merchant_id = #{merchantId}
+        </if>
+        <if test="merchantIdList != null  and merchantIdList.size() > 0">
+            and o1.merchant_id in
+            <foreach item='option' index='index' collection='merchantIdList' open='(' separator=','
+                     close=')'>
+                #{option}
+            </foreach>
+        </if>
+        <if test="playId!=null or (playIdList !=null and playIdList.size() > 0) or sportId != null or matchId != null
+                             or matchType!=null or oddsDataSource!=null or tournamentId != null or maxOdds != null or minOdds != null">
+            and o1.order_no in (select distinct order_no
+            from t_order_detail tod
+            where tod.create_time >= #{startTimeL}
+            <if test="sportId != null">
+                AND tod.sport_id = #{sportId}
+            </if>
+            <if test="tournamentId != null">
+                AND tod.tournament_id = #{tournamentId}
+            </if>
+            <if test="playId != null">
+                AND tod.play_id = #{playId}
+            </if>
+            <if test="matchId != null">
+                AND tod.match_id = #{matchId}
+            </if>
+            <if test="maxOdds != null">
+                AND tod.odds_value/100000 <![CDATA[ <= ]]> #{maxOdds}
+            </if>
+            <if test="minOdds != null">
+                AND tod.odds_value/100000 <![CDATA[ >= ]]> #{minOdds}
+            </if>
+            <if test="matchType != null">
+                AND tod.match_type = #{matchType}
+                <if test="matchType == 3">
+                    AND tod.match_id in (select id from s_outright_match_info)
+                </if>
+            </if>
+            <if test="oddsDataSource != null">
+                AND tod.odds_data_sourse = #{oddsDataSource}
+            </if>
+            <if test="playIdList != null and playIdList.size() > 0">
+                AND tod.play_id in
+                <foreach item='code' index='index' collection='playIdList'
+                         open='(' separator=',' close=')'>
+                    #{code}
+                </foreach>
+            </if>
+            )
+        </if>
+        <if test="minProfit != null or maxProfit!=null or (outComeList != null and outComeList.size() > 0) or settleType != null">
+            and o1.order_no in (select distinct order_no
+            from t_settle s1
+            where s1.create_time >= #{startTimeL}
+            and s1.last_settle = 1
+            <if test="minProfit != null">
+                and s1.profit_amount <![CDATA[ >= ]]>#{minProfit}
+            </if>
+            <if test="settleType != null">
+                and s1.settle_type >2 and s1.settle_type not in(4,5)
+            </if>
+            <if test="outComeList != null and outComeList.size() > 0">
+                and s1.out_come in
+                <foreach item='code' index='index' collection='outComeList'
+                         open='(' separator=',' close=')'>
+                    #{code}
+                </foreach>
+            </if>
+            <if test="maxProfit != null">
+                AND s1.profit_amount <![CDATA[ <= ]]> #{maxProfit}
+            </if>)
+        </if>
+        <if test="settleCancle != null and settleCancle==1">
+            AND o1.order_status = 2
+            and o1.order_no in (select distinct order_no
+            from t_settle s1
+            where s1.create_time >= #{startTimeL})
+        </if>
+        <if test="fromAppointment != null and fromAppointment==1">
+            and o1.pre_order = 1
+        </if>
+        <if test="userName != null or fakeName != null">
+            and o1.uid in (select tu.uid
+            from t_user tu
+            <where>
+                <if test="userName != null">
+                    tu.username = #{userName}
+                </if>
+                <if test="fakeName != null">
+                    and tu.fake_name = #{fakeName}
+                </if>
+            </where>)
+        </if>
+        <if test="accountTag != null and accountTag == 1 and startTimeL != null and endTimeL != null">
+            and o1.order_no in
+            (select distinct tot.order_no from t_order_times_settle_info tot
+            where tot.negative_amount <![CDATA[ < ]]> 0)
+        </if>
+        ORDER BY o1.create_time DESC
+        LIMIT #{start},#{size}) d on d.id = o2.id ) o ON o.order_no = od.order_no
+        LEFT JOIN t_settle s ON s.order_no = o.order_no and s.last_settle = 1 and s.bet_amount>0
+        left join t_order_internationalize i on od.bet_no = i.bet_no and od.order_no = i.order_no
+    </select>
+
+    <select id="querySettledOrderList" parameterType="com.panda.sport.merchant.common.vo.BetOrderV2VO"
+            resultMap="betOrderMap">
+        SELECT
+        s.uid,
+        o.remark,
+        s.order_no,
+        s.id,
+        ROUND(o.order_amount_total / 100, 2)          order_amount_total,
+        ROUND(o.pre_bet_amount / 100, 2)              pre_bet_amount,
+        ROUND(o.original_order_amount_total / 100, 2) original_order_amount_total,
+        ROUND(o.product_amount_total / 100, 2)        product_amount_total,
+        o.product_count,
+        o.series_type,
+        o.series_value,
+        o.ip,
+        o.ip_area,
+        o.device_type,
+        o.device_imei,
+        o.order_status,
+        o.manager_code,
+        o.ac_code,
+        o.pre_settle,
+        s.out_come,
+        s.settle_time,
+        s.settle_type,
+        ROUND(s.settle_amount / 100, 2)               settle_amount,
+        ROUND(s.profit_amount / 100, 2)               profit_amount,
+        ROUND(s.original_profit_amount / 100, 2)      original_profit_amount,
+        ROUND(s.original_settle_amount / 100, 2)      original_settle_amount,
+        od.create_time,
+        od.create_user,
+        od.bet_no,
+        od.sport_id,
+        od.play_id,
+        (case
+        when i.order_no is not null then
+        (case when 'en' = #{language} then i.sport_name_en else i.sport_name_zs end)
+        else od.sport_name end)                  sport_name,
+        od.match_type,
+        od.market_type,
+        od.play_options,
+        ROUND(od.bet_amount / 100, 2)                 bet_amount,
+        ROUND(od.original_bet_amount / 100, 2)        original_bet_amount,
+        od.market_value,
+        od.play_name                                                       original_play,
+        (case
+        when i.order_no is not null then
+        (case when 'en' = #{language} then i.play_name_en else i.play_name_zs end)
+        else od.play_name end)                   play_name,
+        od.play_options_id,
+        od.match_id,
+        (case
+        when i.order_no is not null then
+        (case when 'en' = #{language} then i.tournament_name_en else i.tournament_name_zs end)
+        else od.match_name end)                  tournament_name,
+        (case
+        when i.order_no is not null then
+        (case when 'en' = #{language} then i.match_info_en else i.match_info_zs end)
+        else od.match_info end)                  match_info,
+        od.match_name,
+        od.odds_value / 100000                        odds_value,
+        od.odd_finally,
+        (case
+        when i.order_no is not null then
+        (case when 'en' = #{language} then i.playoption_en else i.playoption_zs end)
+        else od.play_option_name end)            play_option_name,
+        od.settle_times,
+        od.bet_result,
+        od.bet_status,
+        od.remark                                     od_remark,
+        od.cancel_type,
+        od.settle_score,
+        od.trade_type,
+        od.risk_event,
+        od.child_play_id,
+        (CASE
+        WHEN od.sport_id in (1, 2) and od.match_type = 2
+        THEN od.score_benchmark END)         score_benchmark,
+        (CASE
+        WHEN o.manager_code not in (3,4) THEN (SELECT CONCAT(@a := ifNULL(t2.begin_time, 0),
+        @w := t2.match_manage_id,
+        @c := ifNULL(t2.score, '0'),
+        @f := ifNULL(sl1.zs, '0'),
+        @g := ifNULL(sl2.zs, '0'))
+        from s_match_info t2
+        left join s_language sl1 on sl1.name_code = t2.home_name_code
+        left join s_language sl2 on sl2.name_code = t2.away_name_code
+        where od.match_id = t2.id)
+        WHEN o.manager_code = 3 THEN (select CONCAT(@a := ifNULL(t1.begin_time, 0),
+        @w := t1.match_manage_id,
+        @c := ifNULL(t1.score_result, '0'),
+        @f := ifNULL(sl1.zs, '0'),
+        @g := ifNULL(sl2.zs, '0'))
+        from s_virtual_match_info t1
+        left join s_language sl1 on sl1.name_code = t1.home_name_code
+        left join s_language sl2 on sl2.name_code = t1.away_name_code
+        where t1.id = od.match_id)
+        WHEN o.manager_code = 4 THEN (select CONCAT(@a := ifNULL(t1.start_time, 0), @w := t1.id,
+        @c := ifNULL(t1.score, '0'),
+        @f := ifNULL(sl1.zs, '0'),
+        @g := ifNULL(sl2.zs, '0'))
+        from s_esport_matches t1
+        left join s_esport_language sl1 on sl1.name_code = t1.home_name_code
+        left join s_esport_language sl2 on sl2.name_code = t1.away_name_code
+        where t1.id = od.match_id) end)
+        as                                        temp,
+        @w  as                                        match_manage_id,
+        @a  as                                        begin_time,
+        @c  as                                        score,
+        @f  as                                        home_name,
+        @g  as                                        away_name
+        FROM `t_order_detail` od
+        RIGHT JOIN (SELECT s2.id,
+        s2.uid,
+        s2.order_no,
+        s2.create_time,
+        s2.bet_amount,
+        s2.out_come,
+        s2.settle_time,
+        s2.settle_amount,
+        s2.original_settle_amount,
+        s2.profit_amount,
+        s2.original_profit_amount,
+        s2.settle_type
+        FROM `t_settle` s2 join
+        (SELECT s1.id  FROM `t_settle` s1
+        where s1.last_settle = 1
+        and s1.bet_amount > 0
+        and s1.out_come in (2, 3, 4, 5, 6)
+        AND s1.create_time <![CDATA[ >= ]]> #{startTimeL}
+        <if test="userId != null">
+            AND s1.uid = #{userId}
+        </if>
+        <if test="userIdList != null and userIdList.size() > 0">
+            AND s1.uid in
+            <foreach item='option' index='index' collection='userIdList' open='(' separator=','
+                     close=')'>
+                #{option}
+            </foreach>
+        </if>
+        <if test="endTimeL != null">
+            AND s1.create_time <![CDATA[ <= ]]> #{endTimeL}
+        </if>
+        <if test="orderNo != null">
+            AND s1.order_no = #{orderNo}
+        </if>
+        <if test="orderNoList != null">
+            AND s1.order_no in
+            <foreach item='option' index='index' collection='orderNoList' open='(' separator=','
+                     close=')'>
+                #{option}
+            </foreach>
+        </if>
+        <if test="minBetAmount != null">
+            AND s1.bet_amount <![CDATA[ >= ]]>#{minBetAmount}
+        </if>
+        <if test="settleType != null">
+            and s1.settle_type >2 and s1.settle_type not in(4,5)
+        </if>
+        <if test="outComeList != null and outComeList.size() > 0">
+            and s1.out_come in
+            <foreach item='code' index='index' collection='outComeList'
+                     open='(' separator=',' close=')'>
+                #{code}
+            </foreach>
+        </if>
+        <if test="maxBetAmount != null">
+            AND s1.bet_amount <![CDATA[ <= ]]> #{maxBetAmount}
+        </if>
+        <if test="minProfit != null">
+            AND s1.profit_amount <![CDATA[ >= ]]>#{minProfit}
+        </if>
+        <if test="maxProfit != null">
+            AND s1.profit_amount <![CDATA[ <= ]]> #{maxProfit}
+        </if>
+        <if test="seriesType != null or ip != null or managerCode != null or userVip !=null or currency != null or (enablePreSettle != null and enablePreSettle == true) or deviceType != null">
+            and s1.order_no in (select order_no
+            from t_order o1
+            where o1.create_time >=
+            UNIX_TIMESTAMP(CAST(SYSDATE() AS DATE) - INTERVAL 365 DAY) * 1000
+            <if test="enablePreSettle != null and enablePreSettle == true">
+                and o1.pre_bet_amount > 0
+            </if>
+            <if test="seriesType != null and seriesType==1">
+                and o1.series_type = 1
+            </if>
+            <if test="seriesType != null and seriesType==2">
+                and o1.series_type <![CDATA[ <> ]]> 1
+            </if>
+            <if test="deviceType != null">
+                AND o1.device_type = #{deviceType}
+            </if>
+            <if test="currency != null">
+                AND o1.currency_code = #{currency}
+            </if>
+            <if test="userVip != null">
+                and o1.vip_level = #{userVip}
+            </if>
+            <if test="ip != null">
+                and o1.ip = #{ip}
+            </if>
+            <if test="managerCode != null and managerCode==3">
+                AND o1.manager_code = 3
+            </if>
+            <if test="managerCode != null and managerCode==5">
+                AND o1.ac_code is not null
+            </if>
+            <if test="managerCode != null and managerCode==4">
+                AND o1.manager_code != 3
+            </if>)
+        </if>
+        <if test="playId!=null or (playIdList !=null and playIdList.size() > 0) or sportId != null or matchId != null or matchType!=null or
+                             oddsDataSource!=null or tournamentId != null or maxOdds != null or minOdds != null">
+            and s1.order_no in (select distinct order_no
+            from t_order_detail tod
+            where tod.create_time >= UNIX_TIMESTAMP(CAST(SYSDATE() AS DATE) - INTERVAL 365 DAY) * 1000
+            <if test="sportId != null">
+                AND tod.sport_id = #{sportId}
+            </if>
+            <if test="tournamentId != null">
+                AND tod.tournament_id = #{tournamentId}
+            </if>
+            <if test="playId != null">
+                AND tod.play_id = #{playId}
+            </if>
+            <if test="playIdList != null and playIdList.size() > 0">
+                AND tod.play_id in
+                <foreach item='code' index='index' collection='playIdList'
+                         open='(' separator=',' close=')'>
+                    #{code}
+                </foreach>
+            </if>
+            <if test="matchId != null">
+                AND tod.match_id = #{matchId}
+            </if>
+            <if test="oddsDataSource != null">
+                AND tod.odds_data_sourse = #{oddsDataSource}
+            </if>
+            <if test="maxOdds != null">
+                AND tod.odds_value/100000 <![CDATA[ <= ]]> #{maxOdds}
+            </if>
+            <if test="minOdds != null">
+                AND tod.odds_value/100000 <![CDATA[ >= ]]> #{minOdds}
+            </if>
+            <if test="matchType != null">
+                AND tod.match_type = #{matchType}
+                <if test="matchType == 3">
+                    AND tod.match_id in (select id from s_outright_match_info)
+                </if>
+            </if>)
+        </if>
+
+        <if test="fromAppointment != null and fromAppointment==1">
+            and s1.order_no in (select a.order_no from t_order a where a.pre_order = 1 and s1.order_no =  a.order_no)
+        </if>
+
+        <if test="merchantCode != null or fakeName != null or merchantCodeList != null or userName != null">
+            and s1.uid in (select tu.uid
+            from t_user tu
+            <where>
+                <if test="merchantCode != null">
+                    and tu.merchant_code = #{merchantCode}
+                </if>
+                <if test="merchantCodeList != null and merchantCodeList.size() > 0">
+                    AND tu.merchant_code in
+                    <foreach item='code' index='index' collection='merchantCodeList'
+                             open='(' separator=',' close=')'>
+                        #{code}
+                    </foreach>
+                </if>
+                <if test="userName != null">
+                    AND tu.username = #{userName}
+                </if>
+                <if test="fakeName != null">
+                    tu.fake_name = #{fakeName}
+                </if>
+            </where>)
+        </if>
+        <if test="accountTag != null and accountTag == 1 and startTimeL != null and endTimeL != null">
+            and s1.order_no in
+            (select distinct order_no from t_order_times_settle_info tot
+            where tot.negative_amount <![CDATA[ < ]]> 0)
+        </if>
+        ORDER BY ${sqlOrder} ${sortby}
+        LIMIT #{start},#{size}) b on s2.id=b.id) s ON s.order_no = od.order_no
+        left join t_order o on s.order_no = o.order_no
+        left join t_order_internationalize i on od.bet_no = i.bet_no and od.order_no = i.order_no
+    </select>
+
+    <select id="queryLiveOrderList" parameterType="com.panda.sport.merchant.common.vo.BetOrderV2VO"
+            resultMap="betOrderMap">
+        SELECT
+        o.id,
+        o.uid,
+        ROUND(o.order_amount_total / 100, 2)          order_amount_total,
+        ROUND(o.pre_bet_amount / 100, 2)              pre_bet_amount,
+        ROUND(o.original_order_amount_total / 100, 2) original_order_amount_total,
+        ROUND(o.product_amount_total / 100, 2)        product_amount_total,
+        o.product_count,
+        o.series_type,
+        o.series_value,
+        o.ip,
+        o.ip_area,
+        o.device_type,
+        o.device_imei,
+        o.manager_code,
+        o.ac_code,
+        o.pre_settle,
+        o.order_status,
+        ROUND(s.settle_amount / 100, 2)               settle_amount,
+        ROUND(s.profit_amount / 100, 2)               profit_amount,
+        ROUND(s.original_profit_amount / 100, 2)      original_profit_amount,
+        ROUND(s.original_settle_amount / 100, 2)      original_settle_amount,
+        s.out_come,
+        s.settle_time,
+        s.settle_type,
+        od.bet_no,
+        od.sport_id,
+        od.play_id,
+        (case
+        when i.order_no is not null then
+        (case when 'en' = #{language} then i.sport_name_en else i.sport_name_zs end)
+        else od.sport_name end)                  sport_name,
+        od.match_type,
+        od.market_type,
+        od.play_options,
+        ROUND(od.bet_amount / 100, 2)                 bet_amount,
+        ROUND(od.original_bet_amount / 100, 2)        original_bet_amount,
+        od.market_value,
+        od.play_name                     original_play,
+        (case
+        when i.order_no is not null then
+        (case when 'en' = #{language} then i.play_name_en else i.play_name_zs end)
+        else od.play_name end)                   play_name,
+        od.play_options_id,
+        od.match_id,
+        (case
+        when i.order_no is not null then
+        (case when 'en' = #{language} then i.tournament_name_en else i.tournament_name_zs end)
+        else od.match_name end)                  tournament_name,
+        od.match_name,
+        (case
+        when i.order_no is not null then
+        (case when 'en' = #{language} then i.match_info_en else i.match_info_zs end)
+        else od.match_info end)                  match_info,
+        od.odds_value / 100000  odds_value,
+        od.odd_finally,
+        od.create_time,
+        od.create_user,
+        od.order_no,
+        (case
+        when i.order_no is not null then
+        (case when 'en' = #{language} then i.playoption_en else i.playoption_zs end)
+        else od.play_option_name end)            play_option_name,
+        od.bet_result,
+        od.bet_status,
+        od.remark                                     od_remark,
+        (CASE
+        WHEN od.sport_id in (1, 2) and od.match_type = 2
+        THEN od.score_benchmark END)         score_benchmark,
+        od.cancel_type,
+        od.settle_score,
+        od.trade_type,
+        od.risk_event,
+        od.child_play_id,
+        (CASE
+        WHEN o.manager_code not in (3,4) THEN (SELECT CONCAT(@a := ifNULL(t2.begin_time, 0),
+        @w := t2.match_manage_id,
+        @c := ifNULL(t2.score, '0'),
+        @f := ifNULL(sl1.zs, '0'),
+        @g := ifNULL(sl2.zs, '0'))
+        from s_match_info t2
+        left join s_language sl1 on sl1.name_code = t2.home_name_code
+        left join s_language sl2 on sl2.name_code = t2.away_name_code
+        where od.match_id = t2.id)
+        WHEN o.manager_code = 3 THEN (select CONCAT(@a := ifNULL(t1.begin_time, 0),@w := t1.match_manage_id,
+        @c := ifNULL(t1.score_result, '0'),
+        @f := ifNULL(sl1.zs, '0'),
+        @g := ifNULL(sl2.zs, '0'))
+        from s_virtual_match_info t1
+        left join s_language sl1 on sl1.name_code = t1.home_name_code
+        left join s_language sl2 on sl2.name_code = t1.away_name_code
+        where t1.id = od.match_id)
+        WHEN o.manager_code = 4 THEN (select CONCAT(@a := ifNULL(t1.start_time, 0), @w := t1.id,
+        @c := ifNULL(t1.score, '0'),
+        @f := ifNULL(sl1.zs, '0'),
+        @g := ifNULL(sl2.zs, '0'))
+        from s_esport_matches t1
+        left join s_esport_language sl1 on sl1.name_code = t1.home_name_code
+        left join s_esport_language sl2 on sl2.name_code = t1.away_name_code
+        where t1.id = od.match_id) end)
+        as                                        temp,
+        @w as                                        match_manage_id,
+        @a  as                                        begin_time,
+        @c  as                                        score,
+        @f  as                                        home_name,
+        @g  as                                        away_name
+        FROM `t_order_detail` od
+        RIGHT JOIN (SELECT o1.id,
+        o1.uid,
+        o1.order_no,
+        o1.create_time,
+        o1.order_amount_total,
+        o1.pre_bet_amount,
+        o1.original_order_amount_total,
+        o1.product_amount_total,
+        o1.product_count,
+        o1.series_type,
+        o1.series_value,
+        o1.ip,
+        o1.ip_area,
+        o1.device_type,
+        o1.device_imei,
+        o1.currency_code,
+        o1.remark,
+        o1.order_status,
+        o1.ac_code,
+        o1.manager_code,
+        o1.pre_settle
+        FROM `t_order` o1
+        where
+        1 = 1
+        <if test="fromAppointment != null and fromAppointment==1">
+            and o1.pre_order = 1
+        </if>
+        <if test="matchId == null">
+            and o1.create_time <![CDATA[ >= ]]> #{betStartTimeL}
+        </if>
+        <if test="enablePreSettle != null and enablePreSettle == true">
+            and o1.pre_bet_amount > 0
+        </if>
+        <if test="seriesType != null and seriesType==1">
+            and o1.series_type = 1
+        </if>
+        <if test="seriesType != null and seriesType==2">
+            AND o1.series_type <![CDATA[ <> ]]> 1
+        </if>
+        <if test="userVip != null">
+            AND o1.vip_level = #{userVip}
+        </if>
+        <if test="deviceType != null">
+            AND o1.device_type = #{deviceType}
+        </if>
+        <if test="currency != null">
+            AND o1.currency_code = #{currency}
+        </if>
+        <if test="userId != null">
+            AND o1.uid = #{userId}
+        </if>
+        <if test="userIdList != null and userIdList.size() > 0">
+            AND o1.uid in
+            <foreach item='option' index='index' collection='userIdList' open='(' separator=','
+                     close=')'>
+                #{option}
+            </foreach>
+        </if>
+        <if test="managerCode != null and managerCode==3">
+            AND o1.manager_code = 3
+        </if>
+        <if test="managerCode != null and managerCode==4">
+            AND o1.manager_code != 3
+        </if>
+        <if test="orderNo != null">
+            AND o1.order_no = #{orderNo}
+        </if>
+        <if test="orderNoList != null">
+            AND o1.order_no in
+            <foreach item='option' index='index' collection='orderNoList' open='(' separator=','
+                     close=')'>
+                #{option}
+            </foreach>
+        </if>
+        <if test="minBetAmount != null">
+            AND o1.order_amount_total <![CDATA[ >= ]]>#{minBetAmount}
+        </if>
+        <if test="maxBetAmount != null">
+            AND o1.order_amount_total <![CDATA[ <= ]]> #{maxBetAmount}
+        </if>
+        <if test="orderStatus != null">
+            AND o1.order_status = #{orderStatus}
+        </if>
+        <if test="orderStatusList != null and orderStatusList.size() > 0">
+            AND o1.order_status in
+            <foreach item='option' index='index' collection='orderStatusList' open='(' separator=','
+                     close=')'>
+                #{option}
+            </foreach>
+        </if>
+        <if test="playId != null or (playIdList !=null and playIdList.size() > 0) or sportId != null or matchId != null or matchType!=null
+        or tournamentId != null or maxOdds != null or minOdds != null">
+            and o1.order_no in (select distinct order_no
+            from t_order_detail tod
+            where
+            1 = 1
+            <if test="matchId != null">
+                AND tod.match_id = #{matchId}
+            </if>
+            <if test="sportId != null">
+                AND tod.sport_id = #{sportId}
+            </if>
+            <if test="tournamentId != null">
+                AND tod.tournament_id = #{tournamentId}
+            </if>
+            <if test="playId != null">
+                AND tod.play_id = #{playId}
+            </if>
+            <if test="playIdList != null and playIdList.size() > 0">
+                AND tod.play_id in
+                <foreach item='code' index='index' collection='playIdList'
+                         open='(' separator=',' close=')'>
+                    #{code}
+                </foreach>
+            </if>
+            <if test="maxOdds != null">
+                AND tod.odds_value/100000 <![CDATA[ <= ]]> #{maxOdds}
+            </if>
+            <if test="minOdds != null">
+                AND tod.odds_value/100000 <![CDATA[ >= ]]> #{minOdds}
+            </if>
+            <if test="matchType != null">
+                AND tod.match_type = #{matchType}
+                <if test="matchType == 3">
+                    AND tod.match_id in (select id from s_outright_match_info)
+                </if>
+            </if>
+            )
+        </if>
+        <if test="minProfit != null or maxProfit!=null or settleType!=null or (outComeList != null and outComeList.size() > 0)">
+            and o1.order_no in (select distinct order_no
+            from t_settle s1
+            where s1.last_settle = 1
+            <if test="minProfit != null">
+                and s1.profit_amount <![CDATA[ >= ]]>#{minProfit}
+            </if>
+            <if test="maxProfit != null">
+                AND s1.profit_amount <![CDATA[ <= ]]> #{maxProfit}
+            </if>
+            <if test="settleType != null">
+                and s1.settle_type >2 and s1.settle_type not in(4,5)
+            </if>
+            <if test="outComeList != null and outComeList.size() > 0">
+                and s1.out_come in
+                <foreach item='code' index='index' collection='outComeList'
+                         open='(' separator=',' close=')'>
+                    #{code}
+                </foreach>
+            </if>
+            )
+        </if>
+        <if test="merchantId != null">
+            and o1.merchant_id = #{merchantId}
+        </if>
+        <if test="merchantIdList != null">
+            and o1.merchant_id in
+            <foreach item='option' index='index' collection='merchantIdList' open='(' separator=','
+                     close=')'>
+                #{option}
+            </foreach>
+        </if>
+        <if test="userName != null or fakeName != null">
+            and o1.uid in (select tu.uid
+            from t_user tu
+            <where>
+                <if test="userName != null">
+                    tu.username = #{userName}
+                </if>
+                <if test="fakeName != null">
+                    tu.fake_name = #{fakeName}
+                </if>
+            </where>)
+        </if>
+        <if test="accountTag != null and accountTag == 1 and betStartTimeL != null">
+            and o1.order_no in
+            (select distinct order_no from t_order_times_settle_info tot
+            where tot.negative_amount <![CDATA[ < ]]> 0)
+        </if>
+        <if test="sqlOrder != null and sqlOrder!='s.profit_amount'">
+            ORDER BY ${sqlOrder} ${sortby}
+            LIMIT #{start},#{size}
+        </if>    ) o ON o.order_no = od.order_no
+        left join t_order_internationalize i on od.bet_no = i.bet_no and od.order_no = i.order_no
+        LEFT JOIN t_settle s ON s.order_no = od.order_no and s.last_settle = 1 and s.bet_amount > 0
+        <if test="sqlOrder != null and sqlOrder=='s.profit_amount'">
+            ORDER BY ${sqlOrder} ${sortby}
+            LIMIT #{start},#{size}
+        </if>
+    </select>
+
+    <select id="countBetOrderList" parameterType="com.panda.sport.merchant.common.vo.BetOrderV2VO" resultType="Integer">
+        SELECT
+        count(*)
+        FROM
+        t_order o1
+        <where>
+            <if test="enablePreSettle != null and enablePreSettle == true">
+                and o1.pre_bet_amount > 0
+            </if>
+            <if test="seriesType != null and seriesType==1">
+                and o1.series_type = 1
+            </if>
+            <if test="seriesType != null and seriesType==2">
+                AND o1.series_type <![CDATA[ <> ]]> 1
+            </if>
+            <if test="userId != null">
+                AND o1.uid = #{userId}
+            </if>
+            <if test="currency != null">
+                AND o1.currency_code = #{currency}
+            </if>
+            <if test="userIdList != null and userIdList.size() > 0">
+                AND o1.uid in
+                <foreach item='option' index='index' collection='userIdList' open='(' separator=','
+                         close=')'>
+                    #{option}
+                </foreach>
+            </if>
+            <if test="startTimeL != null">
+                AND o1.create_time <![CDATA[ >= ]]> #{startTimeL}
+            </if>
+            <if test="endTimeL != null">
+                AND o1.create_time <![CDATA[ < ]]> #{endTimeL}
+            </if>
+            <if test="orderNo != null">
+                AND o1.order_no = #{orderNo}
+            </if>
+            <if test="orderNoList != null and orderNoList.size() > 0">
+                AND o1.order_no in
+                <foreach item='option' index='index' collection='orderNoList' open='(' separator=','
+                         close=')'>
+                    #{option}
+                </foreach>
+            </if>
+            <if test="orderStatus != null">
+                AND o1.order_status = #{orderStatus}
+            </if>
+            <if test="orderStatusList != null and orderStatusList.size() > 0">
+                AND o1.order_status in
+                <foreach item='option' index='index' collection='orderStatusList' open='(' separator=','
+                         close=')'>
+                    #{option}
+                </foreach>
+            </if>
+            <if test="merchantId != null">
+                and o1.merchant_id = #{merchantId}
+            </if>
+            <if test="merchantIdList != null and merchantIdList.size() > 0">
+                and o1.merchant_id in
+                <foreach item='option' index='index' collection='merchantIdList' open='(' separator=','
+                         close=')'>
+                    #{option}
+                </foreach>
+            </if>
+            <if test="playId != null or (playIdList !=null and playIdList.size() > 0)
+                    or sportId != null
+                    or matchId != null
+                    or matchType!=null
+                    or oddsDataSource!=null
+                    or tournamentId != null">
+                and o1.order_no in (select distinct order_no
+                from t_order_detail tod
+                where tod.create_time >= #{startTimeL}
+                <if test="sportId != null">
+                    AND tod.sport_id = #{sportId}
+                </if>
+                <if test="tournamentId != null">
+                    AND tod.tournament_id = #{tournamentId}
+                </if>
+                <if test="playId != null">
+                    AND tod.play_id = #{playId}
+                </if>
+                <if test="matchId != null">
+                    AND tod.match_id = #{matchId}
+                </if>
+                <if test="matchType != null">
+                    AND tod.match_type = #{matchType}
+                    <if test="matchType == 3">
+                        AND tod.match_id in (select id from s_outright_match_info)
+                    </if>
+                </if>
+                <if test="oddsDataSource != null">
+                    AND tod.odds_data_sourse = #{oddsDataSource}
+                </if>
+                <if test="playIdList != null and playIdList.size() > 0">
+                    AND tod.play_id in
+                    <foreach item='code' index='index' collection='playIdList' open='('
+                             separator=',' close=')'>
+                        #{code}
+                    </foreach>
+                </if>
+                )
+            </if>
+            <if test="settleType!=null or (outComeList != null and outComeList.size() > 0)">
+                and o1.order_no in (select distinct order_no
+                from t_settle s1
+                where s1.create_time >= #{startTimeL}
+                and s1.last_settle = 1
+                <if test="settleType != null">
+                    and s1.settle_type >2 and s1.settle_type not in(4,5)
+                </if>
+                <if test="outComeList != null and outComeList.size() > 0">
+                    and s1.out_come in
+                    <foreach item='code' index='index' collection='outComeList'
+                             open='(' separator=',' close=')'>
+                        #{code}
+                    </foreach>
+                </if>
+                )
+            </if>
+            <if test="settleCancle != null and settleCancle==1">
+                AND o1.order_status = 2
+                and o1.order_no in (select distinct order_no
+                from t_settle s1
+                where s1.create_time >= #{startTimeL})
+            </if>
+            <if test="accountTag != null and accountTag == 1 and startTimeL != null and endTimeL != null">
+                and o1.order_no in
+                (select distinct order_no from t_order_times_settle_info tot
+                where tot.negative_amount <![CDATA[ < ]]> 0)
+            </if>
+            <if test="fromAppointment != null and fromAppointment==1">
+                and o1.pre_order = 1
+            </if>
+        </where>
+    </select>
+
+    <select id="countSettledOrderList" parameterType="com.panda.sport.merchant.common.vo.BetOrderV2VO"
+            resultType="Integer">
+        SELECT count(*)
+        FROM `t_settle` s1
+        where s1.last_settle = 1
+        and s1.bet_amount > 0
+        and s1.out_come in (2,3,4,5,6)
+        <if test="userId != null">
+            AND s1.uid = #{userId}
+        </if>
+        <if test="startTimeL != null">
+            AND s1.create_time <![CDATA[ >= ]]> #{startTimeL}
+        </if>
+        <if test="endTimeL != null">
+            AND s1.create_time <![CDATA[ <= ]]> #{endTimeL}
+        </if>
+        <if test="orderNo != null">
+            AND s1.order_no = #{orderNo}
+        </if>
+        <if test="orderNoList != null">
+            AND s1.order_no in
+            <foreach item='option' index='index' collection='orderNoList' open='(' separator=','
+                     close=')'>
+                #{option}
+            </foreach>
+        </if>
+        <if test="minBetAmount != null">
+            AND s1.bet_amount <![CDATA[ >= ]]>#{minBetAmount}
+        </if>
+        <if test="settleType != null">
+            and s1.settle_type >2 and s1.settle_type not in(4,5)
+        </if>
+        <if test="outComeList != null and outComeList.size() > 0">
+            and s1.out_come in
+            <foreach item='code' index='index' collection='outComeList'
+                     open='(' separator=',' close=')'>
+                #{code}
+            </foreach>
+        </if>
+        <if test="maxBetAmount != null">
+            AND s1.bet_amount <![CDATA[ <= ]]> #{maxBetAmount}
+        </if>
+        <if test="minProfit != null">
+            AND s1.profit_amount <![CDATA[ >= ]]>#{minProfit}
+        </if>
+        <if test="maxProfit != null">
+            AND s1.profit_amount <![CDATA[ <= ]]> #{maxProfit}
+        </if>
+        <if test="seriesType != null or ip != null or managerCode != null  or userVip !=null or currency != null or (enablePreSettle != null and enablePreSettle == true) or deviceType != null ">
+            and s1.order_no in (select order_no
+            from t_order o1
+            where o1.create_time >=
+            UNIX_TIMESTAMP(CAST(SYSDATE() AS DATE) - INTERVAL 365 DAY) * 1000
+            <if test="enablePreSettle != null and enablePreSettle == true">
+                and o1.pre_bet_amount > 0
+            </if>
+            <if test="seriesType != null and seriesType==1">
+                and o1.series_type = 1
+            </if>
+            <if test="seriesType != null and seriesType==2">
+                and o1.series_type <![CDATA[ <> ]]> 1
+            </if>
+            <if test="deviceType != null">
+                AND o1.device_type = #{deviceType}
+            </if>
+            <if test="managerCode != null and managerCode==3">
+                AND o1.manager_code = 3
+            </if>
+            <if test="managerCode != null and managerCode==5">
+                AND o1.ac_code is not null
+            </if>
+            <if test="currency != null">
+                AND o1.currency_code = #{currency}
+            </if>
+            <if test="userVip != null">
+                AND  o1.vip_level = #{userVip}
+            </if>
+            <if test="ip != null">
+                AND  o1.ip = #{ip}
+            </if>
+            <if test="managerCode != null and managerCode==4">
+                AND o1.manager_code != 3
+            </if>)
+        </if>
+        <if test="playId!=null or (playIdList !=null and playIdList.size() > 0) or sportId != null or matchId != null or matchType!=null or
+         oddsDataSource!=null or tournamentId != null or maxOdds != null or minOdds != null">
+            and s1.order_no in (select distinct order_no
+            from t_order_detail tod
+            where tod.create_time >= UNIX_TIMESTAMP(CAST(SYSDATE() AS DATE) - INTERVAL 365 DAY) * 1000
+            <if test="sportId != null">
+                AND tod.sport_id = #{sportId}
+            </if>
+            <if test="tournamentId != null">
+                AND tod.tournament_id = #{tournamentId}
+            </if>
+            <if test="playId != null">
+                AND tod.play_id = #{playId}
+            </if>
+            <if test="playIdList != null and playIdList.size() > 0">
+                AND tod.play_id in
+                <foreach item='code' index='index' collection='playIdList'
+                         open='(' separator=',' close=')'>
+                    #{code}
+                </foreach>
+            </if>
+            <if test="oddsDataSource != null">
+                AND tod.odds_data_sourse = #{oddsDataSource}
+            </if>
+            <if test="matchId != null">
+                AND tod.match_id = #{matchId}
+            </if>
+            <if test="maxOdds != null">
+                AND tod.odds_value/100000 <![CDATA[ <= ]]> #{maxOdds}
+            </if>
+            <if test="minOdds != null">
+                AND tod.odds_value/100000 <![CDATA[ >= ]]> #{minOdds}
+            </if>
+            <if test="matchType != null">
+                AND tod.match_type = #{matchType}
+                <if test="matchType == 3">
+                    AND tod.match_id in (select id from s_outright_match_info)
+                </if>
+            </if>
+            )
+        </if>
+        <if test="userIdList != null and userIdList.size() > 0">
+            AND s1.uid in
+            <foreach item='option' index='index' collection='userIdList' open='(' separator=','
+                     close=')'>
+                #{option}
+            </foreach>
+        </if>
+        <if test="merchantCode != null or fakeName != null or merchantCodeList != null or userName != null">
+            and s1.uid in (select tu.uid
+            from t_user tu
+            <where>
+                <if test="merchantCode != null">
+                    and tu.merchant_code = #{merchantCode}
+                </if>
+                <if test="merchantCodeList != null and merchantCodeList.size() > 0">
+                    AND tu.merchant_code in
+                    <foreach item='code' index='index' collection='merchantCodeList'
+                             open='(' separator=',' close=')'>
+                        #{code}
+                    </foreach>
+                </if>
+                <if test="userName != null">
+                    AND tu.username = #{userName}
+                </if>
+                <if test="fakeName != null">
+                    AND tu.fake_name = #{fakeName}
+                </if>
+            </where>)
+        </if>
+        <if test="accountTag != null and accountTag == 1 and startTimeL != null and endTimeL != null">
+            and s1.order_no in
+            (select distinct order_no from t_order_times_settle_info tot
+            where tot.negative_amount <![CDATA[ < ]]> 0)
+        </if>
+        <if test="fromAppointment != null and fromAppointment==1">
+            and s1.order_no in (select a.order_no from t_order a where a.pre_order = 1 and s1.order_no =  a.order_no)
+        </if>
+    </select>
+
+    <select id="countLiveOrderList" parameterType="com.panda.sport.merchant.common.vo.BetOrderV2VO" resultType="Integer">
+        SELECT count(1)
+        FROM `t_order` o1
+        where
+        1 = 1
+        <if test="matchId == null">
+            and o1.create_time <![CDATA[ >= ]]> #{betStartTimeL}
+        </if>
+        <if test="enablePreSettle != null and enablePreSettle == true">
+            and o1.pre_bet_amount > 0
+        </if>
+        <if test="merchantId != null">
+            and o1.merchant_id = #{merchantId}
+        </if>
+        <if test="merchantIdList != null">
+            and o1.merchant_id in
+            <foreach item='option' index='index' collection='merchantIdList' open='(' separator=','
+                     close=')'>
+                #{option}
+            </foreach>
+        </if>
+        <if test="seriesType != null and seriesType==1">
+            and o1.series_type = 1
+        </if>
+        <if test="seriesType != null and seriesType==2">
+            AND o1.series_type <![CDATA[ <> ]]> 1
+        </if>
+        <if test="userId != null">
+            AND o1.uid = #{userId}
+        </if>
+        <if test="userVip != null">
+            AND o1.vip_level = #{userVip}
+        </if>
+        <if test="currency != null">
+            AND o1.currency_code = #{currency}
+        </if>
+        <if test="managerCode != null and managerCode==3">
+            AND o1.manager_code = 3
+        </if>
+        <if test="managerCode != null and managerCode==4">
+            AND o1.manager_code != 3
+        </if>
+        <if test="orderNo != null">
+            AND o1.order_no = #{orderNo}
+        </if>
+        <if test="orderNoList != null">
+            AND o1.order_no in
+            <foreach item='option' index='index' collection='orderNoList' open='(' separator=','
+                     close=')'>
+                #{option}
+            </foreach>
+        </if>
+        <if test="minBetAmount != null">
+            AND o1.order_amount_total <![CDATA[ >= ]]>#{minBetAmount}
+        </if>
+        <if test="maxBetAmount != null">
+            AND o1.order_amount_total <![CDATA[ <= ]]> #{maxBetAmount}
+        </if>
+        <if test="orderStatus != null">
+            AND o1.order_status = #{orderStatus}
+        </if>
+        <if test="orderStatusList != null and orderStatusList.size() > 0">
+            AND o1.order_status in
+            <foreach item='option' index='index' collection='orderStatusList' open='(' separator=','
+                     close=')'>
+                #{option}
+            </foreach>
+        </if>
+        <if test="playId != null or sportId != null or matchId != null or matchType!=null or tournamentId != null or maxOdds != null or minOdds != null">
+            and o1.order_no in (select distinct order_no
+            from t_order_detail tod
+            where 1 = 1
+            <if test="matchId != null">
+                AND tod.match_id = #{matchId}
+            </if>
+            <if test="sportId != null">
+                AND tod.sport_id = #{sportId}
+            </if>
+            <if test="tournamentId != null">
+                AND tod.tournament_id = #{tournamentId}
+            </if>
+            <if test="playId != null">
+                AND tod.play_id = #{playId}
+            </if>
+            <if test="playIdList != null and playIdList.size() > 0">
+                AND tod.play_id in
+                <foreach item='code' index='index' collection='playIdList'
+                         open='(' separator=',' close=')'>
+                    #{code}
+                </foreach>
+            </if>
+            <if test="maxOdds != null">
+                AND tod.odds_value/100000 <![CDATA[ <= ]]> #{maxOdds}
+            </if>
+            <if test="minOdds != null">
+                AND tod.odds_value/100000 <![CDATA[ >= ]]> #{minOdds}
+            </if>
+            <if test="matchType != null">
+                AND tod.match_type = #{matchType}
+                <if test="matchType == 3">
+                    AND tod.match_id in (select id from s_outright_match_info)
+                </if>
+            </if>
+            )
+        </if>
+        <if test="minProfit != null or maxProfit!=null or settleType!=null or (outComeList != null and outComeList.size() > 0)">
+            and o1.order_no in (select distinct order_no
+            from t_settle s1
+            where  s1.last_settle = 1
+            <if test="minProfit != null">
+                and s1.profit_amount <![CDATA[ >= ]]>#{minProfit}
+            </if>
+            <if test="maxProfit != null">
+                AND s1.profit_amount <![CDATA[ <= ]]> #{maxProfit}
+            </if>
+            <if test="settleType != null">
+                and s1.settle_type > 2 and s1.settle_type not in(4,5)
+            </if>
+            <if test="outComeList != null and outComeList.size() > 0">
+                and s1.out_come in
+                <foreach item='code' index='index' collection='outComeList'
+                         open='(' separator=',' close=')'>
+                    #{code}
+                </foreach>
+            </if>
+            )
+        </if>
+        <if test="userIdList != null and userIdList.size() > 0">
+            AND o1.uid in
+            <foreach item='option' index='index' collection='userIdList' open='(' separator=','
+                     close=')'>
+                #{option}
+            </foreach>
+        </if>
+        <if test="userName != null or fakeName != null">
+            and o1.uid in (select tu.uid
+            from t_user tu
+            <where>
+                <if test="userName != null">
+                    tu.username = #{userName}
+                </if>
+                <if test="fakeName != null">
+                    tu.fake_name = #{fakeName}
+                </if>
+            </where>)
+        </if>
+        <if test="accountTag != null and accountTag == 1 and betStartTimeL != null">
+            and o1.order_no in
+            (select distinct order_no from t_order_times_settle_info tot
+            where tot.negative_amount <![CDATA[ < ]]> 0)
+        </if>
+    </select>
+
+    <select id="queryUserMerchantPOList" resultMap="betOrderMap">
+        select
+        u.uid,
+        u.username,
+        u.fake_name,
+        u.user_level,
+        u.currency_code,
+        m.merchant_name,
+        m.merchant_code,
+        m.transfer_mode
+        from t_user u LEFT JOIN t_merchant m ON u.merchant_code = m.merchant_code
+        where u.uid in
+        <foreach item='uid' index='index' collection='uidList' open='(' separator=',' close=')'>
+            #{uid}
+        </foreach>
+    </select>
+
+    <select id="getNameByNameCode" resultType="java.lang.String">
+        select ${language} from s_virtual_language where name_code = #{nameCode}
+    </select>
+
+</mapper>

@@ -1,0 +1,95 @@
+DROP PROCEDURE IF EXISTS p_r_merchant_order_week;
+
+DELIMITER //
+CREATE
+    DEFINER = `root`@`%` PROCEDURE `p_r_merchant_order_week`(in str_date varchar(100))
+BEGIN
+    DECLARE task_type INT(2) DEFAULT 15;
+    DECLARE result_code CHAR(5) DEFAULT '0';
+    DECLARE start_time VARCHAR(30) DEFAULT get_cur_ymdhms();
+    DECLARE end_time VARCHAR(30);
+    DECLARE result INT(2) DEFAULT 1;
+    DECLARE exce_msg VARCHAR(512) DEFAULT 'p_r_merchant_order_week成功';
+    DECLARE msg TEXT;
+    DECLARE execute_date date;
+
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN
+        GET DIAGNOSTICS CONDITION 1 result_code = RETURNED_SQLSTATE, msg = MESSAGE_TEXT;
+        SET end_time = get_cur_ymdhms();
+        SET exce_msg = CONCAT("错误码：", result_code, " p_r_merchant_order_week错误信息：", msg);
+        SET result = 2;
+        CALL p_add_task_event_log(task_type, start_time, end_time, result, exce_msg);
+    END;
+    SET execute_date = str_to_date(str_date, '%Y-%m-%d');
+
+    REPLACE INTO r_merchant_order_week
+    SELECT a.id,
+           a.merchant_code,
+           a.time,
+           ifNull(b.betUser / a.register_total_user_sum, 0),
+           a.profit,
+           a.register_total_user_sum,
+           a.return_rate,
+           a.return_amount,
+           a.merchant_level,
+           a.bet_amount,
+           a.order_sum,
+           a.first_bet_user_sum,
+           b.betUser,
+           ifNull(b.settleUser / a.register_total_user_sum, 0),
+           a.settle_profit,
+           a.settle_return,
+           a.settle_return_rate,
+           a.settle_bet_amount,
+           a.settle_order_num,
+           a.merchant_name,
+           a.add_user,
+           UNIX_TIMESTAMP(CURRENT_TIMESTAMP(3)),
+           a.parent_code,
+           a.parent_name,
+           IFNULL(b.settleUser, 0) AS settleUsers
+    FROM (SELECT Concat(t.merchant_code, t.week) id,
+                 t.merchant_code,
+                 t.week                          time,
+                 SUM(t.profit)                   profit,
+                 max(t.register_total_user_sum)  register_total_user_sum,
+                 ifnull(SUM(t.return_amount) / IF(SUM(t.bet_amount) = '0', NULL, SUM(t.bet_amount)),
+                        0)          AS           return_rate,
+                 SUM(t.return_amount)            return_amount,
+                 MIN(t.merchant_level)           merchant_level,
+                 SUM(t.bet_amount)               bet_amount,
+                 SUM(t.order_sum)                order_sum,
+                 SUM(t.first_bet_user_sum)       first_bet_user_sum,
+                 SUM(t.settle_profit)            settle_profit,
+                 SUM(t.settle_return)            settle_return,
+                 ifnull(SUM(t.settle_return) / IF(SUM(t.settle_bet_amount) = '0', NULL, SUM(t.settle_bet_amount)),
+                        0)          AS           settle_return_rate,
+                 SUM(t.settle_bet_amount)        settle_bet_amount,
+                 SUM(t.settle_order_num)         settle_order_num,
+                 MIN(t.merchant_name)            merchant_name,
+                 SUM(t.add_user)                 add_user,
+                 max(t.parent_code) as           parent_code,
+                 max(t.parent_name) as           parent_name
+          FROM (SELECT *,
+                       DATE_FORMAT(date_add(execute_date, INTERVAL -1 day), '%Y%U') AS 'week'
+                FROM r_merchant_order_day
+                WHERE time >=
+                      DATE_FORMAT(date_sub(execute_date, INTERVAL WEEKDAY(execute_date) - 0 DAY), '%Y%m%d')
+                  AND time <=
+                      DATE_FORMAT(date_sub(execute_date, INTERVAL WEEKDAY(execute_date) - 6 DAY), '%Y%m%d')) t
+          GROUP BY t.merchant_code, t.week) a
+             LEFT JOIN (SELECT merchant_code,
+                               time,
+                               COUNT(CASE WHEN bet_amount > 0 THEN user_id END)          AS betUser,
+                               COUNT(CASE WHEN settle_order_amount > 0 THEN user_id END) AS settleUser
+                        FROM r_user_order_week
+                        WHERE time = DATE_FORMAT(execute_date, '%Y%U')
+                        GROUP BY merchant_code, time) b ON a.merchant_code = b.merchant_code AND a.time = b.time;
+
+    SET end_time = get_cur_ymdhms();
+
+    SET exce_msg = CONCAT(execute_date, " p_r_merchant_order_week success!");
+
+    CALL p_add_task_event_log(task_type, start_time, end_time, result, exce_msg);
+END//
+DELIMITER ;

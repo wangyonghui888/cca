@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 用户表(t_user) -->
+<mapper namespace="com.oubao.mapper.TUserMapper">
+    <!-- 结果映射 -->
+    <resultMap id="tUserMap" type="com.oubao.po.UserPO">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="disabled" property="disabled" jdbcType="VARCHAR"/>
+        <result column="username" property="username" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="currency_code" property="currencyCode" jdbcType="VARCHAR"/>
+        <result column="real_name" property="realName" jdbcType="VARCHAR"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="id_card" property="idCard" jdbcType="VARCHAR"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="user_level" property="userLevel" jdbcType="INTEGER"/>
+        <result column="ip_address" property="ipAddress" jdbcType="INTEGER"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="create_user" property="createUser" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="BIGINT"/>
+        <result column="modify_user" property="modifyUser" jdbcType="VARCHAR"/>
+        <result column="modify_time" property="modifyTime" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <!-- 表所有字段 -->
+    <sql id="allColumns">
+        id, user_id, disabled, username, password, real_name,currency_code,
+        phone, id_card, email, remark, create_user, create_time,
+        modify_user, modify_time
+    </sql>
+
+    <!-- 根据条件查询数据 -->
+    <select id="findTUserByCondition" resultMap="tUserMap">
+        SELECT
+        <include refid="allColumns"/>
+        FROM t_user WHERE 1 = 1
+        <if test="userId != null">
+            AND user_id = #{userId}
+        </if>
+        AND disabled = 1
+    </select>
+    <!-- 根据条件查询数据  userId,username email,phone四个中只查询其中一个条件-->
+    <select id="getUser" resultMap="tUserMap">
+        SELECT
+        <include refid="allColumns"/>
+        FROM t_user
+        where
+            1=1
+            <choose>
+                <when test="userId != null">
+                    AND user_id = #{userId}
+                </when>
+                <when test="userId == null and username != null and username !=''">
+                    AND username = #{username}
+                </when>
+                <otherwise>
+                    <choose>
+                        <when test="email != null and email !=''">
+                            AND email = #{email}
+                        </when>
+                        <otherwise>
+                            <if test="phone != null and phone !=''">
+                                AND phone = #{phone}
+                            </if>
+                        </otherwise>
+                    </choose>
+                </otherwise>
+            </choose>
+            <if test="merchantCode != null">
+              and merchant_code = #{merchantCode}
+            </if>
+    </select>
+    <!-- 根据条件查询数据  userId,username email,phone四个中只查询其中一个条件-->
+    <select id="getUserVoByUserIdOrUsernameOrPhoneOrEmail" resultMap="tUserMap">
+        SELECT
+        <include refid="allColumns"/>
+        FROM t_user
+        where
+            1=1
+            <choose>
+                <when test="userId != null">
+                    AND user_id = #{userId}
+                </when>
+                <when test="userId == null and username != null and username !=''">
+                    AND username = #{username}
+                </when>
+                <otherwise>
+                    <choose>
+                        <when test="email != null and email !=''">
+                            AND email = #{email}
+                        </when>
+                        <otherwise>
+                            <if test="phone != null and phone !=''">
+                                AND phone = #{phone}
+                            </if>
+                        </otherwise>
+                    </choose>
+                </otherwise>
+            </choose>
+            and password = #{password}
+            <if test="merchantCode != null">
+              and merchant_code = #{merchantCode}
+            </if>
+    </select>
+
+
+    <!-- 插入数据 -->
+    <insert id="insertTUser" parameterType="com.oubao.po.UserPO">
+        INSERT INTO t_user (
+        `user_id`,
+        <if test="disabled != null">disabled,</if>
+        `username`,
+        `password`,
+        `real_name`,
+        `phone`,
+        `ip_address`,
+        <if test="idCard != null">`id_card`,</if>
+        `email`,
+        `currency_code`,
+        <if test="userLevel != null">`user_level`,</if>
+        `remark`,
+        `create_user`,
+        `create_time`,
+        `merchant_code`
+        )
+        VALUES (
+        #{userId},
+        <if test="disabled != null">#{disabled},</if>
+        #{username},
+        #{password},
+        #{realName},
+        #{phone},
+        #{ipAddress},
+        <if test="idCard != null">#{idCard},</if>
+        #{email},
+        #{currencyCode},
+        <if test="userLevel != null">#{userLevel},</if>
+        #{remark},
+        #{createUser},
+        #{createTime},
+        #{merchantCode}
+        )
+    </insert>
+
+    <!-- 修改数据 -->
+    <update id="updateTUser" parameterType="com.oubao.po.UserPO">
+        UPDATE t_user SET
+        disabled = #{disabled},
+        username = #{username},
+        password = #{password},
+        real_name = #{realName},
+        phone = #{phone},
+        id_card = #{idCard},
+        email = #{email},
+        remark = #{remark},
+        modify_user = #{modifyUser},
+        modify_time = #{modifyTime}
+        WHERE
+        <choose>
+            <when test="id !=null">id = #{id}</when>
+            <otherwise>user_id = #{userId}</otherwise>
+        </choose>
+    </update>
+
+    <!-- 根据主键批量删除数据 -->
+    <delete id="deleteTUserByIds" parameterType="list">
+        update t_user
+        set disabled= 1
+        WHERE id IN
+        <foreach collection="list" index="index" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="countUserByCondition"
+            parameterType="com.oubao.vo.UserOperationVo"
+            resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM (
+        SELECT
+        u.user_id
+        FROM
+        t_user u
+        LEFT JOIN
+        t_order_detail o ON u.user_id = o.uid
+        <where>
+            <if test="uid != null">
+                u.user_id = #{uid}
+            </if>
+            <if test="userLevel != null">
+                AND u.user_level = #{userLevel}
+            </if>
+            <if test="startTime != null">
+                AND u.create_time <![CDATA[ >= ]]> #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND u.create_time <![CDATA[ < ]]> #{endTime}
+            </if>
+            <if test="disabled != null">
+                AND u.disabled = #{disabled}
+            </if>
+        </where>
+        GROUP BY u.user_id
+        <if test="betAmountMin != null">
+            HAVING SUM(o.bet_amount) <![CDATA[ >= ]]> #{betAmountMin}
+        </if>
+        <if test="betAmountMax != null">
+            AND SUM(o.bet_amount) <![CDATA[ < ]]> #{betAmountMax}
+        </if>
+        ) a
+    </select>
+
+    <select id="countOrderSize" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM t_order_detail o
+        WHERE o.uid = #{uid}
+    </select>
+
+    <select id="countAccountChangeHistorySize"
+            resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM t_account_change_history l
+        WHERE l.uid = #{uid}
+    </select>
+
+    <insert id="insertBssTUser" parameterType="com.oubao.po.UserPO">
+        INSERT INTO tybss_merchant_common.t_user (
+        `uid`,
+        <if test="disabled != null">`disabled`,</if>
+        `username`,
+        `password`,
+        `real_name`,
+        `ip_address`,
+        <if test="idCard != null">`id_card`,</if>
+        `currency_code`,
+        <if test="userLevel != null">`user_level`,</if>
+        `remark`,
+        `create_user`,
+        `create_time`,
+        `modify_time`,
+        `merchant_code`,
+        `user_bet_prefer`,
+        `language_name`
+        )
+        VALUES (
+        #{userId},
+        <if test="disabled != null">#{disabled},</if>
+        #{username},
+        #{password},
+        #{realName},
+        #{ipAddress},
+        <if test="idCard != null">#{idCard},</if>
+        #{currencyCode},
+        <if test="userLevel != null">#{userLevel},</if>
+        #{remark},
+        #{createUser},
+        #{createTime},
+        #{modifyTime},
+        #{merchantCode},
+        #{userBetPrefer},
+        #{languageName}
+        )
+    </insert>
+
+    <select id="getBssUserByUserName" resultType="com.oubao.po.UserPO">
+        select u.uid                        userId,
+               u.username          as       username,
+               u.merchant_code              merchantCode,
+               u.currency_code              currencyCode,
+               u.create_time                createTime,
+               u.user_level                 userLevel,
+               u.user_bet_prefer            userBetPrefer,
+               u.user_market_prefer         userMarketPrefer,
+               u.language_name              languageName,
+               u.special_betting_limit_type specialBettingLimitType,
+               u.vip_level                  vipLevel,
+               mc.tag_market_level          marketLevel,
+               u.max_bet                    maxBet,
+               u.agent_id                   agentId,
+               u.risk_bet_percent  as       riskBetPercent,
+               u.finance_tag       as       financeTag,
+               u.settle_in_advance as       settleInAdvance,
+               m.domain_group_code          domainGroupCode,
+               m.open_esport                openEsport,
+               m.open_vr_sport              openVrSport,
+               m.open_video                 openVideo
+        from tybss_merchant_common.t_user u
+                 left join tybss_merchant_common.t_merchant m on m.merchant_code = u.merchant_code
+                 left join tybss_merchant_common.t_merchant_config mc on mc.merchant_code = u.merchant_code
+        where u.merchant_code = #{merchantCode}
+          and u.username = #{userName}
+    </select>
+</mapper>

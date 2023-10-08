@@ -1,0 +1,25 @@
+select `id`                 as id,
+       `match_id`           as matchId,
+       `play_id`            as playId,
+       `market_id`          as marketId,
+       `match_info`         as matchInfo,
+       `play_name`          as playName,
+       `market_value`       as marketValue,
+       `market_type`        as merketType,
+       `bet_amount`         as betAmount,
+       `order_amount_total` as orderAmountTotal,
+       `valid_bet_amount`   as validBetAmount,
+       `settle_amount`      as settleAmount,
+       `profit`             as profit,
+       `profit_rate`        as profitRate,
+       `user_amount`        as userAmount,
+       `order_amount`       as orderAmount,
+       merchant_code        as merchantCode,
+       merchant_name        as merchantName,
+        begin_time    as beginTime,
+       tournament_level as tournamentLevel,
+        match_status  as matchStatus,
+       updated_time         AS updatedTime
+from tybss_report.r_merchant_market_bet_info
+WHERE (updated_time >= :sql_last_value AND updated_time < UNIX_TIMESTAMP(now()))
+ORDER BY updated_time ASC;

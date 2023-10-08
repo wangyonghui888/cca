@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.backup.mapper.BackupTAccountChangeHistoryMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="recordMap" type="com.panda.sport.merchant.common.po.bss.AccountChangeHistoryPO">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="uid" property="uid" jdbcType="BIGINT"/>
+        <result column="change_type" property="changeType" jdbcType="INTEGER"/>
+        <result column="biz_type" property="bizType" jdbcType="INTEGER"/>
+        <result column="current_balance" property="currentBalance" jdbcType="BIGINT"/>
+        <result column="before_transfer" property="beforeTransfer" jdbcType="BIGINT"/>
+        <result column="after_transfer" property="afterTransfer" jdbcType="BIGINT"/>
+        <result column="change_amount" property="changeAmount" jdbcType="BIGINT"/>
+        <result column="order_no" property="orderNo" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="BIGINT"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="modify_time" property="modifyTime" jdbcType="BIGINT"/>
+        <result column="ip_address" property="ipAddress" jdbcType="VARCHAR"/>
+        <result column="currency_code" property="currencyCode" jdbcType="VARCHAR"/>
+        <result column="modify_user" property="modifyUser" jdbcType="VARCHAR"/>
+    </resultMap>
+    
+    <!-- 表所有字段 -->
+    <sql id="allColumns">
+        s.id,
+        s.uid,
+        s.change_type,
+        (select rr.country_cn from t_currency_rate rr where rr.currency_code = u.currency_code) as currency_code,
+        s.current_balance,
+        s.biz_type,
+        u.ip_address,
+        s.change_amount,
+        s.before_transfer,
+        s.after_transfer,
+        s.order_no,
+        s.modify_user,
+        s.create_time,
+        s.modify_time,
+        s.remark
+    </sql>
+
+    <select id="countChangeHistoryList" resultType="int">
+        SELECT count(s.id)
+        FROM
+        t_account_change_history s
+        LEFT JOIN t_user u on s.uid = u.uid
+        LEFT JOIN t_merchant m ON m.merchant_code = u.merchant_code
+        <where>
+            <if test="uid != null">
+                and  s.uid =#{uid}
+            </if>
+            <if test="startTimeL != null">
+                AND s.create_time <![CDATA[ >= ]]> #{startTimeL}
+            </if>
+            <if test="endTimeL != null">
+                AND s.create_time <![CDATA[ < ]]> #{endTimeL}
+            </if>
+            <if test="orderNo != null">
+                AND s.order_no = #{orderNo}
+            </if>
+            <if test="bizStatus != null  and bizStatus">
+                AND s.after_transfer <![CDATA[ < ]]>  0
+            </if>
+            <if test="bizTypeList != null">
+                AND s.biz_type in
+                <foreach item='code' index='index' collection='bizTypeList' open='(' separator=',' close=')'>
+                    #{code}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="queryChangeHistoryList" resultMap="recordMap">
+        SELECT <include refid="allColumns"></include>
+        FROM
+        t_account_change_history s
+        LEFT JOIN t_user u on s.uid = u.uid
+        LEFT JOIN t_merchant m ON m.merchant_code = u.merchant_code
+        <where>
+            <if test="uid != null">
+                and  s.uid =#{uid}
+            </if>
+            <if test="startTimeL != null">
+                AND s.create_time <![CDATA[ >= ]]> #{startTimeL}
+            </if>
+            <if test="endTimeL != null">
+                AND s.create_time <![CDATA[ < ]]> #{endTimeL}
+            </if>
+            <if test="orderNo != null">
+                AND s.order_no like CONCAT('%',#{orderNo},'%')
+            </if>
+            <if test="bizStatus != null  and bizStatus">
+                AND s.after_transfer <![CDATA[ < ]]>  0
+            </if>
+            <if test="bizTypeList != null">
+                AND s.biz_type in
+                <foreach item='code' index='index' collection='bizTypeList' open='(' separator=',' close=')'>
+                    #{code}
+                </foreach>
+            </if>
+        </where>
+        order by s.create_time desc
+    </select>
+
+    <select id="queryChangeHistoryListNew" parameterType="com.panda.sport.merchant.common.vo.UserAccountFindVO"
+            resultType="com.panda.sport.merchant.common.vo.AccountChangeHistoryFindVO">
+        SELECT t.id                      as id,
+               t.uid                     as uid,
+               u.username                as username,
+               u.fake_name               as fakeName,
+               u.ip_address              as ipAddress,
+               (select rr.country_cn from t_currency_rate rr where rr.currency_code = u.currency_code) as currencyCode,
+               m.merchant_code           as merchantCode,
+               m.merchant_name           as merchantName,
+               t.current_balance         as currentBalance,
+               (t.before_transfer / 100) as beforeTransfer,
+               (t.after_transfer / 100)  as afterTransfer,
+               (t.change_amount / 100)   as changeAmount,
+               t.change_type             as changeType,
+               t.biz_type                as bizType,
+               t.remark                  as remark,
+               t.order_no                as orderNo,
+               t.create_time             as createTime,
+               t.modify_user             as modifyUser,
+               t.modify_time             as modifyTime,
+               ''                        as transferId
+        FROM t_account_change_history t
+                 LEFT JOIN t_user u on t.uid = u.uid
+                 LEFT JOIN t_merchant m ON m.merchant_code = u.merchant_code
+        <include refid="queryParam"/>
+        <if test="sort == 'desc' and orderTimes == 1 ">
+            ORDER BY t.order_no,t.create_time desc
+        </if>
+        <if test="sort == 'asc' and orderTimes == 1 ">
+            ORDER BY t.order_no,t.create_time asc
+        </if>
+        <if test="sort == 'desc' and orderTimes == 0 ">
+            ORDER BY t.create_time desc
+        </if>
+        <if test="sort == 'asc' and orderTimes == 0 ">
+            ORDER BY t.create_time asc
+        </if>
+        LIMIT #{start}, #{pageSize}
+    </select>
+
+    <select id="queryChangeHistoryListNewExportList"
+            parameterType="com.panda.sport.merchant.common.vo.UserAccountFindVO" resultType="java.util.Map">
+        SELECT t.id as id,t.uid as uid,u.username as username,u.fake_name as fakeName,m.merchant_code as merchantCode,m.merchant_name as merchantName,
+        t.current_balance as currentBalance,truncate((t.before_transfer/100),2) as beforeTransfer,truncate((t.after_transfer/100),2) as afterTransfer,truncate((t.change_amount/100),2) as changeAmount,
+        t.change_type as changeType,t.biz_type as bizType,t.remark as remark,t.order_no as orderNo,t.create_time as createTime,
+        t.modify_time             as modifyTime,
+        t.modify_user             as modifyUser,
+        u.ip_address              as ipAddress,
+        '' as transferId
+        FROM t_account_change_history t
+        LEFT JOIN t_user u on t.uid = u.uid
+        LEFT JOIN t_merchant m ON m.merchant_code = u.merchant_code
+        <include refid="queryParam"/>
+        <if test="sort == 'desc' and orderTimes == 1 ">
+            ORDER BY t.order_no,t.create_time desc
+        </if>
+        <if test="sort == 'asc' and orderTimes == 1 ">
+            ORDER BY t.order_no,t.create_time asc
+        </if>
+        <if test="sort == 'desc' and orderTimes == 0 ">
+            ORDER BY t.create_time desc
+        </if>
+        <if test="sort == 'asc' and orderTimes == 0 ">
+            ORDER BY t.create_time asc
+        </if>
+        LIMIT #{start}, #{pageSize}
+    </select>
+
+    <select id="queryChangeHistoryListNewExportListCount"
+            parameterType="com.panda.sport.merchant.common.vo.UserAccountFindVO" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM t_account_change_history t
+        LEFT JOIN t_user u on t.uid = u.uid
+        LEFT JOIN t_merchant m ON m.merchant_code = u.merchant_code
+        <include refid="queryParam"/>
+    </select>
+
+    <select id="countChangeHistoryListNew" resultType="java.lang.Integer"
+            parameterType="com.panda.sport.merchant.common.vo.UserAccountFindVO">
+        SELECT count(1)
+        FROM t_account_change_history t
+        LEFT JOIN t_user u on t.uid = u.uid
+        LEFT JOIN t_merchant m ON m.merchant_code = u.merchant_code
+        <include refid="queryParam"/>
+    </select>
+
+    <sql id="queryParam">
+        <where>
+            <if test="startTime != null">
+                AND t.create_time  BETWEEN #{startTime} and #{endTime}
+            </if>
+            <if test="bizTypeList != null">
+                AND t.biz_type IN
+                <foreach collection="bizTypeList" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="merchantCodes != null">
+                AND u.merchant_code IN
+                <foreach collection="merchantCodes" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="username != null">
+                AND
+                u.username =#{username}
+            </if>
+            <if test="userId != null">
+                AND
+                 t.uid = #{userId}
+            </if>
+            <if test="userIdList != null and userIdList.size()>0">
+                AND t.uid IN
+                <foreach collection="userIdList" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="fakeName != null">
+                AND u.fake_name = #{fakeName}
+            </if>
+            <if test="transferId != null">
+                AND
+                  t.order_no = #{transferId}
+            </if>
+            <if test="amountTag != null and amountTag == 0 ">
+                AND t.after_transfer <![CDATA[ < ]]> 0
+            </if>
+            <if test="orderTimes != null and orderTimes == 1 ">
+                AND t.order_no in (select h.order_no from t_account_change_history h where h.biz_type = 9)
+            </if>
+        </where>
+    </sql>
+    
+    <select id="countChangeHistory" resultType="int">
+        SELECT count(*)
+        FROM `t_account_change_history` a
+                 left join t_user u on a.uid = u.uid
+        where a.create_time <![CDATA[ >= ]]> #{startTime}
+          and a.create_time <![CDATA[ <= ]]> #{endTime}
+          and u.merchant_code = #{merchantCode}
+    </select>
+    
+    <select id="queryAccountChangeList" resultType="java.util.Map">
+        SELECT t.id                                   as id,
+               t.uid                                  as uid,
+               u.username                             as username,
+               u.merchant_code                        as merchantCode,
+               t.current_balance                      as currentBalance,
+               truncate((t.before_transfer / 100), 2) as beforeTransfer,
+               truncate((t.after_transfer / 100), 2)  as afterTransfer,
+               truncate((t.change_amount / 100), 2)   as changeAmount,
+               t.change_type                          as changeType,
+               t.biz_type                             as bizType,
+               t.remark                               as remark,
+               t.order_no                             as orderNo,
+               t.create_time                          as createTime
+        FROM `t_account_change_history` t
+                 left join t_user u on t.uid = u.uid
+        where t.create_time <![CDATA[ >= ]]> #{startTime}
+          and t.create_time <![CDATA[ <= ]]> #{endTime}
+          and u.merchant_code = #{merchantCode}
+        order by t.id
+        limit #{start},#{size}
+    </select>
+</mapper>

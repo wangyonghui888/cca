@@ -1,0 +1,5 @@
+DELETE FROM `merchant`.`admin_menu` WHERE id in(31);
+INSERT INTO `merchant`.`admin_menu`(`id`, `name`, `pid`, `sort`, `path`, `icon`, `create_time`) VALUES (31, 'VIP注单下载', 10, 29, 'VIP_bet_download', '', '2021-12-11 14:58:19');
+
+INSERT INTO `merchant`.`admin_roles_menus`(`role_id`, `menu_id`)  SELECT id,31 FROM merchant.admin_role;
+COMMIT;

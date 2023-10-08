@@ -1,0 +1,60 @@
+DROP PROCEDURE IF EXISTS p_r_user_order_week;
+DELIMITER //
+CREATE PROCEDURE p_r_user_order_week(in str_date varchar(100))
+BEGIN
+
+    DECLARE task_type INT(2) DEFAULT 33;
+    DECLARE result_code CHAR(5) DEFAULT '0';
+    DECLARE start_time VARCHAR(30) DEFAULT get_cur_ymdhms();
+    DECLARE end_time VARCHAR(30);
+    DECLARE result INT(2) DEFAULT 1;
+    DECLARE exce_msg VARCHAR(512) DEFAULT 'p_r_user_order_week成功';
+    DECLARE msg TEXT;
+    DECLARE execute_date date;
+/*异常处理*/
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN
+        GET DIAGNOSTICS CONDITION 1 result_code = RETURNED_SQLSTATE, msg = MESSAGE_TEXT;
+        SET end_time = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s');
+        SET exce_msg = CONCAT("错误码：", result_code, " p_r_user_order_week错误信息：", msg);
+        SET result = 2;
+        CALL p_add_task_event_log(task_type, start_time, end_time, result, exce_msg);
+    END;
+    SET execute_date = str_to_date(str_date, '%Y-%m-%d');
+
+    REPLACE INTO tybss_report.r_user_order_week
+    SELECT Concat(t.user_id, t.WEEK)                                                       id,
+           t.user_id,
+           min(t.user_name),
+           min(t.merchant_code),
+           min(t.merchant_name),
+           t.WEEK                                                                          time,
+           SUM(t.bet_num)                                                                  bet_num,
+           SUM(t.bet_amount)                                                               bet_amount,
+           SUM(t.profit)                                                                   profit,
+           ifnull(SUM(t.profit) / IF(SUM(t.bet_amount) = '0', NULL, SUM(t.bet_amount)), 0) profit_rate,
+           sum(t.settle_order_num)                                                         settle_order_num,
+           SUM(t.settle_order_amount)                                                      settle_order_amount,
+           SUM(t.settle_profit)                                                            settle_profit,
+           ifnull(SUM(t.settle_profit) / IF(SUM(t.settle_order_amount) = '0', NULL, SUM(t.settle_order_amount)),
+                  0)                                                                       settle_profit_rate,
+           SUM(t.settle_return)                                                            settle_return,
+           COUNT(CASE WHEN t.bet_amount > 0 THEN t.user_id END) AS                         active_days,
+           UNIX_TIMESTAMP(CURRENT_TIMESTAMP(3)),
+           max(t.parent_code)                                   as                         parent_code,
+           max(t.parent_name)                                   as                         parent_name
+    FROM (SELECT *,
+                 DATE_FORMAT(date_add(execute_date, INTERVAL -1 day), '%Y%U') AS 'week'
+          FROM r_user_order_day
+          WHERE time >= DATE_FORMAT(date_sub(execute_date, INTERVAL WEEKDAY(execute_date) - 0 DAY), '%Y%m%d')
+            AND time <= DATE_FORMAT(date_sub(execute_date, INTERVAL WEEKDAY(execute_date) - 6 DAY), '%Y%m%d')) t
+    GROUP BY t.user_id, t.WEEK;
+
+/*执行成功，添加日志*/
+    SET end_time = get_cur_ymdhms();
+
+    SET exce_msg = CONCAT(execute_date, " p_r_user_order_week success!");
+
+    CALL p_add_task_event_log(task_type, start_time, end_time, result, exce_msg);
+
+END//
+DELIMITER ;

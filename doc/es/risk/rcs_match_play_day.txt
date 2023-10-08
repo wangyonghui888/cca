@@ -1,0 +1,135 @@
+put http://lan-es75.sportxxxr1pub.com/rcs_match_play_day
+
+{
+  "mappings": {
+    "properties": {
+      "userNum": {
+        "type": "long"
+      },
+      "betProportion": {
+        "type": "double"
+      },
+      "profitAmount": {
+        "type": "double"
+      },
+      "matchType": {
+        "type": "long"
+      },
+      "averageAmount": {
+        "type": "double"
+      },
+      "matchInfo": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "playName": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "settleAmount": {
+        "type": "double"
+      },
+      "mpdId": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+
+
+      "matchManageId":{
+        "type": "long"
+      },
+      "tournamentName":{
+        "type": "text",
+          "fields": {
+            "keyword": {
+              "ignore_above": 256,
+              "type": "keyword"
+            }
+         }
+      },
+      "preDataSourse": {
+        "type": "text",
+          "fields": {
+            "keyword": {
+              "ignore_above": 256,
+              "type": "keyword"
+            }
+         }
+      },
+      "liveDataSourse": {
+        "type": "text",
+          "fields": {
+            "keyword": {
+              "ignore_above": 256,
+              "type": "keyword"
+            }
+         }
+      },
+
+
+      "orderNum": {
+        "type": "long"
+      },
+      "personOrderNum": {
+        "type": "double"
+      },
+      "playId": {
+        "type": "long"
+      },
+      "betAmount": {
+        "type": "double"
+      },
+      "sportId": {
+        "type": "long"
+      },
+      "tournamentId": {
+        "type": "long"
+      },
+      "optionOneAmount": {
+        "type": "double"
+      },
+      "optionTwoNum": {
+        "type": "long"
+      },
+      "beginTime": {
+        "type": "long"
+      },
+      "totalBetAmount": {
+        "type": "double",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "optionOneNum": {
+        "type": "long"
+      },
+      "optionTwoAmount": {
+        "type": "double"
+      },
+      "matchId": {
+        "type": "long"
+      },
+      "personBetAmount": {
+        "type": "double"
+      }
+    }
+  }
+}

@@ -1,0 +1,24 @@
+
+# 拆分线路商数据
+update merchant.t_line_carrier set tab = 'ty' WHERE id = 1;
+update merchant.t_line_carrier set tab = 'dj' WHERE id > 1 ;
+# 补充CP线路商数据,从DJ复制来
+INSERT INTO `merchant`.`t_line_carrier`
+    ( `id`, `line_carrier_code`, `line_carrier_name`, `line_carrier_status`, `tab`, `create_by`, `create_time`, `update_by`, `update_time` )
+SELECT
+        id + 20, `line_carrier_code`, `line_carrier_name`, `line_carrier_status`, 'cp', `create_by`, `create_time`, `update_by`, `update_time`
+FROM
+    `merchant`.`t_line_carrier`
+WHERE
+    `merchant`.`t_line_carrier`.tab = 'dj';
+# 修复CP的域名线路商数据
+UPDATE `merchant`.t_domain SET line_carrier_id = line_carrier_id+20
+WHERE tab = 'cp';
+
+
+UPDATE `merchant`.`t_domain_group`
+SET `h5_threshold` = 1,
+    `pc_threshold` = 1,
+    `api_threshold` = 1,
+    `img_threshold` = 1;
+

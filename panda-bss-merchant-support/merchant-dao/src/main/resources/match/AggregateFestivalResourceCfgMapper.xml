@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.match.mapper.AggregateFestivalResourceCfgMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.panda.sport.merchant.common.po.bss.AggregateFestivalResourceCfg">
+        <id column="id" property="id"/>
+        <result column="platform" property="platform"/>
+        <result column="language" property="language"/>
+        <result column="img_1" property="img1"/>
+        <result column="img_1_type" property="img1Type"/>
+        <result column="img_1_url" property="img1Url"/>
+        <result column="img_2" property="img2"/>
+        <result column="img_2_type" property="img2Type"/>
+        <result column="img_2_url" property="img2Url"/>
+        <result column="img_3" property="img3"/>
+        <result column="img_3_type" property="img3Type"/>
+        <result column="img_3_url" property="img3Url"/>
+        <result column="img_4" property="img4"/>
+        <result column="img_4_type" property="img4Type"/>
+        <result column="img_4_url" property="img4Url"/>
+        <result column="img_5" property="img5"/>
+        <result column="img_5_type" property="img5Type"/>
+        <result column="img_5_url" property="img5Url"/>
+        <result column="img_6" property="img6"/>
+        <result column="img_6_type" property="img6Type"/>
+        <result column="img_6_url" property="img6Url"/>
+        <result column="img_7" property="img7"/>
+        <result column="img_7_type" property="img7Type"/>
+        <result column="img_7_url" property="img7Url"/>
+        <result column="start_time" property="startTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="state" property="state"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        platform,
+        language,
+        img_1,
+        img_1_type,
+        img_1_url,
+        img_2,
+        img_2_type,
+        img_2_url,
+        img_3,
+        img_3_type,
+        img_3_url,
+        img_4,
+        img_4_type,
+        img_4_url,
+        img_5,
+        img_5_type,
+        img_5_url,
+        img_6,
+        img_6_type,
+        img_6_url,
+        img_7,
+        img_7_type,
+        img_7_url,
+        start_time,
+        end_time,
+        state,
+        create_time
+    </sql>
+</mapper>

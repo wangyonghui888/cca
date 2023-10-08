@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.center.mapper.trader.MemberMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.panda.center.entity.Member">
+        <id column="uid" property="uid" />
+        <result column="parent_merchant_id" property="parentMerchantId" />
+        <result column="parent_merchant_account" property="parentMerchantAccount" />
+        <result column="merchant_id" property="merchantId" />
+        <result column="merchant_account" property="merchantAccount" />
+        <result column="account" property="account" />
+        <result column="password" property="password" />
+        <result column="top_merchant_id" property="topMerchantId" />
+        <result column="top_merchant_account" property="topMerchantAccount" />
+        <result column="sort_level" property="sortLevel" />
+        <result column="deph" property="deph" />
+        <result column="register_time" property="registerTime" />
+        <result column="last_login_time" property="lastLoginTime" />
+        <result column="last_login_ip" property="lastLoginIp" />
+        <result column="status" property="status" />
+        <result column="tester" property="tester" />
+        <result column="limit_status" property="limitStatus" />
+        <result column="online_status" property="onlineStatus" />
+        <result column="odd_update_type" property="oddUpdateType" />
+        <result column="agent_id" property="agentId" />
+        <result column="agent_account" property="agentAccount" />
+        <result column="token" property="token" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        uid, parent_merchant_id, parent_merchant_account, merchant_id, merchant_account, account, password, top_merchant_id, top_merchant_account, sort_level, deph, register_time, last_login_time, last_login_ip, status, tester, limit_status, online_status, odd_update_type, agent_id, agent_account, token
+    </sql>
+
+</mapper>

@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.cp.mapper.TCpMerchantMapper">
+
+    <resultMap id="BaseResultMap" type="com.panda.sport.merchant.common.po.cp.TMerchant" >
+        <result column="id" property="id" />
+        <result column="merchant_account" property="merchantAccount" />
+        <result column="merchant_name" property="merchantName" />
+        <result column="status" property="status" />
+        <result column="amount_mode" property="amountMode" />
+        <result column="double_mode" property="doubleMode" />
+        <result column="normal_mode" property="normalMode" />
+        <result column="features_mode" property="featuresMode" />
+        <result column="phone" property="phone" />
+        <result column="skype" property="skype" />
+        <result column="telegram" property="telegram" />
+        <result column="group_sort" property="groupSort" />
+        <result column="remark" property="remark" />
+        <result column="email" property="email" />
+        <result column="updated_by" property="updatedBy" />
+        <result column="updated_at" property="updatedAt" />
+        <result column="created_by" property="createdBy" />
+        <result column="created_at" property="createdAt" />
+        <result column="settlement_type" property="settlementType" />
+        <result column="settlement_id" property="settlementId" />
+        <result column="settlement_name" property="settlementName" />
+        <result column="transfer_type" property="transferType" />
+        <result column="transfer_allow" property="transferAllow" />
+        <result column="scheme_switch_at" property="schemeSwitchAt" />
+        <result column="parent_id" property="parentId" />
+        <result column="parent_tree" property="parentTree" />
+        <result column="top_id" property="topId" />
+        <result column="level" property="level" />
+        <result column="has_sub" property="hasSub" />
+        <result column="parent_merchant_account" property="parentMerchantAccount" />
+        <result column="secret_key" property="secretKey" />
+        <result column="merchant_type" property="merchantType" />
+        <result column="merchant_phone" property="merchantPhone" />
+        <result column="merchant_email" property="merchantEmail" />
+        <result column="merchant_telegram" property="merchantTelegram" />
+        <result column="merchant_skype" property="merchantSkype" />
+        <result column="merchant_remark" property="merchantRemark" />
+        <result column="money_address" property="moneyAddress" />
+        <result column="agent_mode" property="agentMode" />
+        <result column="brand" property="brand" />
+        <result column="cooperate" property="cooperate" />
+        <result column="childrens_num" property="childrensNum" />
+        <result column="childrens_limit" property="childrensLimit" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+                id,
+                merchant_account,
+                merchant_name,
+                status,
+                amount_mode,
+                double_mode,
+                normal_mode,
+                features_mode,
+                phone,
+                skype,
+                telegram,
+                group_sort,
+                remark,
+                email,
+                updated_by,
+                updated_at,
+                created_by,
+                created_at,
+                settlement_type,
+                settlement_id,
+                settlement_name,
+                transfer_type,
+                transfer_allow,
+                scheme_switch_at,
+                parent_id,
+                parent_tree,
+                top_id,
+                level,
+                has_sub,
+                parent_merchant_account,
+                secret_key,
+                merchant_type,
+                merchant_phone,
+                merchant_email,
+                merchant_telegram,
+                merchant_skype,
+                merchant_remark,
+                money_address,
+                agent_mode,
+                brand,
+                cooperate,
+                childrens_num,
+                childrens_limit
+    </sql>
+
+    <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id" parameterType="com.panda.sport.merchant.common.po.cp.TMerchant">
+        INSERT INTO t_merchant
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="null != merchantAccount and '' != merchantAccount">
+                merchant_account,
+            </if>
+            <if test="null != merchantName and '' != merchantName">
+                merchant_name,
+            </if>
+            <if test="null != status and '' != status">
+                status,
+            </if>
+            <if test="null != amountMode and '' != amountMode">
+                amount_mode,
+            </if>
+            <if test="null != doubleMode and '' != doubleMode">
+                double_mode,
+            </if>
+            <if test="null != normalMode and '' != normalMode">
+                normal_mode,
+            </if>
+            <if test="null != featuresMode and '' != featuresMode">
+                features_mode,
+            </if>
+            <if test="null != phone and '' != phone">
+                phone,
+            </if>
+            <if test="null != skype and '' != skype">
+                skype,
+            </if>
+            <if test="null != telegram and '' != telegram">
+                telegram,
+            </if>
+            <if test="null != groupSort and '' != groupSort">
+                group_sort,
+            </if>
+            <if test="null != remark and '' != remark">
+                remark,
+            </if>
+            <if test="null != email and '' != email">
+                email,
+            </if>
+            <if test="null != updatedBy and '' != updatedBy">
+                updated_by,
+            </if>
+            <if test="null != updatedAt and '' != updatedAt">
+                updated_at,
+            </if>
+            <if test="null != createdBy and '' != createdBy">
+                created_by,
+            </if>
+            <if test="null != createdAt and '' != createdAt">
+                created_at,
+            </if>
+            <if test="null != settlementType and '' != settlementType">
+                settlement_type,
+            </if>
+            <if test="null != settlementId and '' != settlementId">
+                settlement_id,
+            </if>
+            <if test="null != settlementName and '' != settlementName">
+                settlement_name,
+            </if>
+            <if test="null != transferType and '' != transferType">
+                transfer_type,
+            </if>
+            <if test="null != transferAllow and '' != transferAllow">
+                transfer_allow,
+            </if>
+            <if test="null != schemeSwitchAt and '' != schemeSwitchAt">
+                scheme_switch_at,
+            </if>
+            <if test="null != parentId and '' != parentId">
+                parent_id,
+            </if>
+            <if test="null != parentTree and '' != parentTree">
+                parent_tree,
+            </if>
+            <if test="null != topId and '' != topId">
+                top_id,
+            </if>
+            <if test="null != level and '' != level">
+                level,
+            </if>
+            <if test="null != hasSub and '' != hasSub">
+                has_sub,
+            </if>
+            <if test="null != parentMerchantAccount and '' != parentMerchantAccount">
+                parent_merchant_account,
+            </if>
+            <if test="null != secretKey and '' != secretKey">
+                secret_key,
+            </if>
+            <if test="null != merchantType and '' != merchantType">
+                merchant_type,
+            </if>
+            <if test="null != merchantPhone and '' != merchantPhone">
+                merchant_phone,
+            </if>
+            <if test="null != merchantEmail and '' != merchantEmail">
+                merchant_email,
+            </if>
+            <if test="null != merchantTelegram and '' != merchantTelegram">
+                merchant_telegram,
+            </if>
+            <if test="null != merchantSkype and '' != merchantSkype">
+                merchant_skype,
+            </if>
+            <if test="null != merchantRemark and '' != merchantRemark">
+                merchant_remark,
+            </if>
+            <if test="null != moneyAddress and '' != moneyAddress">
+                money_address,
+            </if>
+            <if test="null != agentMode and '' != agentMode">
+                agent_mode,
+            </if>
+            <if test="null != brand and '' != brand">
+                brand,
+            </if>
+            <if test="null != cooperate and '' != cooperate">
+                cooperate,
+            </if>
+            <if test="null != childrensNum and '' != childrensNum">
+                childrens_num,
+            </if>
+            <if test="null != childrensLimit and '' != childrensLimit">
+                childrens_limit
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="null != merchantAccount and '' != merchantAccount">
+                #{merchantAccount},
+            </if>
+            <if test="null != merchantName and '' != merchantName">
+                #{merchantName},
+            </if>
+            <if test="null != status and '' != status">
+                #{status},
+            </if>
+            <if test="null != amountMode and '' != amountMode">
+                #{amountMode},
+            </if>
+            <if test="null != doubleMode and '' != doubleMode">
+                #{doubleMode},
+            </if>
+            <if test="null != normalMode and '' != normalMode">
+                #{normalMode},
+            </if>
+            <if test="null != featuresMode and '' != featuresMode">
+                #{featuresMode},
+            </if>
+            <if test="null != phone and '' != phone">
+                #{phone},
+            </if>
+            <if test="null != skype and '' != skype">
+                #{skype},
+            </if>
+            <if test="null != telegram and '' != telegram">
+                #{telegram},
+            </if>
+            <if test="null != groupSort and '' != groupSort">
+                #{groupSort},
+            </if>
+            <if test="null != remark and '' != remark">
+                #{remark},
+            </if>
+            <if test="null != email and '' != email">
+                #{email},
+            </if>
+            <if test="null != updatedBy and '' != updatedBy">
+                #{updatedBy},
+            </if>
+            <if test="null != updatedAt and '' != updatedAt">
+                #{updatedAt},
+            </if>
+            <if test="null != createdBy and '' != createdBy">
+                #{createdBy},
+            </if>
+            <if test="null != createdAt and '' != createdAt">
+                #{createdAt},
+            </if>
+            <if test="null != settlementType and '' != settlementType">
+                #{settlementType},
+            </if>
+            <if test="null != settlementId and '' != settlementId">
+                #{settlementId},
+            </if>
+            <if test="null != settlementName and '' != settlementName">
+                #{settlementName},
+            </if>
+            <if test="null != transferType and '' != transferType">
+                #{transferType},
+            </if>
+            <if test="null != transferAllow and '' != transferAllow">
+                #{transferAllow},
+            </if>
+            <if test="null != schemeSwitchAt and '' != schemeSwitchAt">
+                #{schemeSwitchAt},
+            </if>
+            <if test="null != parentId and '' != parentId">
+                #{parentId},
+            </if>
+            <if test="null != parentTree and '' != parentTree">
+                #{parentTree},
+            </if>
+            <if test="null != topId and '' != topId">
+                #{topId},
+            </if>
+            <if test="null != level and '' != level">
+                #{level},
+            </if>
+            <if test="null != hasSub and '' != hasSub">
+                #{hasSub},
+            </if>
+            <if test="null != parentMerchantAccount and '' != parentMerchantAccount">
+                #{parentMerchantAccount},
+            </if>
+            <if test="null != secretKey and '' != secretKey">
+                #{secretKey},
+            </if>
+            <if test="null != merchantType and '' != merchantType">
+                #{merchantType},
+            </if>
+            <if test="null != merchantPhone and '' != merchantPhone">
+                #{merchantPhone},
+            </if>
+            <if test="null != merchantEmail and '' != merchantEmail">
+                #{merchantEmail},
+            </if>
+            <if test="null != merchantTelegram and '' != merchantTelegram">
+                #{merchantTelegram},
+            </if>
+            <if test="null != merchantSkype and '' != merchantSkype">
+                #{merchantSkype},
+            </if>
+            <if test="null != merchantRemark and '' != merchantRemark">
+                #{merchantRemark},
+            </if>
+            <if test="null != moneyAddress and '' != moneyAddress">
+                #{moneyAddress},
+            </if>
+            <if test="null != agentMode and '' != agentMode">
+                #{agentMode},
+            </if>
+            <if test="null != brand and '' != brand">
+                #{brand},
+            </if>
+            <if test="null != cooperate and '' != cooperate">
+                #{cooperate},
+            </if>
+            <if test="null != childrensNum and '' != childrensNum">
+                #{childrensNum},
+            </if>
+            <if test="null != childrensLimit and '' != childrensLimit">
+                #{childrensLimit}
+            </if>
+        </trim>
+    </insert>
+
+    <select id="getMerchantList" resultType="com.panda.sport.merchant.common.vo.ThirdMerchantVo">
+        select m.id, m.id as merchantCode, m.merchant_account as merchantName, m.created_at as createdAt
+        from t_merchant m where (m.id in (SELECT DISTINCT top_id FROM t_merchant))
+        order by m.created_at
+    </select>
+
+    <select id="getMerchantByCodes" resultType="com.panda.sport.merchant.common.vo.ThirdMerchantVo">
+        select m.id, m.id as merchantCode, m.merchant_account as merchantName, UNIX_TIMESTAMP(m.created_at) as creatTime
+        from t_merchant m
+        WHERE m.id IN
+        <foreach collection="merchantCodes" index="index" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <delete id="delete" >
+        DELETE FROM t_merchant
+        WHERE id = #{id}
+    </delete>
+
+    <update id="update" parameterType="com.panda.sport.merchant.common.po.cp.TMerchant">
+        UPDATE t_merchant
+        <set>
+            <if test="null != merchantAccount and '' != merchantAccount">merchant_account = #{merchantAccount},</if>
+            <if test="null != merchantName and '' != merchantName">merchant_name = #{merchantName},</if>
+            <if test="null != status and '' != status">status = #{status},</if>
+            <if test="null != amountMode and '' != amountMode">amount_mode = #{amountMode},</if>
+            <if test="null != doubleMode and '' != doubleMode">double_mode = #{doubleMode},</if>
+            <if test="null != normalMode and '' != normalMode">normal_mode = #{normalMode},</if>
+            <if test="null != featuresMode and '' != featuresMode">features_mode = #{featuresMode},</if>
+            <if test="null != phone and '' != phone">phone = #{phone},</if>
+            <if test="null != skype and '' != skype">skype = #{skype},</if>
+            <if test="null != telegram and '' != telegram">telegram = #{telegram},</if>
+            <if test="null != groupSort and '' != groupSort">group_sort = #{groupSort},</if>
+            <if test="null != remark and '' != remark">remark = #{remark},</if>
+            <if test="null != email and '' != email">email = #{email},</if>
+            <if test="null != updatedBy and '' != updatedBy">updated_by = #{updatedBy},</if>
+            <if test="null != updatedAt and '' != updatedAt">updated_at = #{updatedAt},</if>
+            <if test="null != createdBy and '' != createdBy">created_by = #{createdBy},</if>
+            <if test="null != createdAt and '' != createdAt">created_at = #{createdAt},</if>
+            <if test="null != settlementType and '' != settlementType">settlement_type = #{settlementType},</if>
+            <if test="null != settlementId and '' != settlementId">settlement_id = #{settlementId},</if>
+            <if test="null != settlementName and '' != settlementName">settlement_name = #{settlementName},</if>
+            <if test="null != transferType and '' != transferType">transfer_type = #{transferType},</if>
+            <if test="null != transferAllow and '' != transferAllow">transfer_allow = #{transferAllow},</if>
+            <if test="null != schemeSwitchAt and '' != schemeSwitchAt">scheme_switch_at = #{schemeSwitchAt},</if>
+            <if test="null != parentId and '' != parentId">parent_id = #{parentId},</if>
+            <if test="null != parentTree and '' != parentTree">parent_tree = #{parentTree},</if>
+            <if test="null != topId and '' != topId">top_id = #{topId},</if>
+            <if test="null != level and '' != level">level = #{level},</if>
+            <if test="null != hasSub and '' != hasSub">has_sub = #{hasSub},</if>
+            <if test="null != parentMerchantAccount and '' != parentMerchantAccount">parent_merchant_account = #{parentMerchantAccount},</if>
+            <if test="null != secretKey and '' != secretKey">secret_key = #{secretKey},</if>
+            <if test="null != merchantType and '' != merchantType">merchant_type = #{merchantType},</if>
+            <if test="null != merchantPhone and '' != merchantPhone">merchant_phone = #{merchantPhone},</if>
+            <if test="null != merchantEmail and '' != merchantEmail">merchant_email = #{merchantEmail},</if>
+            <if test="null != merchantTelegram and '' != merchantTelegram">merchant_telegram = #{merchantTelegram},</if>
+            <if test="null != merchantSkype and '' != merchantSkype">merchant_skype = #{merchantSkype},</if>
+            <if test="null != merchantRemark and '' != merchantRemark">merchant_remark = #{merchantRemark},</if>
+            <if test="null != moneyAddress and '' != moneyAddress">money_address = #{moneyAddress},</if>
+            <if test="null != agentMode and '' != agentMode">agent_mode = #{agentMode},</if>
+            <if test="null != brand and '' != brand">brand = #{brand},</if>
+            <if test="null != cooperate and '' != cooperate">cooperate = #{cooperate},</if>
+            <if test="null != childrensNum and '' != childrensNum">childrens_num = #{childrensNum},</if>
+            <if test="null != childrensLimit and '' != childrensLimit">childrens_limit = #{childrensLimit}</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+
+    <select id="load" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM t_merchant
+        WHERE id = #{id}
+    </select>
+
+    <select id="pageList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM t_merchant
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="pageListCount" resultType="java.lang.Integer">
+        SELECT count(1)
+        FROM t_merchant
+    </select>
+
+</mapper>

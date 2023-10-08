@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.bss.mapper.AcBonusMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.panda.sport.merchant.common.po.bss.AcBonusPO">
+        <id column="id" property="id"/>
+        <result column="uid" property="uid"/>
+        <result column="act_id" property="actId"/>
+        <result column="act_name" property="actName"/>
+        <result column="task_id" property="taskId"/>
+        <result column="task_name" property="taskName"/>
+        <result column="user_name" property="userName"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="ticket_num" property="ticketNum"/>
+        <result column="bonus_type" property="bonusType"/>
+        <result column="task_type" property="taskType"/>
+        <result column="remark" property="remark"/>
+        <result column="last_update" property="lastUpdate"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, uid, act_id, act_name, task_id, task_name, user_name, create_time, update_time, ticket_num, bonus_type, task_type, remark, last_update
+    </sql>
+
+    <insert id="upsertUserBonus">
+        INSERT INTO t_ac_bonus (uid, act_id, act_name, task_id, task_name,user_name, create_time, update_time, ticket_num,bonus_type, task_type,remark,last_update)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.uid},#{item.actId},#{item.actName},#{item.taskId},#{item.taskName},#{item.userName},UNIX_TIMESTAMP(CURRENT_TIMESTAMP(3)) * 1000,
+             UNIX_TIMESTAMP(CURRENT_TIMESTAMP(3)) * 1000,#{item.ticketNum},#{item.bonusType},#{item.taskType},#{item.remark},#{item.lastUpdate})
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+        update_time=UNIX_TIMESTAMP(CURRENT_TIMESTAMP(3)) * 1000, ticket_num=values(ticket_num), bonus_type=values(bonus_type),last_update=values(last_update)
+    </insert>
+
+    <select id="queryUserBonus" resultType="com.panda.sport.merchant.common.po.bss.AcBonusPO">
+        SELECT *
+        FROM t_ac_bonus t
+        WHERE t.uid = #{uids}
+            AND t.id in
+            <foreach item='code' index='index' collection='aids' open='(' separator=',' close=')'>
+                #{code}
+            </foreach>
+    </select>
+
+    <update id="clearTicketsOfTask">
+        update t_ac_bonus set ticket_num=0,bonus_type=2 where task_type=0
+        and update_time <![CDATA[ >= ]]> UNIX_TIMESTAMP(DATE_SUB(now(),INTERVAL 2 day))*1000
+        and update_time <![CDATA[ <= ]]> UNIX_TIMESTAMP(now())*1000
+    </update>
+
+    <select id="queryAllTaskConfig" resultType="Map">
+        select id,
+               act_id          "actId",
+               act_name        "actName",
+               task_name       "taskName",
+               ticket_num      "ticketNum",
+               condition_id    "conditionId",
+               task_condition  "taskCondition",
+               task_condition2 "taskCondition2",
+               task_condition3 "taskCondition3",
+               condition_match "conditionMatch",
+               create_time     "createTime"
+        from t_ac_task
+        where type = #{type}
+          and status = 1
+          and invalidation = 1
+    </select>
+
+    <insert id="insertBatchBonusLog" parameterType="List">
+
+        INSERT INTO t_ac_bonus_log
+        (
+            `uid`,
+            `task_id`,
+            `act_id`,
+            `act_name`,
+            `task_name`,
+            `ticket_num`,
+            `bonus_id`,
+            `receive_time`,
+            `bonus_time`
+        )
+        VALUES
+        <foreach collection="list" item="obj" separator=",">
+        (
+            #{obj.uid},
+            #{obj.taskId},
+            #{obj.actId},
+            #{obj.actName},
+            #{obj.taskName},
+            #{obj.ticketNum},
+            #{obj.bonusId},
+            #{obj.receiveTime},
+            #{obj.bonusTime}
+        )
+        </foreach>
+    </insert>
+
+    <update id="updateBatchBonusType">
+        UPDATE t_ac_bonus SET bonus_type = #{bonusType}
+        WHERE uid = #{uids}
+        AND id in
+        <foreach item='code' index='index' collection='aids' open='(' separator=',' close=')'>
+            #{code}
+        </foreach>
+    </update>
+
+
+
+    <select id="queryBonusLog" resultType="com.panda.sport.merchant.common.po.bss.AcBonusLogPO">
+        SELECT *
+        FROM t_ac_bonus_log t
+        WHERE t.uid = #{uids}
+        AND t.bonus_time = #{bonusTime}
+        AND t.bonus_id in
+        <foreach item='code' index='index' collection='aids' open='(' separator=',' close=')'>
+            #{code}
+        </foreach>
+    </select>
+
+
+    <select id="queryAllReceivedUserListByType" resultType="Long">
+        select uid
+        from t_ac_bonus
+        where task_id = #{taskId}
+          and task_type = #{taskType}
+          and uid in
+        <foreach item='item' index='index' collection='userIdList' open='(' separator=',' close=')'>
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="queryAllReceivedUserListByTime" resultType="Long">
+        select uid
+        from t_ac_bonus
+        where task_id = #{taskId}
+          and last_update = #{timeL}
+          and uid in
+        <foreach item='item' index='index' collection='userIdList' open='(' separator=',' close=')'>
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="queryDailyLotteryUser" resultType="Map">
+        select a.uid, (select username from t_user where uid = a.uid) userName, a.times
+        from (select uid, count(*) times
+              from s_olympic_luckybox_records
+              where create_time <![CDATA[ >= ]]> #{startL}
+                and create_time <![CDATA[ < ]]> #{endL}
+              group by uid) a
+        where a.times <![CDATA[ >= ]]> #{times}
+    </select>
+
+    <update id="resetGrowthTaskData">
+        update t_ac_bonus
+        set ticket_num = 0,
+            bonus_type =2
+        where task_type = 1
+    </update>
+
+    <delete id="deleteGrowthTaskData">
+        delete from t_ac_bonus where `task_type`= 1
+    </delete>
+</mapper>

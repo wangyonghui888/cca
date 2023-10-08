@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.bss.mapper.SystemSwitchMapper">
+    <select id="querySystemSwitch" resultType="com.panda.sport.merchant.common.vo.SystemSwitchVO">
+        SELECT
+            t.id AS id,
+            t.config_key AS configKey,
+            t.config_value AS configValue,
+            t.create_time AS createTime,
+            t.create_by AS createBy,
+            t.update_time AS updateTime,
+            t.update_by AS updateBy
+        FROM
+            t_system_config t
+    </select>
+
+    <update id="updateSystemSwitch" parameterType="com.panda.sport.merchant.common.vo.SystemSwitchVO">
+        UPDATE t_system_config
+        SET
+        config_value = #{configValue},
+        update_by = #{updateBy},
+        update_time = #{updateTime}
+        WHERE
+            id = #{id}
+    </update>
+
+    <update id="updateConfigValue" parameterType="com.panda.sport.merchant.common.vo.SystemSwitchVO">
+        UPDATE t_system_config
+        SET
+        config_value = #{configValue},
+        update_by = #{updateBy},
+        update_time = #{updateTime}
+        WHERE
+            config_key = #{configKey}
+    </update>
+</mapper>

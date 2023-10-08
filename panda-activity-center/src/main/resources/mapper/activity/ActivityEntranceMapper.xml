@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.center.mapper.activity.ActivityEntranceMapper">
+    <resultMap id="BaseResultMap" type="com.panda.center.entity.ActivityEntrancePo">
+        <result column="id" property="id"/>
+        <result column="status" property="status"/>
+        <result column="name" property="name"/>
+        <result column="activityStatus" property="activityStatus"/>
+        <result column="merchantId" property="merchantId"/>
+        <result column="merchant_name" property="merchantName"/>
+        <result column="start_time" property="startTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="in_start_time" property="inStartTime"/>
+        <result column="in_end_time" property="inEndTime"/>
+        <result column="activityId" property="activityId"/>
+        <result column="merchant_code" property="merchantCode"/>
+        <result column="entrance_status" property="entranceStatus"/>
+        <result column="type" property="type"/>
+    </resultMap>
+    <resultMap id="ActivityConfigResultMap" type="com.panda.center.entity.ActivityConfigPo">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="type" property="type"/>
+        <result column="terminal" property="terminal"/>
+        <result column="start_time" property="startTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="time_limit" property="timeLimit"/>
+        <result column="sport_id" property="sportId"/>
+        <result column="reward_type" property="rewardType"/>
+        <result column="total_cost" property="totalCost"/>
+        <result column="reward_percentage" property="rewardPercentage"/>
+        <result column="single_day_max" property="singleDayMax"/>
+        <result column="single_user_max" property="singleUserMax"/>
+        <result column="user_partition_times" property="userPartitionTimes"/>
+        <result column="auto_check" property="autoCheck"/>
+        <result column="partition_rule" property="partitionRule"/>
+        <result column="reward_rule" property="rewardRule"/>
+        <result column="settle_cycle" property="settleCycle"/>
+        <result column="status" property="status"/>
+        <result column="in_start_time" property="inStartTime"/>
+        <result column="in_end_time" property="inEndTime"/>
+        <result column="pc_url" property="pcUrl"/>
+        <result column="h5_url" property="h5Url"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+                id,
+                name,
+                type,
+                terminal,
+                start_time,
+                end_time,
+                time_limit,
+                sport_id,
+                reward_type,
+                total_cost,
+                reward_percentage,
+                single_day_max,
+                single_user_max,
+                user_partition_times,
+                auto_check,
+                partition_rule,
+                reward_rule,
+                settle_cycle,
+                status,
+                in_start_time,
+                in_end_time,
+                pc_url,
+                h5_url
+    </sql>
+  <select id="selectByMerchantName" parameterType="com.panda.center.vo.ActivityEntranceVO"
+          resultMap="BaseResultMap">
+    SELECT  B.id,B.status,A.status as activityStatus,A.name,B.status,C.id as merchantId,A.id as activityId,C.merchant_name,
+    A.start_time,A.end_time,A.in_start_time,A.in_end_time,B.merchant_code,B.entrance_status,A.type FROM
+    t_activity_config A INNER join t_activity_merchant B on A.id=B.activity_id
+   INNER join t_merchant C on C.merchant_code = B.merchant_code where 1=1
+      <if test="merchantCode !=null and merchantCode !=''">
+          and C.merchant_code LIKE '%${merchantCode}%'
+      </if>
+      <if test="activityName !=null and activityName !=''">
+          and A.name=#{activityName}
+      </if>
+      and A.id in ('10007','10008','10009','10010')
+      order by B.merchant_code desc
+      LIMIT #{start},#{pageSize}
+  </select>
+    <select id="selectByMerchantCount" parameterType="com.panda.center.vo.ActivityEntranceVO"
+            resultType="java.lang.Integer">
+        SELECT  count(1) FROM
+        t_activity_config A INNER join t_activity_merchant B on A.id=B.activity_id
+        INNER join t_merchant C on C.merchant_code = B.merchant_code where 1=1
+        <if test="merchantCode !=null and merchantCode !=''">
+            and C.merchant_code LIKE '%${merchantCode}%'
+        </if>
+        <if test="activityName !=null and activityName !=''">
+            and A.name=#{activityName}
+        </if>
+        and A.id in ('10007','10008','10009','10010')
+    </select>
+
+  <update id="update">
+    update t_activity_merchant t
+    set t.status=#{status}
+    where t.id = #{id}
+  </update>
+  <select id="queryActivityConfigPoById" resultMap="ActivityConfigResultMap">
+    SELECT <include refid="Base_Column_List"/>
+    FROM t_activity_config
+    WHERE id = #{activityId}
+  </select>
+   <select id="selectKeyId" resultType="java.lang.Long">
+        SELECT t.id
+        FROM t_activity_config t
+        order by t.id desc
+        LIMIT 0,1
+   </select>
+    <insert id="saveActivityConfig" parameterType="com.panda.center.entity.ActivityConfigPo">
+        insert into t_activity_config (
+            <if test="pcUrl !=null and pcUrl !=''">
+                pc_url,
+            </if>
+            <if test="h5Url !=null and h5Url !=''">
+                h5_url,
+            </if>
+            id,
+            name,
+            type,
+            status
+        )
+        values (
+            <if test="pcUrl !=null and pcUrl !=''">
+                #{pcUrl},
+            </if>
+            <if test="h5Url !=null and h5Url !=''">
+                #{h5Url},
+            </if>
+            #{id},
+            #{name},
+            #{type},
+            #{status})
+    </insert>
+
+    <select id="getActivityMerchantById" resultType="com.panda.center.vo.ActivityMerchantVO">
+     SELECT B.id, A.id as activityId, A.name, B.status, B.merchant_code merchantCode
+     FROM t_activity_config A
+              INNER join t_activity_merchant B on A.id = B.activity_id
+     where B.id = #{id}
+    </select>
+
+    <update id="activityMechantUpdate">
+        UPDATE t_activity_config
+        SET name = #{name}
+        WHERE id = #{activityId}
+    </update>
+    <select id="queryActivityConfigPoList" resultMap="ActivityConfigResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM t_activity_config where id in (SELECT activity_id FROM t_activity_merchant where id=#{id})
+    </select>
+    <select id="getActivityConfigPO" resultMap="ActivityConfigResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM t_activity_config where id = #{id}
+    </select>
+    <select id="queryActivityConfigGroupByName" resultMap="ActivityConfigResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM t_activity_config where id in ('10007','10009','10008','10010') GROUP by name
+    </select>
+    <select id="queryActivityConfigPoByCode" resultMap="ActivityConfigResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM t_activity_config where id in (SELECT activity_id FROM t_activity_merchant where merchant_code=#{merchantCode} and activity_id in ('10007','10009','10008','10010'))
+    </select>
+    <delete id="deleteActityConfig">
+        delete FROM t_activity_config  where id in
+        <foreach collection="list" item="item" open=" (" close=")" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+    <select id="queryActivityConfigPo" resultMap="ActivityConfigResultMap">
+        SELECT DISTINCT A.name, A.h5_url, A.pc_url
+        FROM t_activity_config A
+                 left join t_activity_merchant B on A.id = B.activity_id
+        where A.id in ('10007', '10009', '10008','10010')
+    </select>
+    <update id="updateActivityConfig">
+        UPDATE t_activity_config
+        SET pc_url = #{pcUrl},
+            h5_url = #{h5Url}
+        WHERE id = #{id}
+    </update>
+    <delete id="deleteAllActityConfig">
+        delete FROM t_activity_config where id in
+        <foreach collection="list" item="item" open=" (" close=")" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+    <insert id="insertPojo" parameterType="com.panda.center.entity.ActivityConfigPo">
+        insert into t_activity_config (
+            id,
+            name,
+            type,
+            status,
+            pc_url,
+            h5_url
+        )
+        values
+        <foreach collection="list" item="item" separator=",">
+        (#{item.id},
+        #{item.name},
+        #{item.type},
+        #{item.status},
+        #{item.pcUrl},
+        #{item.h5Url})
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+        pc_url = VALUES(pc_url),
+        h5_url = VALUES(h5_url)
+    </insert>
+    <update id="updateActivityMerchant">
+    update t_activity_merchant t set t.entrance_status=#{entranceStatus},t.status=#{entranceStatus} where t.id in
+        <foreach collection="list" item="item" open=" (" close=")" separator=",">
+            #{item}
+        </foreach>
+  </update>
+    <update id="updateActivityMerchantStatus">
+        update t_activity_merchant t set t.status=#{status} where t.id in
+        <foreach collection="list" item="item" open=" (" close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+    <update id="updateActivityMerchantBycode">
+        update t_activity_merchant t
+        set t.entrance_status=#{status}
+        where t.activity_id = #{activityId}
+          and merchant_code = #{merchantCode}
+    </update>
+    <update id="updateActivityMerchantStatusBycode">
+        update t_activity_merchant t
+        set t.entrance_status=#{status}
+        where t.activity_id = #{activityId}
+          and merchant_code = #{merchantCode}
+    </update>
+
+    <update id="updateActivity">
+        update t_activity_config t
+        set t.maintain_status=#{maintainStatus},
+            maintain_end_time=#{maintainEndTime},
+            h5_maintain_url=#{h5MaintainUrl},
+            pc_maintain_url=#{pcMaintainUrl},
+            title=#{title},
+            content=#{content}
+        where id in (10009,10008,10007,10010)
+    </update>
+
+    <select id="getActivityMaintain" resultType="Map">
+        select maintain_status   maintainStatus,
+               maintain_end_time maintainEndTime,
+               h5_maintain_url   h5MaintainUrl,
+               pc_maintain_url   pcMaintainUrl,
+               title,
+               content
+        from t_activity_config
+        where id = 10009
+    </select>
+
+    <select id="updateActivityStatus">
+        update t_activity_config
+        set status=#{status}
+        where id = #{id}
+    </select>
+
+
+</mapper>

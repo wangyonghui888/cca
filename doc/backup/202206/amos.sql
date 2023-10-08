@@ -1,0 +1,1 @@
+alter table tybss_report.t_ticket  add pre_order int(3)  COMMENT '预订单编号' after  dangerous_id ;

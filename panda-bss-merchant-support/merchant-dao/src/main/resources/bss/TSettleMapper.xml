@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 用户表(t_settle) -->
+<mapper namespace="com.panda.sport.bss.mapper.TSettleMapper">
+
+    <resultMap id="tSettleMap" type="com.panda.sport.merchant.common.po.bss.TSettle">
+        <result column="id" property="id"/>
+        <result column="uid" property="uid"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="out_come" property="outCome"/>
+        <result column="settle_amount" property="settleAmount"/>
+        <result column="payout_status" property="payoutStatus"/>
+        <result column="settle_type" property="settleType"/>
+        <result column="settle_time" property="settleTime"/>
+        <result column="odd_finally" property="oddFinally"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_user" property="modifyUser"/>
+        <result column="modify_time" property="modifyTime"/>
+        <result column="remark" property="remark"/>
+        <result column="bet_amount" property="betAmount"/>
+        <result column="settle_score" property="settleScore"/>
+        <result column="odds_value" property="oddsValue"/>
+        <result column="profit_amount" property="profitAmount"/>
+        <result column="ip" property="uid"/>
+        <result column="last_settle" property="lastSettle"/>
+    </resultMap>
+
+    <select id="querySettleOrderNo" resultType="java.lang.String">
+        SELECT order_no
+        FROM t_settle s
+        WHERE s.settle_time <![CDATA[ >= ]]> #{startTime}
+          AND s.settle_time <![CDATA[ <= ]]> #{endTime}
+          AND s.last_settle = 1
+    </select>
+
+    <select id="querySettleTypeByOrderNo" resultType="java.lang.Integer">
+        SELECT s.settle_type settleType
+        FROM t_settle s
+        WHERE s.order_no = #{orderNo}
+          AND s.last_settle = 1
+    </select>
+
+    <select id="queryMerchantIdList" resultType="java.lang.String">
+        SELECT DISTINCT (t.merchant_id)
+        FROM t_order t WHERE  t.order_no IN
+        <foreach collection="orderNoList" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+</mapper>

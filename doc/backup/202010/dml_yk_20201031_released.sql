@@ -1,0 +1,1 @@
+INSERT INTO `merchant`.`merchant_notice_type` (`id`, `type_name`) VALUES ('15', '政治娱乐赛事');

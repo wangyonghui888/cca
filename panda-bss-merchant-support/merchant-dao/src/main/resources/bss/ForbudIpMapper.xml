@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.bss.mapper.TForbidIpMapper">
+
+    <resultMap id="BaseResultMap" type="com.panda.sport.merchant.common.po.bss.TForbidIp" >
+        <result column="id" property="id" />
+        <result column="ip_name" property="ipName" />
+        <result column="create_time" property="createTime" />
+        <result column="create_user" property="createUser" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+                id,
+                ip_name,
+                create_time,
+                create_user
+    </sql>
+
+    <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id" parameterType="com.panda.sport.merchant.common.po.bss.TForbidIp">
+        INSERT INTO t_forbid_ip
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="null != ipName and '' != ipName">
+                ip_name,
+            </if>
+            <if test="null != createTime and '' != createTime">
+                create_time,
+            </if>
+            <if test="null != createUser and '' != createUser">
+                create_user
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="null != ipName and '' != ipName">
+                #{ipName},
+            </if>
+            <if test="null != createTime and '' != createTime">
+                #{createTime},
+            </if>
+            <if test="null != createUser and '' != createUser">
+                #{createUser}
+            </if>
+        </trim>
+    </insert>
+
+    <delete id="delete" >
+        DELETE FROM t_forbid_ip
+        WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteByIpName" >
+        DELETE FROM t_forbid_ip
+        WHERE 1 = 1
+    </delete>
+
+    <update id="update" parameterType="com.panda.sport.merchant.common.po.bss.TForbidIp">
+        UPDATE t_forbid_ip
+        <set>
+            <if test="null != ipName and '' != ipName">ip_name = #{ipName},</if>
+            <if test="null != createTime and '' != createTime">create_time = #{createTime},</if>
+            <if test="null != createUser and '' != createUser">create_user = #{createUser}</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+
+    <select id="load" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM t_forbid_ip
+        WHERE id = #{id}
+    </select>
+
+    <select id="pageList" resultMap="BaseResultMap" parameterType="com.panda.sport.merchant.common.vo.DomainVo">
+        SELECT <include refid="Base_Column_List" />
+        FROM t_forbid_ip
+        <include refid="queryParam"></include>
+        LIMIT #{starNum}, #{pageSize}
+    </select>
+
+    <select id="pageListCount" resultType="java.lang.Integer" parameterType="com.panda.sport.merchant.common.vo.DomainVo">
+        SELECT count(1)
+        FROM t_forbid_ip
+        <include refid="queryParam"></include>
+    </select>
+
+    <sql id="queryParam">
+        <where>
+            <if test="ipName != '' and ipName != null">
+                and ip_name = #{ipName}
+            </if>
+        </where>
+    </sql>
+
+</mapper>

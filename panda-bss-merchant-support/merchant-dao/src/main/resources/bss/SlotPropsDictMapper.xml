@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.bss.mapper.SlotPropsDictMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.panda.sport.merchant.common.po.bss.SlotPropsDict">
+        <id column="id" property="id"/>
+        <result column="props_type" property="propsType"/>
+        <result column="props_name" property="propsName"/>
+        <result column="bonus_multiple" property="bonusMultiple"/>
+        <result column="state" property="state"/>
+        <result column="create_time" property="createTime"/>
+        <result column="last_update_time" property="lastUpdateTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        props_type,
+        props_name,
+        bonus_multiple,
+        state,
+        create_time,
+        last_update_time
+    </sql>
+</mapper>

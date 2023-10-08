@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.panda.sport.bss.mapper.MerchantChatRoomSwitchMapper">
+    <update id="updateChatRoomSwitch" parameterType="com.panda.sport.merchant.common.vo.MerchantChatRoomSwitchVO">
+        update t_merchant_config
+        set
+        chat_min_bet_amount = #{chatMinBetAmount},
+        is_default = #{isDefault},
+        three_day_amount = #{threeDayAmount},
+        seven_day_amount = #{sevenDayAmount}
+        where
+        merchant_code = #{merchantCode}
+    </update>
+
+    <select id="queryMerchantChatRoomSwitch" resultType="com.panda.sport.merchant.common.vo.MerchantChatRoomSwitchVO">
+        SELECT
+            t.merchant_code merchantCode,
+            m.id merchantId,
+            m.merchant_name merchantName,
+            t.chat_room_switch chatRoomSwitch,
+            t.chat_min_bet_amount chatMinBetAmount,
+            t.is_default isDefault,
+            t.three_day_amount threeDayAmount,
+            t.seven_day_amount sevenDayAmount
+        FROM
+            t_merchant_config t
+            JOIN t_merchant m ON t.merchant_code = m.merchant_code
+        WHERE
+            t.merchant_code = #{merchantCode}
+    </select>
+
+    <update id="updateMerchantChat" parameterType="com.panda.sport.merchant.common.vo.MerchantChatRoomSwitchVO">
+        update t_merchant_config
+        set
+        chat_room_switch = #{chatRoomSwitch}
+        where
+        merchant_code = #{merchantCode}
+    </update>
+</mapper>

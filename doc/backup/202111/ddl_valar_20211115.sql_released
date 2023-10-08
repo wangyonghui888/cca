@@ -1,0 +1,29 @@
+ALTER TABLE tybss_merchant_common.`t_activity_config`
+    DROP `ip_limit`;
+
+ALTER TABLE tybss_merchant_common.`t_activity_config`
+    DROP `reward_guy`;
+
+
+alter table tybss_merchant_common.t_activity_config
+    add column h5_maintain_url varchar(128) DEFAULT NULL COMMENT 'h5活动维护图片地址' after h5_url;
+
+
+alter table tybss_merchant_common.t_activity_config
+    add column pc_maintain_url varchar(128) DEFAULT NULL COMMENT 'pc活动维护图片地址' after h5_maintain_url;
+
+
+alter table tybss_merchant_common.t_activity_config
+    add column maintain_status tinyint DEFAULT NULL COMMENT '0关闭维护,开启活动;1开启维护' after pc_maintain_url;
+
+
+alter table tybss_merchant_common.t_activity_config
+    add column maintain_end_time bigint DEFAULT NULL COMMENT '维护结束时间' after maintain_status;
+
+
+alter table tybss_merchant_common.t_activity_config
+    add column title varchar(128) DEFAULT NULL COMMENT 'title' after maintain_end_time;
+
+
+alter table tybss_merchant_common.t_activity_config
+    add column content varchar(400) DEFAULT NULL COMMENT 'content' after title;

@@ -1,0 +1,2 @@
+update t_merchant set language_list = concat(language_list,",vi") WHERE language_list not like "vi";
+update t_merchant set language_list = concat(language_list,",th") where language_list not like "th";

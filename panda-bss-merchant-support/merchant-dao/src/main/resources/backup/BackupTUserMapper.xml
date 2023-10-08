@@ -1,0 +1,815 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 用户表(t_user) -->
+<mapper namespace="com.panda.sport.backup.mapper.BackupTUserMapper">
+
+    <select id="getUserByUserName" resultType="com.panda.sport.merchant.common.po.bss.UserPO">
+        select u.uid                        userId,
+               u.username          as       username,
+               u.real_name                  realName,
+               u.merchant_code              merchantCode,
+               u.currency_code              currencyCode,
+               u.create_time                createTime,
+               u.user_level                 userLevel,
+               u.user_bet_prefer            userBetPrefer,
+               u.user_market_prefer         userMarketPrefer,
+               u.language_name              languageName,
+               u.special_betting_limit_type specialBettingLimitType,
+               u.vip_level                  vipLevel,
+               u.market_level               marketLevel,
+               u.max_bet                    maxBet,
+               u.agent_id                   agentId,
+               u.risk_bet_percent  as       riskBetPercent,
+               u.finance_tag       as       financeTag,
+               u.settle_in_advance as       settleInAdvance
+        from t_user u
+        where 1 = 1
+        <if test="realName != null">
+            AND u.real_name = #{realName}
+        </if>
+        <if test="merchantCode != null">
+            AND u.merchant_code = #{merchantCode}
+        </if>
+        <if test="merchantCodeList != null">
+            AND u.merchant_code in
+            <foreach collection="merchantCodeList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="getUserByUserNameOther" resultType="com.panda.sport.merchant.common.vo.user.UserVO">
+        select u.uid                        userId,
+               u.username          as       username,
+               u.merchant_code              merchantCode,
+               u.currency_code              currencyCode,
+               u.create_time                createTime,
+               u.user_level                 userLevel,
+               u.user_bet_prefer            userBetPrefer,
+               u.user_market_prefer         userMarketPrefer,
+               u.language_name              languageName,
+               u.special_betting_limit_type specialBettingLimitType,
+               u.vip_level                  vipLevel,
+               u.market_level               marketLevel,
+               u.max_bet                    maxBet,
+               u.agent_id                   agentId,
+               u.risk_bet_percent  as       riskBetPercent,
+               u.finance_tag       as       financeTag,
+               u.settle_in_advance as       settleInAdvance
+        from t_user u
+        where u.username = #{userName}
+        <if test="merchantCode != null">
+            AND u.merchant_code = #{merchantCode}
+        </if>
+        <if test="merchantCodeList != null">
+            AND u.merchant_code in
+            <foreach collection="merchantCodeList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="getUserPO" resultType="com.panda.sport.merchant.common.po.bss.UserPO">
+        select u.uid                        userId,
+        u.username          as       username,
+        u.merchant_code              merchantCode,
+        u.currency_code              currencyCode,
+        u.create_time                createTime,
+        u.user_level                 userLevel,
+        u.user_bet_prefer            userBetPrefer,
+        u.user_market_prefer         userMarketPrefer,
+        u.language_name              languageName,
+        u.special_betting_limit_type specialBettingLimitType,
+        u.vip_level                  vipLevel,
+        u.market_level               marketLevel,
+        u.max_bet                    maxBet,
+        u.agent_id                   agentId,
+        u.risk_bet_percent  as       riskBetPercent,
+        u.finance_tag       as       financeTag,
+        u.settle_in_advance as       settleInAdvance
+        from t_user u
+        <where>
+            <if test="userId != null">
+                AND u.uid =  #{userId}
+            </if>
+            <if test="userName != null and userName != ''">
+                AND  u.username = #{userName}
+            </if>
+            <if test="merchantCode != null and merchantCode != ''">
+                AND u.merchant_code = #{merchantCode}
+            </if>
+            <if test="merchantCodeList != null">
+                AND u.merchant_code in
+                <foreach collection="merchantCodeList" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+
+    <select id="getUserInfo" resultType="com.panda.sport.merchant.common.po.bss.UserPO">
+        select u.disabled,
+               u.uid               userId,
+               u.username,
+               u.fake_name,
+               u.user_level        userLevel,
+               u.merchant_code     merchantCode,
+               u.create_time       createTime,
+               u.currency_code     currencyCode,
+               u.settle_in_advance settleInAdvance,
+               u.special_betting_limit_delay_time specialBettingLimitDelayTime,
+               u.modify_time       lastLogin,
+               u.market_level      marketLevel
+        from t_user u
+        where u.uid = #{uid}
+    </select>
+
+    <!-- 插入数据 -->
+    <insert id="insertTUser" parameterType="com.panda.sport.merchant.common.po.bss.UserPO">
+        INSERT INTO t_user (
+        `uid`,
+        <if test="disabled != null">`disabled`,</if>
+        `username`,
+        `password`,
+        `real_name`,
+        `fake_name`,
+        `ip_address`,
+        `currency_code`,
+        <if test="userLevel != null">`user_level`,</if>
+        `remark`,
+        `create_user`,
+        `create_time`,
+        `modify_time`,
+        `merchant_code`,
+        `user_bet_prefer`,
+        <if test="specialBettingLimitType != null">`special_betting_limit_type`,</if>
+        `agent_id`,
+        `settle_in_advance`
+        )
+        VALUES (
+        #{userId},
+        <if test="disabled != null">#{disabled},</if>
+        #{username},
+        #{password},
+        #{realName},
+        #{fakeName},
+        #{ipAddress},
+        #{currencyCode},
+        <if test="userLevel != null">#{userLevel},</if>
+        #{remark},
+        #{createUser},
+        #{createTime},
+        #{modifyTime},
+        #{merchantCode},
+        #{userBetPrefer},
+        <if test="specialBettingLimitType != null">#{specialBettingLimitType},</if>
+        #{agentId},
+        #{settleInAdvance}
+        )
+    </insert>
+
+    <update id="batchUpdateIp" parameterType="java.util.List">
+        UPDATE tybss_new.t_user tu inner join (SELECT o.uid, Min(o.ip) ip, Min(o.ip_area) ipAddress
+                                               FROM t_order o
+                                                        left join t_user u on o.uid = u.uid
+                                               WHERE o.create_time <![CDATA[ >= ]]> #{startL}
+                                                 AND o.create_time <![CDATA[ <= ]]> #{endL}
+                                                 AND u.ip is null
+                                               GROUP BY o.uid) uo on tu.uid = uo.uid
+        set tu.ip=uo.ip,
+            tu.ip_address=uo.ipAddress
+    </update>
+
+    <select id="countAllUserList" parameterType="com.panda.sport.merchant.common.vo.UserOrderVO"
+            resultType="int">
+        SELECT count(*)
+        FROM t_user u
+      <where>
+       <if test="userId != null">
+            u.uid = #{userId}
+       </if>
+      <if test="userIdList != null and userIdList.size() > 0">
+          AND u.uid  in
+          <foreach item='option' index='index' collection='userIdList' open='(' separator=','
+                   close=')'>
+              #{option}
+          </foreach>
+      </if>
+       <if test="userName != null">
+           AND u.username =#{userName}
+       </if>
+       <if test="merchantCode != null">
+           AND u.merchant_code = #{merchantCode}
+       </if>
+      <if test="specialBettingLimitType != null">
+          AND u.special_betting_limit_type = #{specialBettingLimitType}
+      </if>
+      <if test="startSpecialBettingLimitTimeL != null">
+          AND u.special_betting_limit_time <![CDATA[ >= ]]> #{startSpecialBettingLimitTimeL}
+      </if>
+      <if test="endSpecialBettingLimitTimeL != null">
+          AND u.special_betting_limit_time <![CDATA[ <= ]]> #{endSpecialBettingLimitTimeL}
+      </if>
+       <if test="merchantName != null">
+           and u.merchant_code = (select m.merchant_code from t_merchant m where m.merchant_name LIKE CONCAT('%',#{merchantName},'%'))
+       </if>
+       <if test="maxBalance != null or minBalance != null">
+          and u.uid in (select a.uid from t_account a
+                            <where>
+                                <if test="maxBalance != null">
+                                    a.amount <![CDATA[ >= ]]> #{maxBalance}
+                                </if>
+                                <if test="minBalance != null">
+                                   AND a.amount <![CDATA[ <= ]]> #{minBalance}
+                               </if>
+                            </where>)
+       </if>
+          <if test="currencyCode != null">
+              AND u.currency_code = #{currencyCode}
+          </if>
+       <if test="merchantCodeList != null">
+           AND u.merchant_code in
+            <foreach collection="merchantCodeList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+       </if>
+          <if test='timeType != null and timeType == 1'>
+              <if test='beginDateTime != null and beginDateTime != ""'>
+                  AND u.create_time <![CDATA[ >= ]]> unix_timestamp(#{beginDateTime}) * 1000
+              </if>
+              <if test='endDateTime != null and endDateTime != ""'>
+                  AND u.create_time <![CDATA[ <= ]]> unix_timestamp(#{endDateTime}) * 1000
+              </if>
+          </if>
+
+          <if test='timeType != null and timeType == 2'>
+              <if test='beginDateTime != null and beginDateTime != ""'>
+              AND u.last_bet_time <![CDATA[ >= ]]> unix_timestamp(#{beginDateTime}) * 1000
+              </if>
+              <if test='endDateTime != null and endDateTime != ""'>
+                  AND u.last_bet_time <![CDATA[ <= ]]> unix_timestamp(#{endDateTime}) * 1000
+              </if>
+          </if>
+          <if test='timeType != null and timeType == 3'>
+              <if test='beginDateTime != null and beginDateTime != ""'>
+                  AND u.modify_time <![CDATA[ >= ]]> unix_timestamp(#{beginDateTime}) * 1000
+              </if>
+              <if test='endDateTime != null and endDateTime != ""'>
+                  AND u.modify_time <![CDATA[ <= ]]> unix_timestamp(#{endDateTime}) * 1000
+              </if>
+          </if>
+      </where>
+    </select>
+
+    <select id="queryAllUserList" parameterType="com.panda.sport.merchant.common.vo.UserOrderVO"
+            resultType="com.panda.sport.merchant.common.po.merchant.UserOrderAllPO">
+        SELECT
+            u.username userName,
+            u.fake_name fakeName,
+            u.uid userId,
+            u.merchant_code merchantCode,
+            u.currency_code currencyCode,
+            u.create_time createTime,
+            u.profit / 100 profit,
+            u.bet_amount / 100 betAmount,
+            u.total_tickets betNum,
+            a.amount / 100 amount,
+            m.merchant_name merchantName,
+            Ifnull(h.login_time,u.modify_time) lastLogin,
+            u.agent_id agentId,
+            u.special_betting_limit_type specialBettingLimitType,
+            u.special_betting_limit_time specialBettingLimitTime,
+            u.special_betting_limit_delay_time specialBettingLimitDelayTime,
+            u.market_level marketLevel,
+            u.last_bet_time lastBet,
+            u.is_test isvip,
+            u.remark,
+            u.disabled disabled,
+            m.id merchantId
+        FROM
+            t_user u
+            LEFT JOIN t_account a ON u.uid = a.uid
+            LEFT JOIN t_merchant m ON m.merchant_code = u.merchant_code
+            LEFT JOIN (select max(login_time) login_time, uid from t_log_history) h ON h.uid = u.uid
+        <where>
+               <if test="userId != null">
+                   AND u.uid = #{userId}
+               </if>
+            <if test="userIdList != null and userIdList.size() > 0">
+                AND u.uid  in
+                <foreach item='option' index='index' collection='userIdList' open='(' separator=','
+                         close=')'>
+                    #{option}
+                </foreach>
+            </if>
+               <if test="userName != null">
+                   AND u.username = #{userName}
+               </if>
+               <if test="merchantName != null">
+                   AND m.merchant_name LIKE CONCAT('%',#{merchantName},'%')
+               </if>
+               <if test="merchantCode != null">
+                   AND u.merchant_code = #{merchantCode}
+               </if>
+               <if test="specialBettingLimitType != null">
+                   AND u.special_betting_limit_type = #{specialBettingLimitType}
+               </if>
+               <if test="startSpecialBettingLimitTimeL != null">
+                   AND u.special_betting_limit_time <![CDATA[ >= ]]> #{startSpecialBettingLimitTimeL}
+               </if>
+               <if test="endSpecialBettingLimitTimeL != null">
+                   AND u.special_betting_limit_time <![CDATA[ <= ]]> #{endSpecialBettingLimitTimeL}
+               </if>
+                <if test="specialBettingLimitDelayTime != null">
+                    AND u.special_betting_limit_delay_time <![CDATA[ >= ]]> #{specialBettingLimitDelayTime}
+                </if>
+                <if test="marketLevel != null">
+                    AND u.market_level  =  #{marketLevel}
+                </if>
+               <if test="maxBalance != null">
+                   AND a.amount <![CDATA[ >= ]]> #{maxBalance}
+               </if>
+               <if test="minBalance != null">
+                   AND a.amount <![CDATA[ <= ]]> #{minBalance}
+               </if>
+            <if test="currencyCode != null">
+                AND u.currency_code = #{currencyCode}
+            </if>
+               <if test="merchantCodeList != null">
+                   AND u.merchant_code in
+                    <foreach collection="merchantCodeList" item="item" index="index" separator="," open="(" close=")">
+                        #{item}
+                    </foreach>
+               </if>
+                <if test="isvip != null">
+                    AND u.is_test = #{isvip}
+                </if>
+            <if test='timeType != null and timeType == 1'>
+                <if test='beginDateTime != null and beginDateTime != ""'>
+                    AND u.create_time <![CDATA[ >= ]]> unix_timestamp(#{beginDateTime}) * 1000
+                </if>
+                <if test='endDateTime != null and endDateTime != ""'>
+                    AND u.create_time <![CDATA[ <= ]]> unix_timestamp(#{endDateTime}) * 1000
+                </if>
+            </if>
+
+            <if test='timeType != null and timeType == 2'>
+                <if test='beginDateTime != null and beginDateTime != ""'>
+                    AND u.last_bet_time <![CDATA[ >= ]]> unix_timestamp(#{beginDateTime}) * 1000
+                </if>
+                <if test='endDateTime != null and endDateTime != ""'>
+                    AND u.last_bet_time <![CDATA[ <= ]]> unix_timestamp(#{endDateTime}) * 1000
+                </if>
+            </if>
+            <if test='timeType != null and timeType == 3'>
+                <if test='beginDateTime != null and beginDateTime != ""'>
+                    AND u.modify_time <![CDATA[ >= ]]> unix_timestamp(#{beginDateTime}) * 1000
+                </if>
+                <if test='endDateTime != null and endDateTime != ""'>
+                    AND u.modify_time <![CDATA[ <= ]]> unix_timestamp(#{endDateTime}) * 1000
+                </if>
+            </if>
+            </where>
+              order by ${orderBy}  ${sort}
+              LIMIT #{start},#{pageSize}
+    </select>
+
+    <select id="queryUserListByIdList" resultType="Map">
+        select
+               u.uid,
+               u.fake_name fakeName
+        from t_user u
+        where u.uid in
+        <foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="queryUserInfoByIdList" resultType="com.panda.sport.merchant.common.vo.user.UserVipVO">
+        select
+            u.uid,
+            u.username as userName,
+            u.disabled disabled,
+            u.merchant_code    merchantCode
+        from t_user u
+        where u.uid in
+        <foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="queryUserInfoAllAllow" resultType="com.panda.sport.merchant.common.vo.user.UserVipVO">
+        select
+            u.uid,
+            u.username as userName,
+            u.disabled disabled,
+            u.merchant_code    merchantCode
+        from t_user u
+    </select>
+
+    <select id="queryUserInfoById" resultType="com.panda.sport.merchant.common.vo.user.UserVipVO">
+        select
+        u.uid,
+        u.merchant_code  merchantCode,
+        u.disabled disabled
+        from t_user u
+        where u.uid = #{userId}
+    </select>
+
+    <select id="getUserDetail" parameterType="com.panda.sport.merchant.common.vo.UserOrderVO"
+            resultType="com.panda.sport.merchant.common.po.merchant.UserOrderAllPO">
+        SELECT u.username                                                          userName,
+               u.fake_name                                                         fakeName,
+               u.uid                                                               userId,
+               u.merchant_code                                                     merchantCode,
+               u.currency_code                                                     currencyCode,
+               u.create_time                                                       createTime,
+               u.profit / 100                                                      profit,
+               u.bet_amount / 100                                                  betAmount,
+               u.total_tickets                                                     betNum,
+               a.amount/100 amount,
+
+               m.merchant_name                                                     merchantName,
+               u.modify_time lastLogin,
+               u.last_bet_time                                                    lastBet,
+               0          loginTimes
+        FROM t_user u
+                 LEFT JOIN t_account a ON u.uid = a.uid
+                 LEFT JOIN t_merchant m ON m.merchant_code = u.merchant_code
+        where u.uid = #{userId}
+           <if test="merchantCode != null">
+               AND u.merchant_code = #{merchantCode}
+           </if>
+           <if test="merchantCodeList != null">
+               AND u.merchant_code in
+                <foreach collection="merchantCodeList" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+           </if>
+    </select>
+
+    <select id="getUserDetailList" parameterType="com.panda.sport.merchant.common.vo.UserOrderVO"
+            resultType="com.panda.sport.merchant.common.po.merchant.UserOrderAllPO">
+        SELECT u.username                                                          userName,
+        u.fake_name                                                         fakeName,
+        u.uid                                                               userId,
+        u.profit / 100                                                      profit,
+        u.bet_amount / 100                                                  betAmount,
+        u.total_tickets                                                     betNum
+        FROM t_user u
+        where 1=1
+        <if test="userIdList != null">
+            AND  u.uid in
+            <foreach collection="userIdList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="merchantCode != null">
+            AND u.merchant_code = #{merchantCode}
+        </if>
+        <if test="merchantCodeList != null">
+            AND u.merchant_code in
+            <foreach collection="merchantCodeList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="queryRiskUserList" resultType="com.panda.sport.merchant.common.po.merchant.UserOrderAllPO"
+            parameterType="com.panda.sport.merchant.common.vo.UserOrderVO">
+        SELECT u.uid,
+               u.disabled,
+               u.username                  userName,
+               u.user_level                levelId,
+               u.ip_address                ipAddress,
+               u.ip,
+               u.currency_code             currencyCode,
+               u.remark,
+               u.create_time               createTime,
+               u.merchant_code             merchantCode,
+               u.bet_amount/100                betAmount,
+               u.profit/100 profit,
+               ( u.profit / u.bet_amount ) profitRate,
+               a.amount/100                    balance,
+               m.merchant_name             merchantName
+               <if test="levelId != null">
+               ,l.modify_time             levelTime
+               </if>
+        FROM   t_user u
+               LEFT JOIN t_account a
+                      ON u.uid = a.uid
+               LEFT JOIN t_merchant m
+                      ON u.merchant_code = m.merchant_code
+            <if test="levelId != null">
+               LEFT JOIN t_user_level_relation l
+                      ON u.user_level = l.level_id and u.uid=l.uid
+            </if>
+           <where>
+               <if test="userId != null">
+                u.uid = #{userId}
+               </if>
+               <if test="merchantName != null">
+               AND m.merchant_name like CONCAT('%',#{merchantName},'%')
+               </if>
+               <if test="merchantCode != null">
+               AND m.merchant_code = #{merchantCode}
+               </if>
+               <if test="merchantCodeList != null">
+               AND m.merchant_code in
+                <foreach collection="merchantCodeList" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+               </if>
+               <if test="userName != null">
+               AND u.username = #{userName}
+               </if>
+               <if test="levelList != null">
+               AND u.user_level in
+                <foreach collection="levelList" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+               </if>
+               <if test="startTimeL != null">
+               AND u.create_time <![CDATA[ >= ]]> #{startTimeL}
+               </if>
+               <if test="endTimeL != null">
+               AND u.create_time <![CDATA[ <= ]]> #{endTimeL}
+               </if>
+               <if test="minBetAmount != null">
+               AND (u.bet_amount/100) <![CDATA[ >= ]]> #{minBetAmount}
+               </if>
+               <if test="maxBetAmount != null">
+               AND (u.bet_amount/100) <![CDATA[ <= ]]> #{maxBetAmount}
+               </if>
+               <if test="minProfit != null">
+               AND (u.profit/100) <![CDATA[ >= ]]> #{minProfit}
+               </if>
+               <if test="maxProfit != null">
+               AND (u.profit/100) <![CDATA[ <= ]]> #{maxProfit}
+               </if>
+               <if test="minProfitRate != null">
+               AND (u.profit/u.bet_amount) <![CDATA[ >= ]]> (#{minProfitRate}/100)
+               </if>
+               <if test="maxProfitRate != null">
+               AND (u.profit/u.bet_amount) <![CDATA[ <= ]]> (#{maxProfitRate}/100)
+               </if>
+               <if test="minBalance != null">
+               AND (a.amount/100) <![CDATA[ >= ]]> #{minBalance}
+               </if>
+               <if test="maxBalance != null">
+               AND (a.amount/100) <![CDATA[ <= ]]> #{maxBalance}
+               </if>
+           </where>
+    </select>
+
+    <update id="updateUserLastLogin">
+        update t_user
+        set modify_time=#{lastLogin}
+        where uid = #{uid}
+    </update>
+
+    <select id="queryUserIdListByUserName" resultType="String" parameterType="com.panda.sport.merchant.common.vo.UserOrderVO">
+       SELECT u.uid userId FROM t_user u LEFT JOIN t_merchant m ON m.merchant_code = u.merchant_code
+                           where u.username=#{userName}
+                            <if test="merchantCode != null">
+                                AND u.merchant_code = #{merchantCode}
+                            </if>
+                            <if test="merchantCodeList != null">
+                                AND u.merchant_code in
+                                <foreach collection="merchantCodeList" item="item" index="index" separator="," open="(" close=")">
+                                    #{item}
+                                </foreach>
+                            </if>
+    </select>
+
+    <update id="updateUserSpecialBettingLimit" parameterType="com.panda.sport.merchant.common.po.bss.UserPO">
+        update t_user
+        set modify_time = unix_timestamp(now()) * 1000
+        <if test='specialBettingLimitTime != null'>
+            ,special_betting_limit_time=#{specialBettingLimitTime}
+        </if>
+        <if test='specialBettingLimitType != null'>
+            ,  special_betting_limit_type=#{specialBettingLimitType}
+        </if>
+        <if test='specialBettingLimitDelayTime != null'>
+          , special_betting_limit_delay_time=#{specialBettingLimitDelayTime}
+        </if>
+        <if test='specialBettingLimitRemark != null'>
+          , special_betting_limit_remark=#{specialBettingLimitRemark}
+        </if>
+        <if test='vipLevel != null'>
+          , vip_level=#{vipLevel}
+        </if>
+        <if test='marketLevel != null'>
+          , market_level=#{marketLevel}
+        </if>
+        where uid = #{userId}
+    </update>
+
+    <select id="queryUserIdList" resultType="Map">
+        SELECT uid,
+               username userName
+        FROM `t_user` u
+        where u.modify_time >=
+              unix_timestamp(DATE_FORMAT(ADDDATE(now(), INTERVAL -12 hour), '%Y-%m-%d %H:00:00')) * 1000
+          and u.merchant_code = #{merchantCode}
+        order by modify_time desc
+        limit 50000
+    </select>
+
+
+    <select id="queryUserlogHistoryIDList" resultType="Map">
+        SELECT h.uid,
+               h.username userName
+        FROM `t_user` u
+                 RIGHT join t_log_history h on h.uid = u.uid
+        where h.login_time >=
+              unix_timestamp(DATE_FORMAT(ADDDATE(now(), INTERVAL -12 hour), '%Y-%m-%d %H:00:00')) * 1000
+          and u.merchant_code = #{merchantCode}
+        order by login_time desc
+        limit 20000
+    </select>
+
+
+    <select id="queryVipUpdateTime" resultType="Map">
+        SELECT
+            ul.uid,
+            ul.modify_time
+        FROM
+            t_user_level_relation_history ul
+        LEFT JOIN (
+            SELECT
+                   uid,
+                   max( id ) id
+            FROM
+                   t_user_level_relation_history WHERE type = 3
+                    <if test="list != null">
+                        and uid in
+                        <foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+            GROUP BY uid
+        ) a ON ul.id = a.id
+        WHERE
+            ul.type =3 and play_json = 'new=1'
+        <if test="list != null">
+        and ul.uid in
+        <foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+        </if>
+
+
+    </select>
+
+
+    <select id="listUserInfoById" resultType="com.panda.sport.merchant.common.vo.user.UserVipVO">
+        SELECT uid as uidStr,
+               username userName
+        FROM `t_user` u
+        WHERE
+        <if test="list != null">
+             u.uid in
+            <foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="getOneUid" resultType="Long">
+        select uid
+        from t_user
+        where merchant_code = #{merchantCode}
+          and length(username) > 15
+          and username not like 'TY%'
+        limit 1
+    </select>
+
+    <select id="getUserIdListByParam" resultType="long">
+        SELECT DISTINCT(user_id) FROM tybss_report.`r_user_order_day_utc8`
+        WHERE bet_amount > 0
+        AND `time` = #{startTime}
+        AND merchant_code in
+        <foreach collection="merchantCodes" item="item" index="index" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+        ORDER BY user_id LIMIT #{startNum},#{rows}
+    </select>
+    <select id="getUserCountByParam" resultType="int">
+        SELECT COUNT(DISTINCT user_id) FROM tybss_report.`r_user_order_day_utc8`
+        WHERE bet_amount > 0
+        AND `time` = #{startTime}
+        AND merchant_code in
+        <foreach collection="merchantCodes" item="item" index="index" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </select>
+
+
+    <select id="countUserAllowList" resultType="java.lang.Integer">
+        SELECT count(distinct u.uid)
+        FROM t_user u
+        LEFT JOIN t_merchant m on u.merchant_code = m.merchant_code
+        WHERE u.disabled in (2,3,4,5)
+        <if test="userId != null">
+            AND u.uid = #{userId}
+        </if>
+        <if test="userIdList != null and userIdList.size() > 0">
+            AND u.uid  in
+            <foreach item='option' index='index' collection='userIdList' open='(' separator=','
+                     close=')'>
+                #{option}
+            </foreach>
+        </if>
+        <if test="userName != null">
+            AND u.username =#{userName}
+        </if>
+        <if test=" userInfo!=null and userInfo!='' ">
+            AND (u.username =#{userInfo} OR u.uid = #{userInfo})
+        </if>
+        <if test="merchantCodeList != null">
+            AND u.merchant_code in
+            <foreach collection="merchantCodeList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test=" disabled!=null">
+            AND u.disabled = #{disabled}
+        </if>
+    </select>
+
+    <select id="queryUserAllowList" resultType="com.panda.sport.merchant.common.po.merchant.UserOrderAllPO">
+        SELECT
+        u.username userName,
+        u.fake_name fakeName,
+        u.uid userId,
+        u.merchant_code merchantCode,
+        u.currency_code currencyCode,
+        u.create_time createTime,
+        u.profit / 100 profit,
+        u.bet_amount / 100 betAmount,
+        u.total_tickets betNum,
+        a.amount / 100 amount,
+        m.merchant_name merchantName,
+        Ifnull(h.login_time,u.modify_time) lastLogin,
+        u.agent_id agentId,
+        u.special_betting_limit_type specialBettingLimitType,
+        u.special_betting_limit_time specialBettingLimitTime,
+        u.special_betting_limit_delay_time specialBettingLimitDelayTime,
+        u.market_level marketLevel,
+        u.last_bet_time lastBet,
+        u.is_test isvip,
+        u.remark,
+        u.disabled disabled,
+        u.disabled allowListSource,
+        m.id merchantId
+        FROM t_user u
+        LEFT JOIN t_account a ON u.uid = a.uid
+        LEFT JOIN t_merchant m ON m.merchant_code = u.merchant_code
+        LEFT JOIN t_log_history h ON h.uid = u.uid
+        WHERE u.disabled in (2,3,4,5)
+        <if test="userId != null">
+            AND u.uid = #{userId}
+        </if>
+        <if test="userIdList != null and userIdList.size() > 0">
+            AND u.uid  in
+            <foreach item='option' index='index' collection='userIdList' open='(' separator=','
+                     close=')'>
+                #{option}
+            </foreach>
+        </if>
+        <if test="userName != null">
+            AND u.username =#{userName}
+        </if>
+        <if test=" userInfo!=null and userInfo!='' ">
+            AND (u.username =#{userInfo} OR u.uid = #{userInfo})
+        </if>
+        <if test="merchantCodeList != null">
+            AND u.merchant_code in
+            <foreach collection="merchantCodeList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test=" disabled!=null">
+            AND u.disabled = #{disabled}
+        </if>
+    </select>
+    <select id="getDeleteUidList" resultType="java.lang.Long">
+        select uid
+        from t_user
+        where merchant_code = #{merchantCode}
+            limit 1000
+    </select>
+    <delete id="clearUserDailyTask">
+        DELETE FROM `t_user` WHERE uid  IN
+        <foreach collection="uIds" item="item" index="index" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+</mapper>

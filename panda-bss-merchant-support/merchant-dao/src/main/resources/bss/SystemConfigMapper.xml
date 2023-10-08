@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.bss.mapper.SystemConfigMapper">
+
+    <resultMap id="BaseResultMap" type="com.panda.sport.merchant.common.po.bss.SystemConfig">
+        <result column="id" property="id"/>
+        <result column="config_key" property="configKey"/>
+        <result column="config_value" property="configValue"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_by" property="createBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="remark" property="remark"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+                id,
+                config_key,
+                config_value,
+                create_time,
+                create_by,
+                update_time,
+                update_by,
+                remark
+    </sql>
+
+    <select id="querySystemConfig" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        from t_system_config
+        WHERE 1=1
+        <if test='null != configKey'>
+            AND config_key LIKE concat(#{configKey},'%')
+        </if>
+        <if test='null != configValue'>
+            AND config_value = #{configValue}
+        </if>
+        <if test='null != id'>
+            AND id = #{id}
+        </if>
+        ORDER BY id ASC
+    </select>
+    <select id="queryMaxId" resultType="java.lang.Long">
+        SELECT MAX(id)+1 FROM `t_system_config`
+    </select>
+
+    <insert id="createSystemConfig" useGeneratedKeys="true" keyColumn="id" keyProperty="id"
+            parameterType="com.panda.sport.merchant.common.po.bss.SystemConfig">
+            INSERT INTO t_system_config
+            ( <include refid="Base_Column_List" /> )
+            VALUES ( #{id},#{configKey},#{configValue},#{createTime},#{createBy},#{updateTime},#{updateBy},#{remark} )
+    </insert>
+
+    <update id="updateSystemConfig">
+        UPDATE t_system_config
+        <set>
+            <if test='null != configKey'>config_key = #{configKey},</if>
+            <if test='null != configValue'>config_value = #{configValue},</if>
+            <if test='null != updateTime'>update_time = #{updateTime},</if>
+            <if test='null != updateBy'>update_by = #{updateBy},</if>
+            <if test='null != remark'>remark = #{remark}</if>
+        </set>
+            WHERE id = #{id}
+    </update>
+
+</mapper>

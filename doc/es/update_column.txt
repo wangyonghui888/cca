@@ -1,0 +1,47 @@
+PUT merchant_order_day/_mapping
+{
+  "properties": {
+    "merchantName": {
+      "type":     "text",
+      "fielddata": true
+    }
+  }
+}
+
+PUT merchant_order_day/_mapping
+{
+  "properties": {
+    "merchantCode": {
+      "type":     "text",
+      "fielddata": true
+    }
+  }
+}
+
+
+
+PUT rcs_match_play_day/_mapping
+{
+  "properties": {
+    "totalBetAmount": {
+      "type": "text",
+      "fielddata": true
+    },
+    "profitAmount": {
+      "type": "text",
+      "fielddata": true
+    },
+    "optionOneAmount": {
+      "type": "text",
+      "fielddata": true
+    },
+    "optionTwoAmount": {
+      "type": "text",
+      "fielddata": true
+    },
+    "betAmount": {
+      "type": "text",
+      "fielddata": true
+    }
+  }
+}

@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.bss.mapper.TDomainMapper">
+
+    <resultMap id="BaseResultMap" type="com.panda.sport.merchant.common.po.bss.TDomain" >
+        <result column="id" property="id" />
+        <result column="domain_type" property="domainType" />
+        <result column="domain_name" property="domainName" />
+        <result column="enable" property="enable" />
+        <result column="enable_time" property="enableTime" />
+        <result column="delete_tag" property="deleteTag" />
+        <result column="create_time" property="createTime" />
+        <result column="create_user" property="createUser" />
+        <result column="update_time" property="updateTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="merchant_group_id" property="merchantGroupId"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+                    id,
+                    domain_type,
+                    domain_name,
+                    enable,
+                    enable_time,
+                    delete_tag,
+                    create_time,
+                    create_user,
+                    update_time,
+                    update_user,
+                    merchant_group_id
+        </sql>
+
+    <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id" parameterType="com.panda.sport.merchant.common.po.bss.TDomain">
+        INSERT INTO t_domain
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="null != domainType and '' != domainType">
+                domain_type,
+            </if>
+            <if test="null != domainName and '' != domainName">
+                domain_name,
+            </if>
+            <if test="null != enable and '' != enable">
+                enable,
+            </if>
+            <if test="null != enableTime and '' != enableTime">
+                enable_time,
+            </if>
+            <if test="null != deleteTag and '' != deleteTag">
+                delete_tag,
+            </if>
+            <if test="null != createTime and '' != createTime">
+                create_time,
+            </if>
+            <if test="null != createUser and '' != createUser">
+                create_user,
+            </if>
+            <if test="null != updateTime and '' != updateTime">
+                update_time,
+            </if>
+            <if test="null != updateUser and '' != updateUser">
+                update_user
+            </if>
+            <if test="null != merchantGroupId and '' != merchantGroupId">
+                merchant_group_id
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="null != domainType and '' != domainType">
+                #{domainType},
+            </if>
+            <if test="null != domainName and '' != domainName">
+                #{domainName},
+            </if>
+            <if test="null != enable and '' != enable">
+                #{enable},
+            </if>
+            <if test="null != enableTime and '' != enableTime">
+                #{enableTime},
+            </if>
+            <if test="null != deleteTag and '' != deleteTag">
+                #{deleteTag},
+            </if>
+            <if test="null != createTime and '' != createTime">
+                #{createTime},
+            </if>
+            <if test="null != createUser and '' != createUser">
+                #{createUser},
+            </if>
+            <if test="null != updateTime and '' != updateTime">
+                #{updateTime},
+            </if>
+            <if test="null != updateUser and '' != updateUser">
+                #{updateUser}
+            </if>
+            <if test="null != merchantGroupId and '' != merchantGroupId">
+                #{merchantGroupId}
+            </if>
+        </trim>
+    </insert>
+
+    <delete id="delete" >
+            DELETE FROM t_domain
+            WHERE id = #{id}
+        </delete>
+
+    <update id="resetDomain" >
+            UPDATE t_domain set enable = 0 WHERE id = #{id}
+    </update>
+
+    <delete id="deleteAll" parameterType="com.panda.sport.merchant.common.vo.DomainVo">
+            DELETE FROM t_domain
+            <include refid="queryParam"></include>
+        </delete>
+
+
+    <update id="update" parameterType="com.panda.sport.merchant.common.po.bss.TDomain">
+        UPDATE t_domain
+        <set>
+            <if test="null != domainType and '' != domainType">domain_type = #{domainType},</if>
+            <if test="null != domainName and '' != domainName">domain_name = #{domainName},</if>
+            <if test="null != enable and '' != enable">enable = #{enable},</if>
+            <if test="null != enableTime and '' != enableTime">enable_time = #{enableTime},</if>
+            <if test="null != deleteTag and '' != deleteTag">delete_tag = #{deleteTag},</if>
+            <if test="null != createTime">create_time = #{createTime},</if>
+            <if test="null != createUser and '' != createUser">create_user = #{createUser},</if>
+            <if test="null != updateTime">update_time = #{updateTime},</if>
+            <if test="null != updateUser and '' != updateUser">update_user = #{updateUser}</if>
+            <if test="null != merchantGroupId and '' != merchantGroupId">merchant_group_id = #{merchantGroupId}</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+
+    <select id="load" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM t_domain
+        WHERE id = #{id}
+    </select>
+
+    <select id="checkDomainByGroup" resultType="java.lang.Integer">
+        SELECT count(1)
+        FROM t_domain d
+                 left join t_merchant_group m on m.id = d.merchant_group_id
+        WHERE d.domain_name = #{api}
+          and m.group_code = #{groupCode}
+    </select>
+
+    <select id="checkDomianByEnable" resultType="java.lang.Integer">
+        SELECT count(1)
+        FROM t_domain
+        WHERE enable = 2 and merchant_group_id = #{merchantGroupId}
+    </select>
+    <select id="maxDomianIdByEnable" resultType="java.lang.Long">
+        SELECT MAX(id)
+        FROM t_domain
+        WHERE enable = 0 and merchant_group_id = #{merchantGroupId}
+    </select>
+
+    <update id="updateDomianEnableById">
+         update  t_domain set enable = #{enable} where id = #{id}
+    </update>
+
+    <update id="updateDomainEnable">
+         update  t_domain set enable = #{enable},update_time=now() where domain_name = #{domainName}
+    </update>
+
+    <update id="updateDomianEnableTimeByid">
+         update  t_domain set enable = 1,enable_time = #{enableTime} where id = #{id}
+    </update>
+
+    <update id="updateByName">
+         update  t_domain set enable = 0,enable_time = null where domain_name = #{domainName}
+    </update>
+
+    <select id="getAvailableDomain" resultType="String">
+         SELECT domain_name FROM `t_domain` WHERE enable in(0,2) and domain_name is not null and domain_type = 2 order by create_time desc limit 1
+    </select>
+
+    <select id="getAvailableDomainByGroup" resultType="Map" parameterType="String">
+        select a.domain_name domainName, (select group_name from t_merchant_group where id = a.merchant_group_id) groupName
+        from t_domain a
+        where a.merchant_group_id in
+              (SELECT DISTINCT merchant_group_id FROM `t_domain` where domain_name = #{domainName})
+          and a.enable in (0, 2)
+          and a.domain_name is not null
+          and a.domain_type = 2
+        order by a.create_time desc
+        limit 1
+    </select>
+
+    <select id="getUnuseDomain" resultType="String">
+         SELECT domain_name FROM `t_domain` WHERE enable =0 and domain_name is not null and domain_type = 2 order by create_time desc limit 1
+    </select>
+
+    <select id="pageList" resultType="com.panda.sport.merchant.common.vo.TDomainVo">
+        SELECT <include refid="Base_Column_List" />
+        FROM t_domain
+        <include refid="queryParam"></include>
+        LIMIT #{starNum}, #{pageSize}
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM t_domain
+        <include refid="queryParam"></include>
+    </select>
+
+    <select id="selectAllByEnable34" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" /> from t_domain where enable in (3,4)
+    </select>
+
+    <select id="pageListCount" resultType="java.lang.Integer" parameterType="com.panda.sport.merchant.common.vo.DomainVo">
+        SELECT count(1)
+        FROM t_domain
+        <include refid="queryParam"></include>
+    </select>
+
+    <sql id="queryParam">
+        <where>
+            <if test="enable != null">
+                and enable = #{enable}
+            </if>
+            <if test="domainType != null">
+                and domain_type = #{domainType}
+            </if>
+            <if test="domainName != null">
+                and domain_name like concat('%',#{domainName},'%')
+            </if>
+            <if test="starDate != null">
+                AND enable_time BETWEEN #{starDate} and #{endDate}
+            </if>
+            <if test="null != merchantGroupId">
+                and merchant_group_id = #{merchantGroupId}
+            </if>
+            <if test="groupType != null">
+                AND group_type = #{groupType}
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectAnimation3Url" resultType="java.lang.String">
+        select animation3_url from t_animation3_url
+    </select>
+
+    <update id="updateAnimation" >
+        update t_animation3_url
+        set animation3_url=#{url}
+    </update>
+
+
+    <insert id="saveDomian" useGeneratedKeys="true" keyColumn="id" keyProperty="id" parameterType="com.panda.sport.merchant.common.po.bss.TDomain">
+        INSERT INTO t_domain
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="null != domainType and '' != domainType">
+                domain_type,
+            </if>
+            <if test="null != domainName and '' != domainName">
+                domain_name,
+            </if>
+            <if test="null != enable and '' != enable">
+                enable,
+            </if>
+            <if test="null != enableTime">
+                enable_time,
+            </if>
+            <if test="null != deleteTag and '' != deleteTag">
+                delete_tag,
+            </if>
+            <if test="null != createTime">
+                create_time,
+            </if>
+            <if test="null != createUser and '' != createUser">
+                create_user,
+            </if>
+            <if test="null != updateTime">
+                update_time,
+            </if>
+            <if test="null != updateUser and '' != updateUser">
+                update_user
+            </if>
+            <if test="null != merchantGroupId">
+                merchant_group_id
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="null != domainType and '' != domainType">
+                #{domainType},
+            </if>
+            <if test="null != domainName and '' != domainName">
+                #{domainName},
+            </if>
+            <if test="null != enable and '' != enable">
+                #{enable},
+            </if>
+            <if test="null != enableTime">
+                #{enableTime},
+            </if>
+            <if test="null != deleteTag and '' != deleteTag">
+                #{deleteTag},
+            </if>
+            <if test="null != createTime">
+                #{createTime},
+            </if>
+            <if test="null != createUser and '' != createUser">
+                #{createUser},
+            </if>
+            <if test="null != updateTime">
+                #{updateTime},
+            </if>
+            <if test="null != updateUser and '' != updateUser">
+                #{updateUser}
+            </if>
+            <if test="null != merchantGroupId">
+                #{merchantGroupId}
+            </if>
+        </trim>
+    </insert>
+
+    <select id="selectTmerchantDomainGroup"  resultType="com.panda.sport.merchant.common.po.bss.TMerchantDomainGroupPo">
+        SELECT *  FROM t_merchant_domain_group WHERE group_code = #{groupCode}
+    </select>
+
+    <select id="tMerchantDomainGroupList"  resultType="com.panda.sport.merchant.common.po.bss.TMerchantDomainGroupPo">
+        SELECT *  FROM t_merchant_domain_group
+    </select>
+
+    <insert id="addApiMerchantGroup" useGeneratedKeys="true" keyColumn="id" keyProperty="id" parameterType="com.panda.sport.merchant.common.po.bss.TMerchantDomainGroupPo">
+      insert into t_merchant_domain_group (group_name,group_code,domain_name,status,create_time,update_time)
+      values (#{groupName},#{groupCode},#{domainName},#{status},#{createTime},#{updateTime})
+    </insert>
+
+    <insert id="addBatchMerchantDomainGroup"  parameterType="List">
+        INSERT INTO t_merchant_domain_group
+        (
+        `group_name`,
+        `group_code`,
+        `domain_name`,
+        `status`,
+        `create_time`,
+        `update_time`
+        )
+        VALUES
+        <foreach collection="list" item="obj" separator=",">
+            (
+            #{obj.groupName},
+            #{obj.groupCode},
+            #{obj.domainName},
+            #{obj.status},
+            #{obj.createTime},
+            #{obj.updateTime}
+            )
+        </foreach>
+    </insert>
+
+    <update id="updateApiMerchantGroup" parameterType="com.panda.sport.merchant.common.po.bss.TMerchantDomainGroupPo">
+        UPDATE t_merchant_domain_group
+        <set >
+            <if test='null != status'>`status` = #{status},</if>
+            <if test='null != groupName'>group_name = #{groupName},</if>
+            <if test='null != groupCode'>group_code = #{groupCode},</if>
+            <if test='null != domainName'>domain_name = #{domainName},</if>
+            <if test='null != updateTime'>update_time = #{updateTime},</if>
+        </set>
+        where id =#{id}
+    </update>
+
+    <delete id="deleteApiMerchantGroup" parameterType="com.panda.sport.merchant.common.po.bss.TMerchantDomainGroupPo">
+       DELETE FROM  t_merchant_domain_group  where group_code =#{groupCode}
+    </delete>
+
+    <select id="getApiDomainUrl" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM t_domain
+        WHERE
+        domain_type = 2
+        AND enable IN (0,1,2)
+        AND domain_name IS NOT NULL
+        AND merchant_group_id IN
+        <foreach collection="merchantGroupIds" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+</mapper>

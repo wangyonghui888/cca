@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.multiterminalinteractivecenter.mapper.LineCarrierMapper">
+
+    <insert id="insertLineCarrier" parameterType="com.panda.multiterminalinteractivecenter.entity.LineCarrier">
+        INSERT INTO t_line_carrier
+        (
+            `id`,
+            `line_carrier_code`,
+            `line_carrier_name`,
+            `line_carrier_status`,
+            `create_by`,
+            `create_time`,
+            `updated_by`,
+            `update_time`,
+        )
+            VALUES
+        (
+            #{id},
+            #{lineCarrierCode},
+            #{lineCarrierName},
+            #{lineCarrierStatus},
+            #{createBy},
+            #{createTime},
+            #{updateBy},
+            #{updateTime}
+        )
+    </insert>
+
+    <select id="selectByName" resultType="int">
+        SELECT
+            count( 1 )
+        FROM
+            t_line_carrier
+        <where>
+            <if test="lineCarrierName!=null and lineCarrierName != ''">
+                and line_carrier_name = #{lineCarrierName}
+            </if>
+            <if test="tab!=null and tab != ''">
+                and tab = #{tab}
+            </if>
+        </where>
+    </select>
+
+    <select id="getLineCarrier" resultType="com.panda.multiterminalinteractivecenter.entity.LineCarrier">
+        SELECT
+            t.id AS id,
+            t.line_carrier_name AS lineCarrierName,
+            t.line_carrier_code AS lineCarrierCode,
+            t.line_carrier_status AS lineCarrierStatus,
+            t.create_by AS createBy,
+            t.create_time AS createTime,
+            t.update_by AS updateBy,
+            t.update_time AS updateTime
+        FROM
+            t_line_carrier t
+        <where>
+            <if test="lineCarrierName!=null and lineCarrierName != ''">
+                and t.line_carrier_name like CONCAT('%',#{lineCarrierName},'%')
+            </if>
+            <if test="tab!=null and tab != ''">
+                and tab = #{tab}
+            </if>
+        </where>
+        ORDER BY
+            t.line_carrier_status DESC,
+            t.update_time DESC
+    </select>
+
+    <update id="updateLineCarrier" parameterType="com.panda.multiterminalinteractivecenter.entity.LineCarrier">
+        UPDATE t_line_carrier
+        SET line_carrier_name = #{lineCarrierName},
+            update_by = #{updateBy},
+            update_time = #{updateTime}
+        WHERE
+            id = #{id}
+    </update>
+
+    <update id="updateLineCarrierStatus" parameterType="com.panda.multiterminalinteractivecenter.entity.LineCarrier">
+        UPDATE t_line_carrier
+        SET line_carrier_status = #{lineCarrierStatus},
+            update_by = #{updateBy},
+            update_time = #{updateTime}
+        WHERE
+            id = #{id}
+    </update>
+
+    <select id="editCheckName" resultType="com.panda.multiterminalinteractivecenter.entity.LineCarrier">
+        SELECT
+            t.id AS id,
+            t.line_carrier_name AS lineCarrierName,
+            t.line_carrier_code AS lineCarrierCode
+        FROM
+            t_line_carrier t
+        WHERE
+            t.line_carrier_name = #{lineCarrierName}
+            and t.tab = #{tab}
+    </select>
+
+    <select id="getLineCarrierById" resultType="com.panda.multiterminalinteractivecenter.entity.LineCarrier">
+        SELECT
+            t.id AS id,
+            t.line_carrier_name AS lineCarrierName,
+            t.line_carrier_code AS lineCarrierCode,
+            t.line_carrier_status AS lineCarrierStatus,
+            t.tab AS tab,
+            t.create_by AS createBy,
+            t.create_time AS createTime,
+            t.update_by AS updateBy,
+            t.update_time AS updateTime
+        FROM
+            t_line_carrier t
+        WHERE
+            t.id = #{id}
+    </select>
+
+    <delete id="delLineCarrierById">
+        delete from t_line_carrier
+        where id = #{id}
+    </delete>
+
+    <select id="queryLineCarrierList" resultType="com.panda.multiterminalinteractivecenter.entity.LineCarrier">
+        SELECT
+            t.id AS id,
+            t.line_carrier_name AS lineCarrierName,
+            t.line_carrier_code AS lineCarrierCode,
+            t.line_carrier_status AS lineCarrierStatus,
+            t.tab AS tab,
+            t.create_by AS createBy,
+            t.create_time AS createTime,
+            t.update_by AS updateBy,
+            t.update_time AS updateTime
+        FROM
+            t_line_carrier t
+        <where>
+            <if test="lineCarrierName!=null and lineCarrierName != ''">
+                and t.line_carrier_name like CONCAT('%',#{lineCarrierName},'%')
+            </if>
+            <if test="tab!=null and tab != ''">
+                and tab = #{tab}
+            </if>
+        </where>
+    </select>
+
+    <select id="getDomainNum" resultType="com.panda.multiterminalinteractivecenter.vo.LineCarrierVo">
+        SELECT
+            tg.id AS domainGroupId,
+            tg.domain_group_name AS domainGroupName,
+            (
+            SELECT
+                COUNT( td.id )
+            FROM
+                t_domain_group tdg
+                LEFT JOIN t_domain_group_relation dgr ON dgr.domain_group_id = tdg.id
+                LEFT JOIN t_domain_ty td ON td.id = dgr.domain_id
+            WHERE
+                tdg.id = tg.id
+            ) AS domainNum,
+            tg.h5_threshold h5Threshold,
+            tg.pc_threshold pcThreshold,
+            tg.api_threshold apiThreshold,
+            tg.img_threshold imgThreshold,
+            td.id AS domainId,
+            td.domain_name AS domainName,
+            lc.id AS id,
+            lc.line_carrier_name AS lineCarrierName,
+            lc.line_carrier_status AS lineCarrierStatus
+        FROM
+            t_line_carrier lc
+            JOIN t_domain_ty td ON lc.id = td.line_carrier_id
+            JOIN t_domain_group_relation tr ON td.id = tr.domain_id
+            JOIN t_domain_group tg ON tr.domain_group_id = tg.id
+        WHERE
+            lc.id = #{id}
+            AND td.STATUS = 1
+            AND tg.STATUS = 1
+    </select>
+    <select id="getDomainGroupByLineId"
+            resultType="com.panda.multiterminalinteractivecenter.dto.DomainGroupThresholdDTO">
+        select tdg.id,tdg.domain_group_name domainGroupName,
+               CASE WHEN tdg.exclusive_type = 2 THEN "VIP"
+                    WHEN tdg.belong_area = 0   THEN "默认"
+                    WHEN tdg.exclusive_type = 1 THEN ( SELECT ma.NAME FROM merchant.m_domain_area ma WHERE ma.id = tdg.belong_area )
+                   END AS areaName,
+               tdg.h5_threshold h5Threshold,
+               tdg.pc_threshold pcThreshold,
+               tdg.api_threshold apiThreshold,
+               tdg.img_threshold imgThreshold,
+               tmp.*
+        FROM t_domain_group tdg
+            LEFT JOIN
+            (SELECT
+                  tdgr.domain_group_id AS id,
+                  COUNT(case when tdty.domain_type=1 then 1 else NULL end) as h5Count,
+                  COUNT(case when tdty.domain_type=2 then 1 else NULL end) as pcCount,
+                  COUNT(case when tdty.domain_type=3 then 1 else NULL end) as apiCount,
+                  COUNT(case when tdty.domain_type=4 then 1 else NULL end) as imgCount,
+                  COUNT(case when tdty.domain_type=5 then 1 else NULL end) as otherCount
+              FROM t_domain_group_relation tdgr
+                       left join<include refid="domain_param"/>
+                    tdty on  tdgr.domain_id = tdty.id
+                       LEFT JOIN t_domain_group tdg ON tdgr.domain_group_id = tdg.id
+              WHERE tdgr.domain_group_id = tdg.id
+                AND tdty.line_carrier_id !=#{param.id}
+              AND tdty.tab = #{param.tab}
+              AND tdg.tab = #{param.tab}
+              GROUP BY tdg.id
+             ) tmp on tdg.id = tmp.id
+        WHERE tdg.tab = #{param.tab}
+    </select>
+
+    <select id="getDomainListByLineId" resultType="java.lang.Long">
+        SELECT td.id
+        FROM
+        <include refid="domain"/>
+        td WHERE td.line_carrier_id = #{id}
+        AND td.tab = #{tab}
+    </select>
+    <select id="getUsedDomainByLineId"
+            resultType="com.panda.multiterminalinteractivecenter.dto.DomainGroupThresholdDTO">
+        SELECT
+            tdg.id,tdg.domain_group_name domainGroupName,
+            tdg.h5_threshold h5Threshold,
+            tdg.pc_threshold pcThreshold,
+            tdg.api_threshold apiThreshold,
+            tdg.img_threshold imgThreshold,
+            CASE WHEN tdg.exclusive_type = 2 THEN "VIP"
+                 WHEN tdg.belong_area = 0   THEN "默认"
+                 WHEN tdg.exclusive_type = 1 THEN ( SELECT ma.NAME FROM merchant.m_domain_area ma WHERE ma.id = tdg.belong_area )
+                END AS areaName,tmp.*
+                FROM  t_domain_group tdg
+                    INNER JOIN
+                (SELECT
+                    tdg.id AS id,
+                    count(case when tdty.domain_type=1 then 1 else NULL end) as h5Count,
+                    count(case when tdty.domain_type=2 then 1 else NULL end) as pcCount,
+                    count(case when tdty.domain_type=3 then 1 else NULL end) as apiCount,
+                    count(case when tdty.domain_type=4 then 1 else NULL end) as imgCount,
+                    count(case when tdty.domain_type=5 then 1 else NULL end) as otherCount
+                FROM t_domain_group tdg
+                LEFT JOIN t_domain_group_relation tdgr ON tdgr.domain_group_id = tdg.id
+                LEFT JOIN <include refid="domain_param"/>  tdty on  tdgr.domain_id = tdty.id
+                    AND 1=1
+                    AND tdty.tab = #{param.tab}
+                    AND tdty.status = 1
+                    AND tdty.enable = 1
+                    AND tdty.line_carrier_id = #{param.id}
+                    AND tdg.tab = #{param.tab}
+                    GROUP BY tdg.id) tmp on tdg.id = tmp.id
+                WHERE tdg.tab = #{param.tab}
+    </select>
+    <select id="getWaitUsedDomainByLineId"
+            resultType="com.panda.multiterminalinteractivecenter.dto.DomainGroupThresholdDTO">
+        SELECT
+        tdg.id,tdg.domain_group_name domainGroupName,
+        tdg.h5_threshold h5Threshold,
+        tdg.pc_threshold pcThreshold,
+        tdg.api_threshold apiThreshold,
+        tdg.img_threshold imgThreshold,
+        CASE WHEN tdg.exclusive_type = 2 THEN "VIP"
+        WHEN tdg.belong_area = 0   THEN "默认"
+        WHEN tdg.exclusive_type = 1 THEN ( SELECT ma.NAME FROM merchant.m_domain_area ma WHERE ma.id = tdg.belong_area )
+        END AS areaName,tmp.*
+        FROM  t_domain_group tdg
+            INNER JOIN
+        (SELECT tdg.id AS id,
+        count(case when tdty.domain_type=1 then 1 else NULL end) as h5Count,
+        count(case when tdty.domain_type=2 then 1 else NULL end) as pcCount,
+        count(case when tdty.domain_type=3 then 1 else NULL end) as apiCount,
+        count(case when tdty.domain_type=4 then 1 else NULL end) as imgCount,
+        count(case when tdty.domain_type=5 then 1 else NULL end) as otherCount
+        FROM t_domain_group tdg
+        LEFT JOIN t_domain_group_relation tdgr ON tdgr.domain_group_id = tdg.id
+        LEFT JOIN <include refid="domain_param"/>  tdty on  tdgr.domain_id = tdty.id
+        AND 1=1
+        AND tdty.tab = #{param.tab}
+        AND tdty.status = 1
+        AND tdty.enable = 2
+        AND tdty.line_carrier_id !=#{param.id}
+        AND tdg.tab = #{param.tab}
+        GROUP BY tdg.id) tmp on tdg.id = tmp.id
+        WHERE tdg.tab = #{param.tab}
+        GROUP BY tdg.id
+    </select>
+
+    <sql id="domain">
+        <if test="null != tab and 'ty' == tab">
+            t_domain_ty
+        </if>
+        <if test="null != tab and 'ty' != tab">
+            t_domain
+        </if>
+    </sql>
+
+    <sql id="domain_param">
+        <if test="null != param.tab and 'ty' == param.tab">
+            t_domain_ty
+        </if>
+        <if test="null != param.tab and 'ty' != param.tab">
+            t_domain
+        </if>
+    </sql>
+</mapper>

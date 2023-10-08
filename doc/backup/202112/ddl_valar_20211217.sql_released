@@ -1,0 +1,3 @@
+
+alter table tybss_merchant_common.t_merchant_config
+    add market_level_update bigint null COMMENT '赔率分组最后更新时间' after tag_market_level;

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.merchant.mapper.ExternalMerchantConfigMapper">
+
+    <resultMap id="BaseResultMap" type="com.panda.sport.merchant.common.po.merchant.MerchantConfig" >
+        <result column="id" property="id" />
+        <result column="merchant_code" property="merchantCode" />
+        <result column="default_time_type" property="defaultTimeType"/>
+        <result column="is_nature_day" property="isNatureDay"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+                id,
+                merchant_code,
+                default_time_type,
+                is_nature_day
+    </sql>
+
+</mapper>

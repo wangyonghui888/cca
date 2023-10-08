@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.bss.mapper.SlotsSyntheticRecordsMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.panda.sport.merchant.common.po.bss.SlotsSyntheticRecords">
+        <id column="id" property="id"/>
+        <result column="uid" property="uid"/>
+        <result column="user_name" property="userName"/>
+        <result column="merchant_code" property="merchantCode"/>
+        <result column="source_token" property="sourceToken"/>
+        <result column="source_token_type" property="sourceTokenType"/>
+        <result column="source_token_id" property="sourceTokenId" />
+        <result column="target_token" property="targetToken"/>
+        <result column="target_token_type" property="targetTokenType"/>
+        <result column="target_token_id" property="targetTokenId" />
+        <result column="return_token" property="returnToken"/>
+        <result column="return_token_type" property="returnTokenType"/>
+        <result column="return_token_id" property="returnTokenId" />
+        <result column="remark" property="remark"/>
+        <result column="created_by" property="createdBy"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        uid,
+        user_name,
+        merchant_code,
+        source_token,
+        source_token_type,
+        source_token_id,
+        target_token,
+        target_token_type,
+        target_token_id,
+        return_token,
+        return_token_type,
+        return_token_id,
+        remark,
+        created_by,
+        create_time
+    </sql>
+</mapper>

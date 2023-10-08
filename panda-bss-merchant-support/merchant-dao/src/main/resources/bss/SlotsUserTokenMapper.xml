@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.bss.mapper.SlotsUserTokenMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.panda.sport.merchant.common.po.bss.SlotsUserToken">
+        <id column="user_id" property="userId"/>
+        <result column="token_num" property="tokenNum"/>
+        <result column="token_id" property="tokenId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="last_update_time" property="lastUpdateTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        user_id,
+        token_num,
+        token_id,
+        create_time,
+        last_update_time
+    </sql>
+</mapper>

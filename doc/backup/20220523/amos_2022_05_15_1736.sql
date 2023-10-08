@@ -1,0 +1,1 @@
+alter table merchant.merchant_log  add ip varchar(20)  COMMENT 'ip外网地址' after domain_type;

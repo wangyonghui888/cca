@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.multiterminalinteractivecenter.mapper.MaintenancePlatformMapper">
+
+    <resultMap id="BaseResultMap" type="com.panda.multiterminalinteractivecenter.entity.MaintenancePlatform" >
+        <result column="id" property="id" />
+        <result column="server_name" property="serverName" />
+        <result column="serve_code" property="serveCode"/>
+        <result column="data_code" property="dataCode" />
+        <result column="base_url" property="baseUrl" />
+        <result column="kick_user_type" property="kickUserType" />
+        <result column="kick_user_url" property="kickUserUrl" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+                id,
+                server_name,
+                serve_code,
+                data_code,
+                base_url,
+                kick_user_type,
+                kick_user_url,
+                create_time,
+                update_time
+    </sql>
+
+    <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id" parameterType="com.panda.multiterminalinteractivecenter.entity.MaintenancePlatform">
+        INSERT INTO m_maintenance_platform
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="null != serverName and '' != serverName">
+                server_name,
+            </if>
+            <if test="null != dataCode and '' != dataCode">
+                data_code,
+            </if>
+            <if test="null != baseUrl and '' != baseUrl">
+                base_url,
+            </if>
+            <if test="null != kickUserType and '' != kickUserType">
+                kick_user_type,
+            </if>
+            <if test="null != kickUserUrl and '' != kickUserUrl">
+                kick_user_url,
+            </if>
+            <if test="null != createTime and '' != createTime">
+                create_time,
+            </if>
+            <if test="null != updateTime and '' != updateTime">
+                update_time
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="null != serverName and '' != serverName">
+                #{serverName},
+            </if>
+            <if test="null != dataCode and '' != dataCode">
+                #{dataCode},
+            </if>
+            <if test="null != baseUrl and '' != baseUrl">
+                #{baseUrl},
+            </if>
+            <if test="null != kickUserType and '' != kickUserType">
+                #{kickUserType},
+            </if>
+            <if test="null != kickUserUrl and '' != kickUserUrl">
+                #{kickUserUrl},
+            </if>
+            <if test="null != createTime and '' != createTime">
+                #{createTime},
+            </if>
+            <if test="null != updateTime and '' != updateTime">
+                #{updateTime}
+            </if>
+        </trim>
+    </insert>
+
+    <delete id="delete" >
+        DELETE FROM m_maintenance_platform
+        WHERE id = #{id}
+    </delete>
+
+    <update id="update" parameterType="com.panda.multiterminalinteractivecenter.entity.MaintenancePlatform">
+        UPDATE m_maintenance_platform
+        <set>
+            <if test="null != serverName and '' != serverName">server_name = #{serverName},</if>
+            <if test="null != dataCode and '' != dataCode">data_code = #{dataCode},</if>
+            <if test="null != baseUrl and '' != baseUrl">base_url = #{baseUrl},</if>
+            <if test="null != kickUserType and '' != kickUserType">kick_user_type = #{kickUserType},</if>
+            <if test="null != kickUserUrl and '' != kickUserUrl">kick_user_url = #{kickUserUrl},</if>
+            <if test="null != createTime and '' != createTime">create_time = #{createTime},</if>
+            <if test="null != updateTime and '' != updateTime">update_time = #{updateTime}</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+
+    <select id="load" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM m_maintenance_platform
+        WHERE id = #{id}
+    </select>
+
+    <select id="pageList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM m_maintenance_platform
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="pageListCount" resultType="java.lang.Integer">
+        SELECT count(1)
+        FROM m_maintenance_platform
+    </select>
+
+    <select id="findListByDataCode" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM m_maintenance_platform
+        <where>
+            <if test="dataCodes != null and dataCodes.size() > 0">
+                and data_code in
+                <foreach item='code' index='index' collection='dataCodes'
+                         open='(' separator=',' close=')'>
+                    #{code}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="querySystemInfo" resultType="com.panda.multiterminalinteractivecenter.vo.MaintenanceRecordOutDto">
+          select  d.maintenance_start_time as maintenanceStartTime,d.maintenance_end_time as maintenanceEndTime,
+           d.maintenance_status as maintenanceStatus,CASE WHEN m.data_code = 'ty' then '体育'
+            WHEN  m.data_code = 'dj' then '电竞' ELSE '彩票' END
+            as serverCode from m_maintenance_platform m
+          left join m_maintenance_record d on m.id = d.maintenance_platform_id
+          where m.data_code = #{dataCode} and d.maintenance_status != 0
+          order by d.maintenance_start_time
+          limit 1;
+    </select>
+
+</mapper>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.bss.mapper.TMerchantGroupMapper">
+
+<resultMap id="BaseResultMap" type="com.panda.sport.merchant.common.po.bss.MerchantGroupPO" >
+    <result column="id" property="id" />
+    <result column="group_name" property="groupName" />
+    <result column="times" property="times" />
+    <result column="time_type" property="timeType" />
+    <result column="update_time" property="updateTime" />
+    <result column="status" property="status" />
+    <result column="third_status" property="thirdStatus" />
+    <result column="alarm_num" property="alarmNum"/>
+</resultMap>
+
+<sql id="Base_Column_List">
+                id,
+                group_name,
+                group_type,
+                group_code,
+                times,
+                time_type,
+                update_time,
+                status,
+                third_status,
+                alarm_num
+    </sql>
+
+    <insert id="createMerchantGroup"  useGeneratedKeys="true" keyColumn="id" keyProperty="id"
+            parameterType="com.panda.sport.merchant.common.po.bss.MerchantGroupPO">
+      insert into t_merchant_group (id,group_name,group_type,group_code,times,time_type,status)
+      values ( #{id},#{groupName},#{groupType},#{groupCode},#{times},#{timeType},#{status})
+    </insert>
+
+    <update id="updateMerchantGroup" parameterType="com.panda.sport.merchant.common.po.bss.MerchantGroupPO">
+        UPDATE t_merchant_group
+        <set >
+            <if test='null != thirdStatus'>`third_status` = #{thirdStatus},</if>
+            <if test='null != status'>`status` = #{status},</if>
+            <if test='null != groupName'>group_name = #{groupName},</if>
+            <if test='null != groupCode'>group_code = #{groupCode},</if>
+            <if test='null != times'>times = #{times},</if>
+            <if test='null != timeType'>time_type = #{timeType},</if>
+            <if test='null != updateTime'>update_time = #{updateTime},</if>
+            <if test='null != alarmNum'>
+                alarm_num = #{alarmNum},
+            </if>
+        </set>
+        where id =#{id}
+    </update>
+
+    <delete id="deleteMerchantGroup" parameterType="com.panda.sport.merchant.common.po.bss.MerchantGroupPO">
+       delete FROM  t_merchant_group  where id =#{id}
+    </delete>
+
+    <select id="selectMerchantGroup"  resultType="com.panda.sport.merchant.common.po.bss.MerchantGroupPO">
+        SELECT <include refid="Base_Column_List" /> from t_merchant_group
+        <where>
+            <if test="status!=null">
+               AND status = #{status}
+            </if>
+            <if test="groupType!=null">
+               AND group_type IN (2,3)
+            </if>
+            <if test="groupCode!=null">
+                AND group_code = #{groupCode}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectMerchantGroupById"  resultType="com.panda.sport.merchant.common.po.bss.MerchantGroupPO">
+        SELECT <include refid="Base_Column_List" /> from t_merchant_group where id = #{id}
+    </select>
+
+<select id="pageList" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List" />
+    FROM t_merchant_group
+    LIMIT #{starNum}, #{pageSize}
+</select>
+
+<select id="pageListCount" resultType="java.lang.Integer" parameterType="com.panda.sport.merchant.common.vo.DomainVo">
+        SELECT count(1)
+        FROM t_merchant_group
+    </select>
+
+</mapper>

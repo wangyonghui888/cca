@@ -1,0 +1,5 @@
+alter table tybss_merchant_common.t_merchant
+    add column is_test tinyint(4)  DEFAULT 0 COMMENT '是否测试商户0否1是';
+
+alter table tybss_merchant_common.t_merchant
+    add column is_external tinyint(4)  DEFAULT 0 COMMENT '是否外部商户0外部1内部';

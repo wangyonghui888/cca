@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.panda.sport.merchant.mapper.MerchantNoticeTypeMapper">
+
+
+    <resultMap id="BaseResultMap" type="com.panda.sport.merchant.common.po.merchant.MerchantNoticeType">
+        <id column="id"  property="id" />
+        <result column="type_name"  property="typeName" />
+        <result column="type_en"  property="typeEn" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+      id,type_name,type_en
+    </sql>
+
+
+
+</mapper>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.match.mapper.FestivalResourceConfigMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.panda.sport.merchant.common.po.bss.FestivalResourceConfig">
+        <id column="id" property="id"/>
+        <result column="language_code" property="languageCode"/>
+        <result column="description" property="description"/>
+        <result column="pc_daytime_link" property="pcDaytimeLink"/>
+        <result column="h5_daytime_link" property="h5DaytimeLink"/>
+        <result column="pc_night_link" property="pcNightLink"/>
+        <result column="h5_night_link" property="h5NightLink"/>
+        <result column="cover_vi" property="coverVi"/>
+        <result column="enabled" property="enabled"/>
+        <result column="start_time" property="startTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        language_code,
+        description,
+        pc_daytime_link,
+        h5_daytime_link,
+        pc_night_link,
+        h5_night_link,
+        cover_vi,
+        enabled,
+        start_time,
+        end_time,
+        create_time,
+        modify_time
+    </sql>
+</mapper>

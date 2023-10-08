@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.bss.mapper.ActivityOrderMapper">
+    <select id="queryLatestOrderCount" resultType="Integer">
+        SELECT count(1)
+        FROM `t_order` o
+        where o.modify_time <![CDATA[ >= ]]> #{startTimeL}
+          and o.modify_time <![CDATA[ <= ]]> #{endTimeL}
+          and o.order_status = 1
+    </select>
+
+    <select id="queryDailyBetTimesUsers1" resultType="Long">
+        SELECT distinct o.uid
+        FROM `t_order` o
+        left join t_order_detail od on o.order_no = od.order_no
+        where o.modify_time <![CDATA[ >= ]]> #{startTimeL}
+        and o.modify_time <![CDATA[ <= ]]> #{endTimeL}
+        and o.order_status = 1
+        <if test="betAmount !=null">
+            and o.order_amount_total >= #{betAmount}
+        </if>
+        <if test="sportList != null and sportList.size() > 0">
+            and od.sport_id in
+            <foreach item='code' index='index' collection='sportList'
+                     open='(' separator=',' close=')'>
+                #{code}
+            </foreach>
+        </if>
+        <if test="playList != null and playList.size() > 0">
+            and od.play_id in
+            <foreach item='code' index='index' collection='playList'
+                     open='(' separator=',' close=')'>
+                #{code}
+            </foreach>
+        </if>
+        and od.odds_value >= 150000
+        and od.bet_result IN (3,4,5,6)
+        and o.series_type = 1
+    </select>
+
+    <select id="queryDailyBetTimesUsers2" resultType="Map">
+        select a.uid, u.username userName,u.merchant_code merchantCode
+        from (SELECT o.uid, count(o.order_no) times
+        FROM `t_order` o
+        left join t_order_detail od on o.order_no = od.order_no
+        where o.modify_time <![CDATA[ >= ]]> #{startTimeL}
+        and o.modify_time <![CDATA[ <= ]]> #{endTimeL}
+        and o.order_status = 1
+        <if test="userList != null and userList.size() > 0">
+            and o.uid in
+            <foreach item='code' index='index' collection='userList'
+                     open='(' separator=',' close=')'>
+                #{code}
+            </foreach>
+        </if>
+        <if test="betAmount !=null">
+            and o.order_amount_total >= #{betAmount}
+        </if>
+        <if test="sportList != null and sportList.size() > 0">
+            and od.sport_id in
+            <foreach item='code' index='index' collection='sportList'
+                     open='(' separator=',' close=')'>
+                #{code}
+            </foreach>
+        </if>
+        <if test="playList != null and playList.size() > 0">
+            and od.play_id in
+            <foreach item='code' index='index' collection='playList'
+                     open='(' separator=',' close=')'>
+                #{code}
+            </foreach>
+        </if>
+        and od.odds_value >= 150000
+        and od.bet_result IN (3,4,5,6)
+        and o.series_type = 1
+        group by o.uid) a
+        left join t_user u on a.uid = u.uid
+        where a.times >= #{times}
+    </select>
+
+    <select id="queryBetAmountUser" resultType="Map">
+        SELECT distinct o.uid, u.username userName,u.merchant_code merchantCode
+        FROM `t_order` o
+        left join t_order_detail od on o.order_no = od.order_no
+        left join t_user u on o.uid = u.uid
+        where o.modify_time <![CDATA[ >= ]]> #{startTimeL}
+        and o.modify_time <![CDATA[ <= ]]> #{endTimeL}
+        and o.order_status = 1
+        <if test="betAmount !=null">
+            and o.order_amount_total >= #{betAmount}
+        </if>
+        <if test="sportList != null and sportList.size() > 0">
+            and od.sport_id in
+            <foreach item='code' index='index' collection='sportList'
+                     open='(' separator=',' close=')'>
+                #{code}
+            </foreach>
+        </if>
+        <if test="playList != null and playList.size() > 0">
+            and od.play_id in
+            <foreach item='code' index='index' collection='playList'
+                     open='(' separator=',' close=')'>
+                #{code}
+            </foreach>
+        </if>
+        and od.odds_value >= 150000
+        and od.bet_result IN (3,4,5,6)
+        and o.series_type = 1
+    </select>
+
+    <select id="queryDailyVirtualBetTimesUsers1" resultType="Long">
+        SELECT distinct o.uid
+        FROM `t_order` o
+        left join t_order_detail od on o.order_no = od.order_no
+        where o.modify_time <![CDATA[ >= ]]> #{startTimeL}
+        and o.modify_time <![CDATA[ <= ]]> #{endTimeL}
+        and o.order_status = 1
+        <if test="betAmount !=null">
+            and o.order_amount_total >= #{betAmount}
+        </if>
+        and o.manager_code = 3
+        <if test="sportList != null and sportList.size() > 0">
+            and od.sport_id in
+            <foreach item='code' index='index' collection='sportList'
+                     open='(' separator=',' close=')'>
+                #{code}
+            </foreach>
+        </if>
+        and od.odds_value >= 150000
+        and od.bet_result IN (3,4,5,6)
+        and o.series_type = 1
+    </select>
+
+    <select id="queryDailyVirtualBetTimesUsers2" resultType="Map">
+        select a.uid, u.username userName,u.merchant_code merchantCode
+        from (SELECT o.uid, count(distinct od.match_id) times
+        FROM `t_order` o
+        left join t_order_detail od on o.order_no = od.order_no
+        where o.modify_time <![CDATA[ >= ]]> #{startTimeL}
+        and o.modify_time <![CDATA[ <= ]]> #{endTimeL}
+        and o.order_status = 1
+        <if test="userList != null and userList.size() > 0">
+            and o.uid in
+            <foreach item='code' index='index' collection='userList'
+                     open='(' separator=',' close=')'>
+                #{code}
+            </foreach>
+        </if>
+        <if test="betAmount !=null">
+            and o.order_amount_total >= #{betAmount}
+        </if>
+        and o.manager_code = 3
+        <if test="sportList != null and sportList.size() > 0">
+            and od.sport_id in
+            <foreach item='code' index='index' collection='sportList'
+                     open='(' separator=',' close=')'>
+                #{code}
+            </foreach>
+        </if>
+        and od.odds_value >= 150000
+        and od.bet_result IN (3,4,5,6)
+        and o.series_type = 1
+        group by o.uid) a
+        left join t_user u on a.uid = u.uid
+        where a.times >= #{times}
+    </select>
+
+    <select id="querySeriesTimesUser1" resultType="Long">
+        SELECT distinct o.uid
+        FROM `t_order` o
+        where o.modify_time <![CDATA[ >= ]]> #{startTimeL}
+        and o.modify_time <![CDATA[ <= ]]> #{endTimeL}
+        and o.order_status = 1
+        <if test="betAmount !=null">
+            and o.order_amount_total >= #{betAmount}
+        </if>
+        and o.series_type > 1
+    </select>
+
+    <select id="querySeriesTimesUser2" resultType="Map">
+        select a.uid, u.username userName,u.merchant_code merchantCode
+        from (SELECT o.uid, count(o.order_no) times
+        FROM `t_order` o
+        where o.modify_time <![CDATA[ >= ]]> #{startTimeL}
+        and o.modify_time <![CDATA[ <= ]]> #{endTimeL}
+        and o.order_status = 1
+        <if test="userList != null and userList.size() > 0">
+            and o.uid in
+            <foreach item='code' index='index' collection='userList'
+                     open='(' separator=',' close=')'>
+                #{code}
+            </foreach>
+        </if>
+        <if test="betAmount !=null">
+            and o.order_amount_total >= #{betAmount}
+        </if>
+        and o.series_type > 1
+        group by o.uid) a
+        left join t_user u on a.uid = u.uid
+        where a.times >= #{times}
+    </select>
+</mapper>

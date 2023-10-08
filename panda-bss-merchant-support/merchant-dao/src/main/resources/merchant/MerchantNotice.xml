@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- merchant_notice -->
+<mapper namespace="com.panda.sport.merchant.mapper.MerchantNoticeMapper">
+
+
+    <resultMap id="BaseResultMap" type="com.panda.sport.merchant.common.po.merchant.MerchantNotice">
+        <id column="id"  property="id" />
+        <result column="title"  property="title" />
+        <result column="status"  property="status" />
+        <result column="context"  property="context" />
+        <result column="visit_number"  property="visitNumber" />
+        <result column="send_time"  property="sendTime" />
+        <result column="create_time"  property="createTime" />
+        <result column="modify_time" property="modifyTime" />
+        <result column="release_range"  property="releaseRange" />
+        <result column="is_pop"  property="isPop" />
+        <result column="upload"  property="upload" />
+        <result column="is_tag"  property="isTag" />
+        <result column="created_by"  property="createdBy" />
+        <result column="updated_by"  property="updatedBy" />
+        <result column="upload_name"  property="uploadName" />
+        <result column="multi_terminal_notice_id"  property="multiTerminalNoticeId" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+      id,title,status,context,visit_number,send_time,create_time,modify_time,release_range,is_pop,upload,is_tag,created_by,updated_by,upload_name,multi_terminal_notice_id
+    </sql>
+
+    <select id="homePopNotice" resultMap="BaseResultMap">
+        SELECT
+            id,title
+        FROM
+            merchant_notice
+        WHERE
+            status = 1
+            AND is_pop  = 1
+            AND (notice_type_id != 37
+            <if test="releaseRange != null and releaseRange != ''" >
+                AND release_range LIKE concat('%',#{releaseRange},'%')
+            </if>) OR (notice_type_id = 37 and abnormal_user_ids LIKE concat('%',#{abnormalUserId},'_%'))
+            ORDER BY send_time DESC
+            LIMIT 50
+    </select>
+
+    <select id="getNoticeByParam" resultType="com.panda.sport.merchant.common.po.merchant.MerchantNotice">
+        SELECT
+        id,title,context,standard_match_id,play_id,t_match_notice_id
+        FROM
+        merchant_notice
+        WHERE
+            standard_match_id = #{standardMatchId}
+        AND
+            play_id = #{playId}
+        ORDER BY send_time DESC
+    </select>
+    <select id="getNoticeIn12Hours" resultType="com.panda.sport.merchant.common.po.merchant.MerchantNotice">
+        SELECT
+            id,title,context,`en_context` as enContext,
+            `zh_context` as zhContext,`jp_context` as jpContext,
+            `vi_context` as viContext,standard_match_id,
+            play_id,t_match_notice_id
+        FROM
+            merchant_notice
+        WHERE
+            standard_match_id = #{matchId}
+          AND
+            notice_type_id = #{noticeTypeId}
+          AND
+            modify_time <![CDATA[ >= ]]> #{fixStartTime}
+        ORDER BY send_time DESC
+        LIMIT 1
+    </select>
+
+</mapper>

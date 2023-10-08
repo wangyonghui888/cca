@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.panda.center.mapper.activity.UserReport3Mapper">
+    <select id="queryActivityBetStatistic" resultType="com.panda.center.entity.UserOrderDayPO">
+        select uid userId, max(time) time, sum(valid_bet_amount) validBetAmount
+        from tybss_report.ac_user_order_hour
+        where time >= #{startTimeL}
+        GROUP by uid
+    </select>
+
+    <select id="queryOlympicTimesUser" resultType="Map">
+        select uid, user_name userName
+        from ac_user_order_day
+        where time = #{timeL}
+          and olympic_tickets >= #{times}
+    </select>
+
+    <select id="queryOlympicSeriesTimesUser" resultType="Map">
+        select user_id uid, user_name userName
+        from tybss_report.r_user_order_day_utc8
+        where time = #{timeL}
+          and settle_series_tickets >= #{times}
+        <if test='betAmount != null'>
+          and settle_series_amount >= #{betAmount}
+        </if>
+    </select>
+
+    <select id="queryOlympicBetAmountUser" resultType="Map">
+        select uid, user_name userName
+        from ac_user_order_day
+        where time = #{timeL}
+          and valid_bet_amount >= #{betAmount}
+    </select>
+
+    <select id="queryOlympicPlayTimesUser" resultType="Map">
+        select uid, user_name userName
+        from ac_user_order_day
+        where time = #{timeL}
+        <if test='playId=="1"'>
+          and olympic_play1_tickets >= #{times}
+        </if>
+        <if test='playId=="2"'>
+          and olympic_play2_tickets >= #{times}
+        </if>
+        <if test='playId=="4"'>
+          and olympic_play4_tickets >= #{times}
+        </if>
+        <if test='playId=="17"'>
+          and olympic_play17_tickets >= #{times}
+        </if>
+        <if test='playId=="18"'>
+          and olympic_play18_tickets >= #{times}
+        </if>
+        <if test='playId=="19"'>
+          and olympic_play19_tickets >= #{times}
+        </if>
+        <if test='playId != null and playId=="corner"'>
+          and olympic_corner_tickets >= #{times}
+        </if>
+        <if test='playId != null and playId=="punish"'>
+          and olympic_punish_tickets >= #{times}
+        </if>
+    </select>
+
+    <select id="queryUserRank" resultType="Map">
+        select *
+        from (SELECT sum(valid_bet_amount) / 100 validBetAmount, user_id uid, min(user_name) userName
+              from r_user_order_day_utc8
+              where merchant_code = #{merchantCode}
+                and time >= 20210721
+                and time <![CDATA[ <= ]]> 20210808
+              group by user_id) a
+        order by a.validBetAmount desc
+        limit 0,10
+    </select>
+
+    <select id="queryOlympicMardiGras" resultType="Map">
+        select *
+        from (select sum(valid_bet_amount) validBetAmount, uid, min(user_name) userName
+              from ac_user_order_day
+              where time >= #{startTimeL}
+                and time <![CDATA[ <= ]]> #{endTimeL}
+                and uid in (select distinct uid from ac_user_order_hour where time = #{startHourTimeL})
+              group by uid) a
+        where a.validBetAmount >= #{betAmount}
+    </select>
+
+    <select id="queryOlympicBetEvery" resultType="Map">
+        select *
+        from (select count(time) days, sum(valid_bet_amount) validBetAmount, uid, min(user_name) userName
+              from ac_user_order_day
+              where time >= #{startTimeL}
+                and time <![CDATA[ <= ]]> #{endTimeL}
+                and uid in (select distinct uid from ac_user_order_hour where time = #{startHourTimeL} )
+              group by uid) a
+        where a.days >= #{days}
+          and a.validBetAmount >= #{betAmount}
+    </select>
+
+    <select id="queryOlympicEvenyDayByUser" resultType="java.util.Map">
+        SELECT sum(valid_bet_amount)/ 100 valid_bet_amount,count(time) days FROM `ac_user_order_day`
+          where time  <![CDATA[ >= ]]> #{startTimeL}
+            and time <![CDATA[ <= ]]> #{endTimeL}
+            and uid=#{userId}
+    </select>
+
+</mapper>

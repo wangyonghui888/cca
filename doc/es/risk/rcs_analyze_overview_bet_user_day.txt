@@ -1,0 +1,97 @@
+put http://lan-es75.sportxxxr1pub.com/rcs_analyze_overview_bet_user_day
+{
+  "mappings": {
+    "properties": {
+      "orderYear": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "matchDate": {
+        "type": "long"
+      },
+      "merchantCode": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "betOrderAmount": {
+        "type": "double"
+      },
+      "matchType": {
+        "type": "long"
+      },
+      "orderWeek": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "sid": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "betOrderNums": {
+        "type": "long"
+      },
+      "orderPhase": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "playId": {
+        "type": "long"
+      },
+      "playName": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+     },
+      "uid": {
+        "type": "long"
+      },
+      "sportId": {
+        "type": "long"
+      },
+      "merchantId": {
+        "type": "long"
+      },
+      "tournamentId": {
+        "type": "long"
+      },
+      "tournamentName": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "ignore_above": 256,
+              "type": "keyword"
+            }
+          }
+       }
+    }
+  }
+}

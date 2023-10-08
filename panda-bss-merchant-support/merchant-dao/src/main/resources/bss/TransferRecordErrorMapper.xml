@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.bss.mapper.TransferRecordErrorMapper">
+    <resultMap id="resultMap" type="com.panda.sport.merchant.common.po.bss.TransferRecordPO">
+        <result column="transfer_id" property="transferId"/>
+        <result column="merchant_code" property="merchantCode"/>
+        <result column="user_id" property="userId"/>
+        <result column="transfer_type" property="transferType"/>
+        <result column="amount" property="amount"/>
+        <result column="status" property="status"/>
+        <result column="mag" property="mag"/>
+        <result column="transfer_mode" property="transferMode"/>
+        <result column="biz_type" property="bizType"/>
+        <result column="create_time" property="createTime"/>
+        <result column="orderStr" property="orderStr"/>
+        <result column="retry_count" property="retryCount"/>
+    </resultMap>
+
+    <select id="getTransferRecordList" resultMap="resultMap">
+        select transfer_id,
+               merchant_code,
+               user_id,
+               amount,
+               transfer_type,
+               biz_type,
+               orderStr,
+               retry_count
+        from t_transfer_record_error
+        where status = 0
+          and biz_type in (2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 14)
+        <if test="transferIdList!=null">
+	      and transfer_id in
+	         <foreach collection="transferIdList" item="item" index="index" separator="," open="(" close=")">
+	                    #{item}
+	           </foreach>
+        </if>
+          and transfer_mode = 1
+        <if test="retryCount!=null">
+          and retry_count  <![CDATA[ < ]]> #{retryCount}
+        </if>
+        order by create_time asc
+    </select>
+
+    <update id="updateTransferRecord">
+    	update t_transfer_record_error set retry_count=retry_count+1
+    	  <if test="status!=null">
+    	  	, status =#{status}
+    	  </if>
+    	  <if test="msg!=null">
+    	  	, mag =#{msg}
+    	  </if>
+    	  where transfer_id =#{transferId}
+    </update>
+
+    <select id="countByTransferId" resultType="int">
+        select count(1)
+        from t_transfer_record_error
+        where status = 0
+          and transfer_id = #{transferId}
+    </select>
+
+    <sql id="queryParam">
+        <where>
+            <if test="startTime != null">
+                AND t.create_time  BETWEEN #{startTime} and #{endTime}
+            </if>
+            <if test="bizTypeList != null">
+                AND t.biz_type IN
+                <foreach collection="bizTypeList" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="username != null">
+                AND t.user_id in (select uid from t_user where username = #{username})
+            </if>
+            <if test="uid != null">
+                AND t.user_id = #{uid}
+            </if>
+            <if test="retryCount != null">
+                AND t.retry_count =  #{retryCount}
+            </if>
+            <if test="userIdList != null and userIdList.size()>0">
+                AND t.user_id IN
+                <foreach collection="userIdList" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="transferId != null">
+                AND t.transfer_id = #{transferId}
+            </if>
+            <if test="status != null">
+                AND t.status = #{status}
+            </if>
+            <if test="transferMode != null">
+                AND t.transfer_mode = #{transferMode}
+            </if>
+        </where>
+    </sql>
+</mapper>

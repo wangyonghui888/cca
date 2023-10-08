@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.bss.mapper.SMatchInfoMapper">
+
+    <resultMap id="MatchInfoResultMap" type="com.panda.sport.merchant.common.po.bss.MatchInfoPO">
+
+        <id column="id"  property="id"/>
+        <result column="sport_id"  property="sportId"/>
+        <result column="third_match_id"  property="thirdMatchId"/>
+        <result column="operate_match_status" property="operateMatchStatus"/>
+        <result column="neutral_ground"  property="neutralGround"/>
+        <result column="match_manage_id" property="matchManageId"/>
+        <result column="name_code"  property="nameCode"/>
+        <result column="score"  property="score"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+       id, sport_id, match_manage_id
+    </sql>
+
+    <select id="getMatchInfoByMid" resultType="com.panda.sport.merchant.common.po.bss.MatchInfoPO">
+        SELECT id,sport_id,match_manage_id,tournament_name_code,home_name_code,away_name_code,begin_time
+        FROM s_match_info mi WHERE mi.id = #{ mid }
+    </select>
+
+</mapper>

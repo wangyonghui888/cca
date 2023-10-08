@@ -1,0 +1,24 @@
+
+CALL p_r_merchant_match_bet_info("2021-06-13");
+CALL p_r_merchant_match_bet_info("2021-06-14");
+CALL p_r_merchant_match_bet_info("2021-06-15");
+CALL p_r_merchant_match_bet_info("2021-06-16");
+CALL p_r_merchant_match_bet_info("2021-06-17");
+CALL p_r_merchant_match_bet_info("2021-06-18");
+CALL p_r_merchant_match_bet_info("2021-06-19");
+CALL p_r_merchant_match_bet_info("2021-06-20");
+CALL p_r_merchant_match_bet_info("2021-06-21");
+CALL p_r_merchant_match_bet_info("2021-06-22");
+CALL p_r_merchant_match_bet_info("2021-06-23");
+CALL p_r_merchant_match_bet_info("2021-06-24");
+CALL p_r_merchant_match_bet_info("2021-06-25");
+CALL p_r_merchant_match_bet_info("2021-06-26");
+CALL p_r_merchant_match_bet_info("2021-06-27");
+CALL p_r_merchant_match_bet_info("2021-06-28");
+CALL p_r_merchant_match_bet_info("2021-06-29");
+CALL p_r_merchant_match_bet_info("2021-06-30");
+CALL p_r_merchant_match_bet_info("2021-07-01");
+CALL p_r_merchant_match_bet_info("2021-07-02");
+CALL p_r_merchant_match_bet_info("2021-07-03");
+CALL p_r_merchant_match_bet_info("2021-07-04");
+CALL p_r_merchant_match_bet_info("2021-07-05");

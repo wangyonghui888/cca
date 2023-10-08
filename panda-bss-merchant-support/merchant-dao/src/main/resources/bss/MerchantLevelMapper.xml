@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.bss.mapper.MerchantLevelMapper">
+  <resultMap id="BaseResultMap" type="com.panda.sport.merchant.common.po.merchant.MerchantLevelPO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="level" jdbcType="INTEGER" property="level" />
+    <result column="level_name" jdbcType="VARCHAR" property="levelName" />
+    <result column="rate_id" jdbcType="VARCHAR" property="rateId" />
+    <result column="range_amount_end" jdbcType="BIGINT" property="rangeAmountEnd" />
+    <result column="terrace_rate" jdbcType="INTEGER" property="terraceRate" />
+    <result column="payment_cycle" jdbcType="INTEGER" property="paymentCycle" />
+    <result column="vip_amount" jdbcType="BIGINT" property="vipAmount" />
+    <result column="vip_payment_cycle" jdbcType="INTEGER" property="vipPaymentCycle" />
+    <result column="technique_amount" jdbcType="BIGINT" property="techniqueAmount" />
+    <result column="technique_payment_cycle" jdbcType="INTEGER" property="techniquePaymentCycle" />
+    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    <result column="create_time" jdbcType="BIGINT" property="createTime" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="modify_time" jdbcType="BIGINT" property="modifyTime" />
+    <result column="modify_user" jdbcType="VARCHAR" property="modifyUser" />
+    <result column="logo" jdbcType="LONGVARCHAR" property="logo" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, level, level_name, rate_id, create_time, create_user, modify_time, modify_user,logo
+  </sql>
+
+  <select id="selectByLevelVO" parameterType="com.panda.sport.merchant.common.vo.merchant.MerchantLevelVO" resultMap="BaseResultMap">
+    select
+      l.level,
+      l.level_name,
+      l.id,
+      l.rate_id,
+      l.range_amount_begin,
+      l.range_amount_end,
+      l.terrace_rate,
+      l.payment_cycle,
+      l.vip_amount,
+      l.vip_payment_cycle,
+      l.technique_amount,
+      l.technique_payment_cycle,
+      l.computing_standard,
+      r.remarks,
+      l.modify_time,
+      l.modify_user
+    from t_merchant_level l
+    left JOIN t_merchant_rate r  on(l.rate_id =r.id	)
+    where 1=1
+      <if test="id != null" >
+      and id = #{id,jdbcType=VARCHAR}
+      </if>
+    order by l.level asc
+  </select>
+  <select id="selectById" resultType="com.panda.sport.merchant.common.po.merchant.MerchantLevelPO">
+      select
+      l.level,
+      l.level_name,
+      l.id,
+      l.rate_id,
+      l.range_amount_begin,
+      l.range_amount_end,
+      l.terrace_rate,
+      l.payment_cycle,
+      l.vip_amount,
+      l.logo,
+      l.vip_payment_cycle,
+      l.technique_amount,
+      l.technique_payment_cycle,
+      l.computing_standard,
+      r.remarks,
+      l.modify_time,
+      l.modify_user
+      from t_merchant_level l
+      left JOIN t_merchant_rate r  on(l.rate_id =r.id	)
+      where l.id = #{id}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from t_merchant_level
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+
+
+  <insert id="insertSelective" parameterType="com.panda.sport.merchant.common.po.merchant.MerchantLevelPO">
+    insert into t_merchant_level
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="level != null">
+        level,
+      </if>
+      <if test="levelName != null">
+        level_name,
+      </if>
+      <if test="rateId != null">
+        rate_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+      <if test="modifyUser != null">
+        modify_user,
+      </if>
+      <if test="logo != null">
+        logo,
+      </if>
+      <if test="vipAmount != null">
+        vip_amount,
+      </if>
+      <if test="vipPaymentCycle != null">
+        vip_payment_cycle,
+      </if>
+      <if test="techniqueAmount != null">
+        technique_amount,
+      </if>
+      <if test="techniquePaymentCycle != null">
+        technique_payment_cycle,
+      </if>
+      <if test="computingStandard != null">
+        computing_standard,
+      </if>
+      <if test="rangeAmountBegin != null">
+        range_amount_begin,
+      </if>
+      <if test="rangeAmountEnd != null">
+        range_amount_end,
+      </if>
+      <if test="terraceRate != null">
+        terrace_rate,
+      </if>
+      <if test="paymentCycle != null">
+        payment_cycle
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null">
+        #{level,jdbcType=INTEGER},
+      </if>
+      <if test="levelName != null">
+        #{levelName,jdbcType=VARCHAR},
+      </if>
+      <if test="rateId != null">
+        #{rateId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=BIGINT},
+      </if>
+      <if test="modifyUser != null">
+        #{modifyUser,jdbcType=VARCHAR},
+      </if>
+      <if test="logo != null">
+        #{logo},
+      </if>
+      <if test="vipAmount != null">
+        #{vipAmount},
+      </if>
+      <if test="vipPaymentCycle != null">
+        #{vipPaymentCycle},
+      </if>
+      <if test="techniqueAmount != null">
+        #{techniqueAmount},
+      </if>
+      <if test="techniquePaymentCycle != null">
+        #{techniquePaymentCycle},
+      </if>
+      <if test="computingStandard != null">
+        #{computingStandard},
+      </if>
+      <if test="rangeAmountBegin != null">
+        #{rangeAmountBegin},
+      </if>
+      <if test="rangeAmountEnd != null">
+        #{rangeAmountEnd},
+      </if>
+      <if test="terraceRate != null">
+        #{terraceRate},
+      </if>
+      <if test="paymentCycle != null">
+        #{paymentCycle}
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.panda.sport.merchant.common.po.merchant.MerchantLevelPO">
+    update t_merchant_level
+    <set>
+      <if test="level != null">
+        level = #{level,jdbcType=INTEGER},
+      </if>
+      <if test="levelName != null">
+        level_name = #{levelName,jdbcType=VARCHAR},
+      </if>
+      <if test="rateId != null">
+        rate_id = #{rateId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=BIGINT},
+      </if>
+      <if test="modifyUser != null">
+        modify_user = #{modifyUser,jdbcType=VARCHAR},
+      </if>
+      <if test="logo != null">
+        logo = #{logo},
+      </if>
+      <if test="vipAmount != null">
+        vip_amount=#{vipAmount},
+      </if>
+      <if test="vipPaymentCycle != null">
+        vip_payment_cycle=#{vipPaymentCycle},
+      </if>
+      <if test="techniqueAmount != null">
+        technique_amount=#{techniqueAmount},
+      </if>
+      <if test="techniquePaymentCycle != null">
+        technique_payment_cycle=#{techniquePaymentCycle},
+      </if>
+      <if test="computingStandard != null">
+        computing_standard=#{computingStandard},
+      </if>
+      <if test="rangeAmountBegin != null">
+        range_amount_begin=#{rangeAmountBegin},
+      </if>
+      <if test="rangeAmountEnd != null">
+        range_amount_end=#{rangeAmountEnd},
+      </if>
+      <if test="terraceRate != null">
+        terrace_rate= #{terraceRate},
+      </if>
+      <if test="paymentCycle != null">
+        payment_cycle= #{paymentCycle}
+      </if>
+
+        </set>
+    where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <insert id="insertMerchantLog" useGeneratedKeys="true" keyColumn="id" keyProperty="id"
+            parameterType="com.panda.sport.merchant.common.po.merchant.MerchantLogPO">
+        INSERT INTO merchant.merchant_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test='null != userId'>
+                user_id,
+            </if>
+            <if test='null != userName'>
+                user_name,
+            </if>
+            <if test='null != operatType'>
+                operat_type,
+            </if>
+            <if test='null != typeName'>
+                type_name,
+            </if>
+            <if test='null != pageName'>
+                page_name,
+            </if>
+            <if test='null != pageCode'>
+                page_code,
+            </if>
+            <if test='null != merchantCode'>
+                merchant_code,
+            </if>
+            <if test='null != merchantName'>
+                merchant_name,
+            </if>
+            <if test='null != dataId'>
+                data_id,
+            </if>
+            <if test='null != operatField'>
+                operat_field,
+            </if>
+            <if test='null != beforeValues'>
+                before_values,
+            </if>
+            <if test='null != afterValues'>
+                after_values,
+            </if>
+            <if test='null != logTag'>
+                log_tag,
+            </if>
+            <if test='null != operatTime'>
+                operat_time
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test='null != userId'>
+                #{userId},
+            </if>
+            <if test='null != userName'>
+                #{userName},
+            </if>
+            <if test='null != operatType'>
+                #{operatType},
+            </if>
+            <if test='null != typeName'>
+                #{typeName},
+            </if>
+            <if test='null != pageName'>
+                #{pageName},
+            </if>
+            <if test='null != pageCode'>
+                #{pageCode},
+            </if>
+            <if test='null != merchantCode'>
+                #{merchantCode},
+            </if>
+            <if test='null != merchantName'>
+                #{merchantName},
+            </if>
+            <if test='null != dataId'>
+                #{dataId},
+            </if>
+            <if test='null != operatField'>
+                #{operatField},
+            </if>
+            <if test='null != beforeValues'>
+                #{beforeValues},
+            </if>
+            <if test='null != afterValues'>
+                #{afterValues},
+            </if>
+            <if test='null != logTag'>
+                #{logTag},
+            </if>
+            <if test='null != operatTime'>
+                #{operatTime}
+            </if>
+        </trim>
+    </insert>
+</mapper>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.backup.mapper.BackupRcsUserSpecialBetLimitConfigMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.panda.sport.merchant.common.po.bss.RcsUserSpecialBetLimitConfigPO">
+        <result column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="special_betting_limit_type" property="specialBettingLimitType"/>
+        <result column="order_type" property="orderType"/>
+        <result column="sport_id" property="sportId"/>
+        <result column="single_note_claim_limit" property="singleNoteClaimLimit"/>
+        <result column="single_game_claim_limit" property="singleGameClaimLimit"/>
+        <result column="percentage_limit" property="percentageLimit"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="remark" property="remark"/>
+    </resultMap>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into rcs_user_special_bet_limit_config (
+        id,
+        user_id,
+        special_betting_limit_type,
+        order_type,
+        sport_id,
+        single_note_claim_limit,
+        single_game_claim_limit,
+        percentage_limit,
+        status,
+        create_time
+        )values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.id},
+            #{item.userId},
+            #{item.specialBettingLimitType},
+            #{item.orderType},
+            #{item.sportId},
+            #{item.singleNoteClaimLimit},
+            #{item.singleGameClaimLimit},
+            #{item.percentageLimit},
+            #{item.status},
+            NOW()
+            )
+        </foreach>
+    </insert>
+
+    <insert id="batchInsertOrUpdate" parameterType="java.util.List">
+        insert into rcs_user_special_bet_limit_config (
+        id,
+        user_id,
+        special_betting_limit_type,
+        order_type,
+        sport_id,
+        single_note_claim_limit,
+        single_game_claim_limit,
+        percentage_limit,
+        status,
+        create_time
+        )values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.id},
+            #{item.userId},
+            #{item.specialBettingLimitType},
+            #{item.orderType},
+            #{item.sportId},
+            #{item.singleNoteClaimLimit},
+            #{item.singleGameClaimLimit},
+            #{item.percentageLimit},
+            #{item.status},
+            NOW()
+            )
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+        order_type=values(order_type),
+        sport_id=values(sport_id),
+        single_note_claim_limit=values(single_note_claim_limit),
+        single_game_claim_limit=values(single_game_claim_limit),
+        percentage_limit=values(percentage_limit),
+        update_time=NOW()
+    </insert>
+
+</mapper>

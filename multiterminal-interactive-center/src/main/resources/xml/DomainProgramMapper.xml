@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.multiterminalinteractivecenter.mapper.DomainProgramMapper">
+
+    <resultMap id="BaseResultMap" type="com.panda.multiterminalinteractivecenter.entity.DomainProgram">
+        <result column="id" property="id"/>
+        <result column="program_name" property="programName"/>
+        <result column="group_type" property="groupType"/>
+        <result column="domainGroupNum" property="domainGroupNum"/>
+        <result column="h5_push_domain_num" property="h5PushDomainNum"/>
+        <result column="pc_push_domain_num" property="pcPushDomainNum"/>
+        <result column="api_push_domain_num" property="apiPushDomainNum"/>
+        <result column="img_push_domain_num" property="imgPushDomainNum"/>
+        <result column="tab" property="tab"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="last_updated" property="lastUpdated"/>
+        <result column="del_tag" property="delTag"/>
+        <result column="merchant_group_id" property="merchantGroupId"/>
+        <result column="group_name" property="groupName"/>
+
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        tdg.id,
+        tdg.program_name,
+        tdg.group_type,
+        tdg.h5_push_domain_num,
+        tdg.pc_push_domain_num,
+        tdg.api_push_domain_num,
+        tdg.img_push_domain_num,
+        tdg.`status`,
+        tdg.create_time,
+        tdg.update_time,
+        tdg.tab,
+        tdg.del_tag,
+        tdg.last_updated,
+        tdg.merchant_group_id
+    </sql>
+
+    <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id"
+            parameterType="com.panda.multiterminalinteractivecenter.entity.DomainProgram">
+        INSERT INTO t_domain_program
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="null != programName and '' != programName">
+                program_name,
+            </if>
+            <if test="null != groupType and '' != groupType">
+                group_type,
+            </if>
+            <if test="null != createTime and '' != createTime">
+                create_time,
+            </if>
+            <if test="null != tab and '' != tab">
+                tab,
+            </if>
+            <if test="null != updateTime and '' != updateTime">
+                update_time,
+            </if>
+            <if test="null != lastUpdated and '' != lastUpdated">
+                last_updated,
+            </if>
+            <if test="null != merchantGroupId and '' != merchantGroupId">
+                merchant_group_id
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="null != programName and '' != programName">
+                #{programName},
+            </if>
+            <if test="null != groupType and '' != groupType">
+                #{groupType},
+            </if>
+            <if test="null != createTime and '' != createTime">
+                #{createTime},
+            </if>
+            <if test="null != tab and '' != tab">
+                #{tab},
+            </if>
+
+            <if test="null != updateTime and '' != updateTime">
+                #{updateTime},
+            </if>
+
+            <if test="null != lastUpdated and '' != lastUpdated">
+                #{lastUpdated},
+            </if>
+            <if test="null != merchantGroupId and '' != merchantGroupId">
+                #{merchantGroupId}
+            </if>
+        </trim>
+    </insert>
+
+    <delete id="delete">
+        DELETE
+        FROM t_domain_program
+        WHERE id = #{id}
+          AND del_tag = 0
+    </delete>
+
+    <update id="update" parameterType="com.panda.multiterminalinteractivecenter.entity.DomainProgram">
+        UPDATE t_domain_program
+        <set>
+            <if test="null != programName and '' != programName">program_name = #{programName},</if>
+            <if test="null != groupType and '' != groupType">group_type = #{groupType},</if>
+            <if test="null != h5PushDomainNum and '' != h5PushDomainNum">h5_push_domain_num = #{h5PushDomainNum},</if>
+            <if test="null != pcPushDomainNum and '' != pcPushDomainNum">pc_push_domain_num = #{pcPushDomainNum},</if>
+            <if test="null != apiPushDomainNum and '' != apiPushDomainNum">api_push_domain_num = #{apiPushDomainNum},</if>
+            <if test="null != imgPushDomainNum and '' != imgPushDomainNum">img_push_domain_num = #{imgPushDomainNum},</if>
+            <if test="null != status and '' != status">status = #{status},</if>
+            <if test="null != updateTime and '' != updateTime">update_time = #{updateTime},</if>
+            <if test="null != merchantGroupId and '' != merchantGroupId">merchant_group_id = #{merchantGroupId}</if>
+        </set>
+        WHERE id = #{id}
+        <if test="null != tab and '' != tab">
+            and tab = #{tab}
+        </if>
+    </update>
+
+
+    <select id="pageList" resultMap="BaseResultMap"
+            parameterType="com.panda.multiterminalinteractivecenter.vo.DomainProgramVO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        <if test="null != tab and ('cp' == tab or 'dj' == tab)">
+           , tmg.group_name
+        </if>
+        ,COUNT(distinct po.id) AS domainGroupNum
+        FROM t_domain_program tdg
+        LEFT JOIN t_domain_program_relation re ON re.program_id = tdg.id
+        LEFT JOIN
+        <if test="null != tab and '' != tab">
+            (SELECT * FROM t_domain_group WHERE tab = #{tab})
+        </if>
+        <if test="null == tab or '' == tab">
+            t_domain_group
+        </if>
+             po ON re.domain_group_id = po.id
+        <if test="null != tab and ('cp' == tab or 'dj' == tab)">
+            LEFT JOIN t_merchant_group tmg on tdg.merchant_group_id = tmg.id
+        </if>
+        <where>
+            <if test="programName != '' and programName != null">
+                and tdg.program_name like CONCAT('%',#{programName},'%')
+            </if>
+            <if test="groupType != '' and groupType != null">
+                and tdg.group_type = #{groupType}
+            </if>
+            <if test="groupType != '' and groupType != null">
+                and po.group_type = #{groupType}
+            </if>
+            <if test="null != tab and '' != tab">
+                and tdg.tab = #{tab}
+            </if>
+        </where>
+        GROUP BY tdg.id
+        LIMIT #{starNum}, #{pageSize}
+    </select>
+
+    <select id="pageListCount" resultType="java.lang.Integer"
+            parameterType="com.panda.multiterminalinteractivecenter.vo.DomainProgramVO">
+        SELECT
+        count(1)
+        FROM(
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_domain_program tdg
+        LEFT JOIN t_domain_program_relation re ON re.program_id = tdg.id
+        LEFT JOIN
+        <if test="null != tab and '' != tab">
+            (SELECT * FROM t_domain_group WHERE tab = #{tab})
+        </if>
+        <if test="null == tab or '' == tab">
+            t_domain_group
+        </if>
+            po ON re.domain_group_id = po.id
+        <where>
+            <if test="programName != '' and programName != null">
+                and tdg.program_name like CONCAT('%',#{programName},'%')
+            </if>
+            <if test="groupType != '' and groupType != null">
+                and tdg.group_type = #{groupType}
+            </if>
+            <if test="groupType != '' and groupType != null">
+                and po.group_type = #{groupType}
+            </if>
+            <if test="null != tab and '' != tab">
+                and tdg.tab = #{tab}
+            </if>
+        </where>
+        GROUP BY tdg.id
+        ) aa
+    </select>
+
+    <delete id="delDomainProgramRelation">
+        DELETE
+        FROM t_domain_program_relation tdg
+        WHERE tdg.program_id = #{programId}
+        <if test="groupType != '' and groupType != null">
+            and tdg.group_type = #{groupType}
+        </if>
+    </delete>
+
+    <insert id="batchSaveDomainProgramRelation" parameterType="java.util.List">
+        insert into t_domain_program_relation
+        (
+        domain_group_id
+        ,program_id
+        ,group_type
+        ,create_time
+        ,update_time
+        ,last_updated
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.domainGroupId}
+            ,#{item.programId}
+            ,#{item.groupType}
+            ,#{item.createTime}
+            ,#{item.updateTime}
+            ,#{item.lastUpdated}
+            )
+        </foreach>
+    </insert>
+
+    <select id="findProgramList" resultType="com.panda.multiterminalinteractivecenter.entity.DomainProgram">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_domain_program tdg
+        where
+        tdg.status = 1
+        <if test="groupType != '' and groupType != null">
+            and tdg.group_type = #{groupType}
+        </if>
+        <if test="null != tab and '' != tab">
+            and tdg.tab = #{tab}
+        </if>
+    </select>
+
+    <select id="findProgramDetail" resultType="com.panda.multiterminalinteractivecenter.entity.DomainProgram">
+        SELECT
+        <include refid="Base_Column_List"/>
+        ,COUNT(distinct po.id) AS domainGroupNum
+        FROM t_domain_program tdg
+        LEFT JOIN t_domain_program_relation re ON re.program_id = tdg.id
+        LEFT JOIN t_domain_group po ON re.domain_group_id = po.id
+        WHERE 1 = 1
+        <if test="groupType != '' and groupType != null">
+            AND tdg.group_type = #{groupType}
+        </if>
+        <if test="null != tab and '' != tab">
+            and tdg.tab = #{tab}
+        </if>
+        AND tdg.id IN
+        <foreach collection="list" index="index" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+
+        GROUP BY tdg.id
+    </select>
+    <select id="hasDefaultDomainGroup" resultType="java.lang.Integer">
+        SELECT
+            COUNT( 1 )
+        FROM
+            t_domain_program_relation tdpr
+                LEFT JOIN t_domain_group tdg ON tdpr.domain_group_id = tdg.id
+        WHERE
+            tdpr.program_id = #{programId}
+          AND tab = #{tab}
+          AND tdg.del_tag = 1;
+    </select>
+    <select id="getUseCountById" resultType="java.lang.Integer">
+        SELECT COUNT(0) FROM t_merchant_group WHERE program_id = #{programId}
+    </select>
+    <select id="getIdByDomainId" resultType="java.lang.Long">
+        SELECT
+        tdp.id
+        FROM
+        t_domain_program tdp
+        LEFT JOIN t_domain_program_relation tdpr ON tdp.id = tdpr.program_id
+        LEFT JOIN t_domain_group tdg ON tdpr.domain_group_id = tdg.id
+        LEFT JOIN t_domain_group_relation tdgr ON tdg.id = tdgr.domain_group_id
+        LEFT JOIN m_domain_area mda ON tdg.belong_area = mda.id
+        LEFT JOIN
+        <if test="null != tab and 'ty' == tab">
+            t_domain_ty
+        </if>
+        <if test="null != tab and 'ty' != tab">
+            t_domain
+        </if>
+        td ON tdgr.domain_id = td.id
+        WHERE
+        td.tab = #{tab}
+        AND td.id = #{domainId}
+    </select>
+    <select id="countByProgram" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM t_domain_program tdp
+        WHERE 1=1
+        <if test="null != programName and '' != programName">
+            AND tdp.program_name = #{programName}
+        </if>
+        <if test="null != tab and '' != tab">
+            AND tdp.tab = #{tab}
+        </if>
+        <if test="null != id">
+            AND tdp.id != #{id}
+        </if>
+    </select>
+</mapper>

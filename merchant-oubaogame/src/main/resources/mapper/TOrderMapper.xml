@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oubao.mapper.TOrderMapper">
+
+    <resultMap id="BaseResultMap" type="com.oubao.po.OrderPO">
+        <result column="id" property="id"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="uid" property="uid"/>
+        <result column="order_status" property="orderStatus"/>
+        <result column="play_option_id" property="playOptionId"/>
+        <result column="series_type" property="seriesType"/>
+        <result column="series_value" property="seriesValue"/>
+        <result column="bet_amount" property="betAmount"/>
+        <result column="profit" property="profit"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_user" property="createUser"/>
+        <result column="match_id" property="matchId"/>
+        <result column="play_option_type" property="playOptionType"/>
+        <result column="match_name" property="matchName"/>
+        <result column="sport_id" property="sportId"/>
+    </resultMap>
+
+    <insert id="insertOrder" useGeneratedKeys="true" keyColumn="id" keyProperty="id"
+            parameterType="com.oubao.po.OrderPO">
+        INSERT INTO t_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test='null != orderNo'>
+                order_no,
+            </if>
+            <if test='null != uid'>
+                uid,
+            </if>
+            <if test='null != orderStatus'>
+                order_status,
+            </if>
+            <if test='null != playOptionId'>
+                play_option_id,
+            </if>
+            <if test='null != seriesType'>
+                series_type,
+            </if>
+            <if test='null != seriesValue'>
+                series_value,
+            </if>
+            <if test='null != betAmount'>
+                bet_amount,
+            </if>
+            <if test='null != profitAmount'>
+                profit,
+            </if>
+            <if test='null != createTime'>
+                create_time,
+            </if>
+            <if test='null != createUser'>
+                create_user,
+            </if>
+            <if test='null != matchId'>
+                match_id,
+            </if>
+            <if test='null != playOptionType'>
+                play_option_type,
+            </if>
+            <if test='null != matchName'>
+                match_name,
+            </if>
+            <if test='null != sportId'>
+                sport_id,
+            </if>
+                tag
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test='null != orderNo'>
+                #{orderNo},
+            </if>
+            <if test='null != uid'>
+                #{uid},
+            </if>
+            <if test='null != orderStatus'>
+                #{orderStatus},
+            </if>
+            <if test='null != playOptionId'>
+                #{playOptionId},
+            </if>
+            <if test='null != seriesType'>
+                #{seriesType},
+            </if>
+            <if test='null != seriesValue'>
+                #{seriesValue},
+            </if>
+            <if test='null != betAmount'>
+                #{betAmount},
+            </if>
+            <if test='null != profitAmount'>
+                #{profitAmount},
+            </if>
+            <if test='null != createTime'>
+                #{createTime},
+            </if>
+            <if test='null != createUser'>
+                #{createUser},
+            </if>
+            <if test='null != matchId'>
+                #{matchId},
+            </if>
+            <if test='null != playOptionType'>
+                #{playOptionType},
+            </if>
+            <if test='null != matchName'>
+                #{matchName},
+            </if>
+            <if test='null != sportId'>
+                #{sportId},
+            </if>
+                #{tag}
+        </trim>
+    </insert>
+
+    <update id="updateOrder" parameterType="com.oubao.po.OrderPO">
+        UPDATE t_order
+            SET
+                order_status = #{orderStatus}
+                <if test='null != profitAmount'>
+                    ,profit = #{profitAmount}
+                </if>
+                <if test='null != tag'>
+                    ,tag = #{tag}
+                </if>
+            WHERE
+                order_no = #{orderNo} and
+                uid = #{uid}
+    </update>
+
+
+    <insert id="batchInsert" parameterType="com.oubao.po.OrderPO">
+        insert into t_order_message
+        (
+        merchant_code,
+        user_name,
+        user_id,
+        order_no,
+        order_status,
+        series_type,
+        series_value,
+        amount_total,
+        profit_amount,
+        create_time,
+        settle_time,
+        outcome,
+        settle_amount,
+        tag,
+        data_create_time
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.merchantCode,jdbcType=VARCHAR},
+            #{item.userName,jdbcType=VARCHAR},
+            #{item.userId},
+            #{item.orderNo,jdbcType=VARCHAR},
+            #{item.orderStatus},
+            #{item.seriesType,jdbcType=INTEGER},
+            #{item.seriesValue,jdbcType=VARCHAR},
+            #{item.amountTotal,jdbcType=DECIMAL},
+            #{item.profitAmount,jdbcType=DECIMAL},
+            #{item.createTime,jdbcType=TIMESTAMP},
+            #{item.settleTime,jdbcType=TIMESTAMP},
+            #{item.outcome,jdbcType=INTEGER},
+            #{item.settleAmount,jdbcType=DECIMAL},
+            #{item.tag,jdbcType=VARCHAR},
+            unix_timestamp(now())
+            )
+        </foreach>
+    </insert>
+
+</mapper>

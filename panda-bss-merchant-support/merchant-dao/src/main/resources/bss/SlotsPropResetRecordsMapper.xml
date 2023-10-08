@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.bss.mapper.SlotsPropResetRecordsMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.panda.sport.merchant.common.po.bss.SlotsPropResetRecords">
+        <id column="id" property="id"/>
+        <result column="uid" property="uid"/>
+        <result column="user_name" property="userName"/>
+        <result column="merchant_code" property="merchantCode"/>
+        <result column="prop_type" property="propType"/>
+        <result column="prop_times" property="propTimes"/>
+        <result column="use_token" property="useToken"/>
+        <result column="use_token_type" property="useTokenType"/>
+        <result column="remark" property="remark"/>
+        <result column="created_by" property="createdBy"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        uid,
+        user_name,
+        merchant_code,
+        prop_type,
+        prop_times,
+        use_token,
+        use_token_type,
+        remark,
+        created_by,
+        create_time
+    </sql>
+</mapper>

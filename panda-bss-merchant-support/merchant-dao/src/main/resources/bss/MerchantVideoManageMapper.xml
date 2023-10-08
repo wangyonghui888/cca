@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.bss.mapper.MerchantVideoManageMapper">
+    <update id="updateMerchantVideoManage" parameterType="com.panda.sport.merchant.common.vo.MerchantVideoManageVo">
+        UPDATE t_merchant_config
+        SET
+        closed_without_operation = #{closedWithoutOperation},
+        video_settings = #{videoSettings},
+        viewing_time = #{viewingTime},
+        custom_viewing_time = #{customViewTime},
+        no_background_play = #{noBackgroundPlay}
+        WHERE
+	    merchant_code = #{merchantCode}
+    </update>
+
+    <select id="queryMerchantVideoManage" resultType="com.panda.sport.merchant.common.vo.MerchantVideoManageVo">
+        SELECT
+            t.closed_without_operation AS closedWithoutOperation,
+            t.video_settings AS videoSettings,
+            t.viewing_time AS viewing_time,
+            t.custom_viewing_time AS customViewTime,
+            t.no_background_play AS no_background_play,
+            t.merchant_code AS merchantCode
+        FROM
+            t_merchant_config t
+        WHERE
+            t.merchant_code = #{merchantCode}
+    </select>
+
+    <select id="getList" resultType="com.panda.sport.merchant.common.vo.MerchantVideoManageVo">
+        SELECT
+            t.closed_without_operation AS closedWithoutOperation,
+            t.video_settings AS videoSettings,
+            t.viewing_time AS viewing_time,
+            t.custom_viewing_time AS customViewTime,
+            t.no_background_play AS no_background_play,
+            t.merchant_code AS merchantCode
+        FROM
+            t_merchant_config t
+        <where>
+            <if test="merchantCode != null and merchantCode != ''">
+                AND t.merchant_code = #{merchantCode}
+            </if>
+        </where>
+        ORDER BY
+            t.update_time DESC
+    </select>
+
+    <update id="batchUpdateMerchantVideoManage" parameterType="com.panda.sport.merchant.common.vo.MerchantVideoManageVo">
+        UPDATE t_merchant_config
+        SET
+        closed_without_operation = #{closedWithoutOperation},
+        video_settings = #{videoSettings},
+        viewing_time = #{viewingTime},
+        custom_viewing_time = #{customViewTime},
+        no_background_play = #{noBackgroundPlay}
+    </update>
+
+    <select id="getVideoManageList" resultType="com.panda.sport.merchant.common.vo.MerchantVideoManageVo">
+        SELECT
+            t.closed_without_operation AS closedWithoutOperation,
+            t.video_settings AS videoSettings,
+            t.viewing_time AS viewing_time,
+            t.custom_viewing_time AS customViewTime,
+            t.no_background_play AS no_background_play,
+            t.merchant_code AS merchantCode
+        FROM
+            t_merchant_config t
+        ORDER BY
+            t.update_time DESC
+    </select>
+</mapper>

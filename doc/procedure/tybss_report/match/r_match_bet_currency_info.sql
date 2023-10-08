@@ -1,0 +1,260 @@
+DROP PROCEDURE IF EXISTS p_r_match_bet_currency_info;
+DELIMITER //
+CREATE PROCEDURE p_r_match_bet_currency_info(in execute_date varchar(100))
+BEGIN
+    /*声明日志信息*/
+    DECLARE task_type INT(2) DEFAULT 201;
+    DECLARE result_code CHAR(5) DEFAULT '0';
+    DECLARE start_time VARCHAR(30) DEFAULT get_cur_ymdhms();
+    DECLARE end_time VARCHAR(30);
+    DECLARE result INT(2) DEFAULT 1;
+    DECLARE exce_msg VARCHAR(512) DEFAULT 'p_r_match_bet_currency_info成功';
+    DECLARE msg TEXT;
+    DECLARE endTimeUTCL BIGINT(16);
+    DECLARE startTimeUTCL BIGINT(16);
+/*异常处理*/
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN
+        GET DIAGNOSTICS CONDITION 1 result_code = RETURNED_SQLSTATE, msg = MESSAGE_TEXT;
+        SET end_time = get_cur_ymdhms();
+        SET exce_msg = CONCAT('错误码:', result_code, execute_date, 'p_r_match_bet_currency_info错误信息：', msg);
+        SET result = 2;
+CALL p_add_task_event_log(task_type, start_time, end_time, result, exce_msg);
+END;
+
+    set startTimeUTCL = unix_timestamp(execute_date) * 1000;
+    set endTimeUTCL = unix_timestamp(date_add(execute_date, INTERVAL 1 DAY)) * 1000 - 1;
+    REPLACE INTO tybss_report.r_match_bet_currency_info
+select concat(b.matchId,b.currency_code)      id,
+       b.matchId                                    matchId,
+       concat(a.homeName, ' v ', a.awayName)   matchInfo,
+       a.sport_id,
+       b.sportName,
+       a.begin_time,
+       a.match_status,
+       a.tournamentName,
+       a.tournament_level,
+       a.tournament_id,
+       b.betAmount,
+       b.validBetAmount,
+       b.settleAmount,
+       b.profit,
+       b.betUsers,
+       b.validTickets,
+       b.profitRate,
+       b.currency_code,
+       UNIX_TIMESTAMP(current_timestamp(3)) AS elasticsearch_id,
+       b.orderCount
+from  (select id,
+              sport_id,
+              begin_time,
+              match_status,
+              (select zs from tybss_merchant_common.s_language where name_code = home_name_code)       homeName,
+              (select zs from tybss_merchant_common.s_language where name_code = away_name_code)       awayName,
+              tournament_id,
+              tournament_level,
+              (select zs from tybss_merchant_common.s_language where name_code = tournament_name_code) tourNamentName
+       from tybss_merchant_common.s_match_info mi
+       where mi.begin_time >= startTimeUTCL
+         AND mi.begin_time <= endTimeUTCL
+         and (mi.pre_match_time > 0 or mi.live_odd_time > 0)) a
+          right join(SELECT d.match_id                                                                             matchId,
+                            MIN(d.sport_name)                                                                      sportName,
+                            IFNULL(SUM(case when d.series_type = 1 then d.original_order_amount_total else 0 end) / 100, 0) betAmount,
+                            /*IFNULL(SUM(CASE WHEN d.series_type = 1 and d.order_status in (0, 1) THEN d.original_order_amount_total END) /
+                                   100,
+                                   0)                                                                              validBetAmount,*/
+                            SUM(CASE
+                                       WHEN s.out_come in (3, 4, 5, 6) and
+                                            ABS(d.original_order_amount_total) = ABS(s.original_profit_amount)
+                                           THEN ABS(s.original_profit_amount / 100)
+                                       WHEN s.out_come in (3, 4, 5, 6) and
+                                            ABS(d.original_order_amount_total) > ABS(s.original_profit_amount)
+                                           THEN ABS(s.original_profit_amount / 100)
+                                       WHEN s.out_come in (3, 4, 5, 6) and
+                                            ABS(d.original_order_amount_total) < ABS(s.original_profit_amount)
+                                           THEN ABS(s.original_profit_amount / 100) END)                           validBetAmount,
+                            IFNULL(SUM(case when d.series_type = 1 then s.original_settle_amount else 0 end) / 100, 0)      settleAmount,
+                            IFNULL(SUM(case when d.series_type = 1 then s.original_profit_amount else 0 end) / 100, 0)      profit,
+                            COUNT(DISTINCT (CASE WHEN d.order_status in (0, 1) THEN d.uid END))                    betUsers,
+                            COUNT(DISTINCT (CASE WHEN d.series_type = 1 and d.order_status in (0, 1) THEN d.order_no END))
+                                validTickets,
+                            IFNULL(CONVERT(SUM(case when d.series_type = 1 then s.original_profit_amount else 0 end) /
+                                           SUM(CASE
+                                                   WHEN d.series_type = 1 and d.order_status = 1
+                                                       THEN d.original_order_amount_total END), DECIMAL(32, 4)), 0)
+                                profitRate,
+                            d.currency_code                                                        currency_code,
+                            count(case when s.out_come in(3,4,5,6) then s.order_no end) as orderCount
+                     FROM view_r_order_match_detail d
+                              LEFT JOIN view_r_settle_full_detail s ON d.order_no = s.order_no
+                     WHERE d.begin_time >= startTimeUTCL
+                       AND d.begin_time <= endTimeUTCL
+                       and d.bet_time > unix_timestamp(date_add(execute_date, INTERVAL -60 DAY)) * 1000
+                     GROUP BY d.match_id,d.currency_code) b on a.id = b.matchId ;
+
+SET end_time = get_cur_ymdhms();
+
+    SET exce_msg = CONCAT(execute_date, 'p_r_match_bet_currency_info success!');
+
+CALL p_add_task_event_log(task_type, start_time, end_time, result, exce_msg);
+
+REPLACE INTO tybss_report.r_match_bet_currency_info
+select concat(b.matchId,b.currency_code)      id,
+       b.matchId                                    matchId,
+       case a.sport_id when 1001 then concat(a.homeName, ' v ', a.awayName) when 1004 then concat(a.homeName, ' v ', a.awayName) else  a.batch_no end matchInfo,
+       a.sport_id,
+       b.sportName,
+       a.begin_time,
+       a.match_status,
+       a.show_batch_no,
+       null,
+       a.tournament_id,
+       b.betAmount,
+       b.validBetAmount,
+       b.settleAmount,
+       b.profit,
+       b.betUsers,
+       b.validTickets,
+       b.profitRate,
+       b.currency_code,
+       UNIX_TIMESTAMP(current_timestamp(3)) AS elasticsearch_id,
+       b.orderCount
+from  (select id,
+              sport_id,
+              begin_time,
+              4 match_status,
+              (select zs from tybss_merchant_common.s_virtual_language where name_code = home_name_code)       homeName,
+              (select zs from tybss_merchant_common.s_virtual_language where name_code = away_name_code)       awayName,
+              tournament_id,
+              show_batch_no,
+              batch_no
+       from tybss_merchant_common.s_virtual_match_info mi
+       where mi.begin_time >= startTimeUTCL
+         AND mi.begin_time <= endTimeUTCL
+      ) a
+          right join(SELECT d.match_id                                                                             matchId,
+                            MIN(d.sport_name)                                                                      sportName,
+                            IFNULL(SUM(case when d.series_type = 1 then d.original_order_amount_total else 0 end) / 100, 0) betAmount,
+                            /*IFNULL(SUM(CASE WHEN d.series_type = 1 and d.order_status in (0, 1) THEN d.original_order_amount_total END) /
+                                   100,
+                                   0)                                                                              validBetAmount,*/
+                            SUM(CASE
+                                       WHEN s.out_come in (3, 4, 5, 6) and
+                                            ABS(d.original_order_amount_total) = ABS(s.original_profit_amount)
+                                           THEN ABS(s.original_profit_amount / 100)
+                                       WHEN s.out_come in (3, 4, 5, 6) and
+                                            ABS(d.original_order_amount_total) > ABS(s.original_profit_amount)
+                                           THEN ABS(s.original_profit_amount / 100)
+                                       WHEN s.out_come in (3, 4, 5, 6) and
+                                            ABS(d.original_order_amount_total) < ABS(s.original_profit_amount)
+                                           THEN ABS(s.original_profit_amount / 100) END)                           validBetAmount,
+                            IFNULL(SUM(case when d.series_type = 1 then s.original_settle_amount else 0 end) / 100, 0)      settleAmount,
+                            IFNULL(SUM(case when d.series_type = 1 then s.original_profit_amount else 0 end) / 100, 0)      profit,
+                            COUNT(DISTINCT (CASE WHEN d.order_status in (0, 1) THEN d.uid END))                    betUsers,
+                            COUNT(DISTINCT (CASE WHEN d.series_type = 1 and d.order_status in (0, 1) THEN d.order_no END))
+                                validTickets,
+                            IFNULL(CONVERT(SUM(case when d.series_type = 1 then s.original_profit_amount else 0 end) /
+                                           SUM(CASE
+                                                   WHEN d.series_type = 1 and d.order_status = 1
+                                                       THEN d.original_order_amount_total END), DECIMAL(32, 4)), 0)
+                                profitRate,
+                            d.currency_code                                                        currency_code,
+                            count(case when s.out_come in(3,4,5,6) then s.order_no end) as orderCount
+                     FROM view_r_order_virtual_match_detail d
+                              LEFT JOIN view_r_settle_full_detail s ON d.order_no = s.order_no
+                     WHERE d.begin_time >= startTimeUTCL
+                       AND d.begin_time <= endTimeUTCL
+                       and d.bet_time > unix_timestamp(date_add(execute_date, INTERVAL -60 DAY)) * 1000
+                     GROUP BY d.match_id,d.currency_code) b on a.id = b.matchId ;
+
+SET end_time = get_cur_ymdhms();
+
+    SET exce_msg = CONCAT(execute_date, 'p_r_virtual_match_bet_currency_info success!');
+
+CALL p_add_task_event_log(task_type, start_time, end_time, result, exce_msg);
+
+
+REPLACE INTO tybss_report.r_match_bet_currency_info
+select concat(b.matchId,b.currency_code)      id,
+       b.matchId                                    matchId,
+       b.match_info                                                               match_info,
+       a.sport_id,
+       b.sportName,
+       a.begin_time,
+       '' match_status,
+       b.tournamentName,
+       0 tournament_level,
+       a.tournament_id,
+       b.betAmount,
+       b.validBetAmount,
+       b.settleAmount,
+       b.profit,
+       b.betUsers,
+       b.validTickets,
+       b.profitRate,
+       b.currency_code,
+       UNIX_TIMESTAMP(current_timestamp(3)) AS elasticsearch_id,
+       b.orderCount
+from  (select id,
+              sport_id,
+              match_begion_time  begin_time,
+              tournament_id
+       from tybss_merchant_common.s_outright_match_info mi
+       where mi.match_begion_time >= startTimeUTCL
+         AND mi.match_begion_time <= endTimeUTCL
+      ) a
+          right join(SELECT d.match_id                                                                             matchId,
+                            MIN(d.sport_name)                                                                      sportName,
+                            MIN(d.match_info)                                                                      match_info,
+                            MIN(d.tournament_name)                                                                 tournamentName,
+                            IFNULL(SUM(case when d.series_type = 1 then d.original_order_amount_total else 0 end) / 100, 0) betAmount,
+                            /*IFNULL(SUM(CASE WHEN d.series_type = 1 and d.order_status in (0, 1) THEN d.original_order_amount_total END) /
+                                   100,
+                                   0)                                                                              validBetAmount,*/
+                            SUM(CASE
+                                       WHEN s.out_come in (3, 4, 5, 6) and
+                                            ABS(d.original_order_amount_total) = ABS(s.original_profit_amount)
+                                           THEN ABS(s.original_profit_amount / 100)
+                                       WHEN s.out_come in (3, 4, 5, 6) and
+                                            ABS(d.original_order_amount_total) > ABS(s.original_profit_amount)
+                                           THEN ABS(s.original_profit_amount / 100)
+                                       WHEN s.out_come in (3, 4, 5, 6) and
+                                            ABS(d.original_order_amount_total) < ABS(s.original_profit_amount)
+                                           THEN ABS(s.original_profit_amount / 100) END)                           validBetAmount,
+                            IFNULL(SUM(case when d.series_type = 1 then s.original_settle_amount else 0 end) / 100, 0)      settleAmount,
+                            IFNULL(SUM(case when d.series_type = 1 then s.original_profit_amount else 0 end) / 100, 0)      profit,
+                            COUNT(DISTINCT (CASE WHEN d.order_status in (0, 1) THEN d.uid END))                    betUsers,
+                            COUNT(DISTINCT (CASE WHEN d.series_type = 1 and d.order_status in (0, 1) THEN d.order_no END))
+                                validTickets,
+                            IFNULL(CONVERT(SUM(case when d.series_type = 1 then s.original_profit_amount else 0 end) /
+                                           SUM(CASE
+                                                   WHEN d.series_type = 1 and d.order_status = 1
+                                                       THEN d.original_order_amount_total END), DECIMAL(32, 4)), 0)
+                                profitRate,
+                            d.currency_code                                                        currency_code,
+                            count(case when s.out_come in(3,4,5,6) then s.order_no end) as orderCount
+                     FROM view_r_order_outright_match_detail d
+                              LEFT JOIN view_r_settle_full_detail s ON d.order_no = s.order_no
+                     WHERE d.begin_time >= startTimeUTCL
+                       AND d.begin_time <= endTimeUTCL
+                       and d.bet_time > unix_timestamp(date_add(execute_date, INTERVAL -60 DAY)) * 1000
+                     GROUP BY d.match_id,d.currency_code) b on a.id = b.matchId ;
+
+SET end_time = get_cur_ymdhms();
+
+    SET exce_msg = CONCAT(execute_date, 'p_r_outright_match_bet_currency_info success!');
+
+CALL p_add_task_event_log(task_type, start_time, end_time, result, exce_msg);
+
+
+END//
+DELIMITER ;
+
+/*set @execute_date:=CURRENT_DATE;
+call p_r_match_bet_currency_info(@execute_date);
+
+set @execute_date:=DATE_ADD(CURRENT_DATE,INTERVAL -1 DAY);
+call p_r_match_bet_currency_info(@execute_date);
+
+set @execute_date:=DATE_ADD(CURRENT_DATE,INTERVAL 1 DAY);
+call p_r_match_bet_currency_info(@execute_date);*/

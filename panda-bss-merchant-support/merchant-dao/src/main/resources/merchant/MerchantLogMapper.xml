@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.panda.sport.merchant.mapper.MerchantLogMapper">
+
+    <resultMap id="BaseResultMap" type="com.panda.sport.merchant.common.po.merchant.MerchantLogPO">
+        <result column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="user_name" property="userName"/>
+        <result column="operat_type" property="operatType"/>
+        <result column="type_name" property="typeName"/>
+        <result column="page_name" property="pageName"/>
+        <result column="page_code" property="pageCode"/>
+        <result column="merchant_code" property="merchantCode"/>
+        <result column="merchant_name" property="merchantName"/>
+        <result column="data_id" property="dataId"/>
+        <result column="operat_field" property="operatField"/>
+        <result column="before_values" property="beforeValues"/>
+        <result column="after_values" property="afterValues"/>
+        <result column="log_tag" property="logTag"/>
+        <result column="operat_time" property="operatTime"/>
+        <result column="domain_self_result" property="domainSelfResult"/>
+        <result column="domain_third_result" property="domainThirdResult"/>
+        <result column="domain_type" property="domainType"/>
+        <result column="ip" property="ip"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+                id,
+                user_id,
+                user_name,
+                operat_type,
+                type_name,
+                page_name,
+                page_code,
+                merchant_code,
+                merchant_name,
+                data_id,
+                operat_field,
+                before_values,
+                after_values,
+                log_tag,
+                operat_time,
+                domain_self_result,
+                domain_third_result,
+                domain_type,
+                ip
+    </sql>
+
+    <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id"
+            parameterType="com.panda.sport.merchant.common.po.merchant.MerchantLogPO">
+        INSERT INTO merchant_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test='null != userId'>
+                user_id,
+            </if>
+            <if test='null != userName'>
+                user_name,
+            </if>
+            <if test='null != operatType'>
+                operat_type,
+            </if>
+            <if test='null != typeName'>
+                type_name,
+            </if>
+            <if test='null != pageName'>
+                page_name,
+            </if>
+            <if test='null != pageCode'>
+                page_code,
+            </if>
+            <if test='null != merchantCode'>
+                merchant_code,
+            </if>
+            <if test='null != merchantName'>
+                merchant_name,
+            </if>
+            <if test='null != dataId'>
+                data_id,
+            </if>
+            <if test='null != operatField'>
+                operat_field,
+            </if>
+            <if test='null != beforeValues'>
+                before_values,
+            </if>
+            <if test='null != afterValues'>
+                after_values,
+            </if>
+            <if test='null != logTag'>
+                log_tag,
+            </if>
+            <if test='null != operatTime'>
+                operat_time,
+            </if>
+            <if test='null != domainSelfResult'>
+                domain_self_result,
+            </if>
+            <if test='null != domainThirdResult'>
+                domain_third_result,
+            </if>
+            <if test='null != domainType'>
+                domain_type,
+            </if>
+            <if test='null != ip'>
+                ip
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test='null != userId'>
+                #{userId},
+            </if>
+            <if test='null != userName'>
+                #{userName},
+            </if>
+            <if test='null != operatType'>
+                #{operatType},
+            </if>
+            <if test='null != typeName'>
+                #{typeName},
+            </if>
+            <if test='null != pageName'>
+                #{pageName},
+            </if>
+            <if test='null != pageCode'>
+                #{pageCode},
+            </if>
+            <if test='null != merchantCode'>
+                #{merchantCode},
+            </if>
+            <if test='null != merchantName'>
+                #{merchantName},
+            </if>
+            <if test='null != dataId'>
+                #{dataId},
+            </if>
+            <if test='null != operatField'>
+                #{operatField},
+            </if>
+            <if test='null != beforeValues'>
+                #{beforeValues},
+            </if>
+            <if test='null != afterValues'>
+                #{afterValues},
+            </if>
+            <if test='null != logTag'>
+                #{logTag},
+            </if>
+            <if test='null != operatTime'>
+                #{operatTime},
+            </if>
+            <if test='null != domainSelfResult'>
+                #{domainSelfResult},
+            </if>
+            <if test='null != domainThirdResult'>
+                #{domainThirdResult},
+            </if>
+            <if test='null != domainType'>
+                #{domainType},
+            </if>
+            <if test='null != ip'>
+                #{ip}
+            </if>
+        </trim>
+    </insert>
+
+    <delete id="delete">
+        DELETE
+        FROM merchant_log
+        WHERE id = #{id}
+    </delete>
+
+    <update id="update" parameterType="com.panda.sport.merchant.common.po.merchant.MerchantLogPO">
+        UPDATE merchant_log
+        <set>
+            <if test='null != userId'>user_id = #{userId},</if>
+            <if test='null != userName'>user_name = #{userName},</if>
+            <if test='null != operatType'>operat_type = #{operatType},</if>
+            <if test='null != typeName'>type_name = #{typeName},</if>
+            <if test='null != pageName'>page_name = #{pageName},</if>
+            <if test='null != pageCode'>page_code = #{pageCode},</if>
+            <if test='null != merchantCode'>merchant_code = #{merchantCode},</if>
+            <if test='null != merchantName'>merchant_name = #{merchantName},</if>
+            <if test='null != dataId'>data_id = #{dataId},</if>
+            <if test='null != operatField'>operat_field = #{operatField},</if>
+            <if test='null != beforeValues'>before_values = #{beforeValues},</if>
+            <if test='null != afterValues'>after_values = #{afterValues},</if>
+            <if test='null != logTag'>log_tag = #{logTag},</if>
+            <if test='null != domainSelfResult'>domain_self_result = #{domainSelfResult},</if>
+            <if test='null != domainThirdResult'>domain_third_result = #{domainThirdResult},</if>
+            <if test='null != operatTime'>operat_time = #{operatTime},</if>
+            <if test='null != ip'>ip = #{ip}</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+
+    <select id="load" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM merchant_log
+        WHERE id = #{id}
+    </select>
+
+    <select id="pageList" resultMap="BaseResultMap"
+            parameterType="com.panda.sport.merchant.common.vo.MerchantLogFindVO">
+        SELECT <include refid="Base_Column_List"/>
+        FROM merchant_log
+        <include refid="queryPageParam"/>
+        ORDER BY operat_time desc
+        LIMIT #{start}, #{pageSize}
+    </select>
+
+    <sql id="queryPageParam">
+        <where>
+            <if test="userName != null  and userName!= ''">
+                AND  user_name = #{userName}
+            </if>
+            <if test="pageCode != null">
+                AND page_code = #{pageCode}
+            </if>
+            <if test="operatTypes != null">
+                AND operat_type IN
+                <foreach collection="operatTypes" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="tag != null">
+                AND log_tag = #{tag}
+            </if>
+            <if test="tags != null">
+                AND ( log_tag is null or
+                log_tag IN
+                <foreach collection="tags" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+                )
+            </if>
+            <if test="domainType != null">
+                AND domain_type = #{domainType}
+            </if>
+            <if test="fieldName != null  and fieldName!= ''">
+                AND operat_field LIKE CONCAT('%',#{fieldName},'%')
+            </if>
+            <if test="dataId != null">
+                AND
+                ( data_id = #{dataId}
+                OR
+                merchant_name = #{dataId})
+            </if>
+            <if test="merchantCodes != null">
+                AND merchant_code IN
+                <foreach collection="merchantCodes" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="merchantCode != null and merchantCode!= ''">
+                AND merchant_code = #{merchantCode}
+            </if>
+            <if test="startTime != null">
+                AND operat_time  BETWEEN #{startTime} and #{endTime}
+            </if>
+        </where>
+
+    </sql>
+    <select id="pageListCount" resultType="java.lang.Integer"
+            parameterType="com.panda.sport.merchant.common.vo.MerchantLogFindVO">
+        SELECT count(1)
+        FROM merchant_log
+        <include refid="queryPageParam"/>
+    </select>
+</mapper>

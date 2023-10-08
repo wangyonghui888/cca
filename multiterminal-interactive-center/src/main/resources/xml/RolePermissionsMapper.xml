@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.panda.multiterminalinteractivecenter.mapper.PermissionsMapper">
+
+    <select id="findPermissionsByRoleId" resultType="com.panda.multiterminalinteractivecenter.entity.Permissions">
+         SELECT r.* FROM m_permissions r
+         left join m_roles_permissions ur on r.id = ur.permission_id WHERE ur.role_id = #{userId} order by r.sort ;
+    </select>
+
+    <select id="findPermissionsIdsByRoleId" resultType="java.lang.Long">
+        SELECT r.permission_id  FROM m_roles_permissions r where r.role_id = #{roleId}
+
+    </select>
+</mapper>

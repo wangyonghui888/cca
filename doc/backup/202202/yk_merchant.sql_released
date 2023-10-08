@@ -1,0 +1,5 @@
+INSERT INTO `merchant`.`admin_menu`(`id`, `name`, `name_en`, `pid`, `sort`, `path`, `icon`, `create_time`) VALUES (35, '汇率查询', 'Curreny Check', 13, 33, 'currency_check', '', '2022-02-06 11:34:48');
+INSERT INTO `merchant`.`admin_menu`(`id`, `name`, `name_en`, `pid`, `sort`, `path`, `icon`, `create_time`) VALUES (37, 'VIP注单下载', 'VIP Download', 10, 37, 'VIP_bet_download', '', '2020-05-16 13:43:59');
+
+INSERT INTO `merchant`.`admin_roles_menus`(`role_id`, `menu_id`)  SELECT id,35 FROM merchant.admin_role;
+

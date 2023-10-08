@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.panda.center.mapper.merchant.MerchantFileMapper">
+
+    <resultMap id="BaseResultMap" type="com.panda.center.entity.MerchantFile" >
+        <result column="id" property="id" />
+        <result column="merchant_code" property="merchantCode" />
+        <result column="file_name" property="fileName" />
+        <result column="file_size" property="fileSize" />
+        <result column="create_time" property="createTime" />
+        <result column="end_time" property="endTime" />
+        <result column="operat_name" property="operatName" />
+        <result column="page_name" property="pageName" />
+        <result column="export_rate" property="exportRate" />
+        <result column="export_param" property="exportParam" />
+        <result column="export_bean" property="exportBean" />
+        <result column="status" property="status" />
+        <result column="remark" property="remark" />
+        <result column="file_path" property="filePath" />
+        <result column="ftp_file_name" property="ftpFileName"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+                id,
+                merchant_code,
+                file_name,
+                file_size,
+                create_time,
+                end_time,
+                operat_name,
+                page_name,
+                export_rate,
+                export_param,
+                export_bean,
+                status,
+                remark,
+                file_path,
+                ftp_file_name
+    </sql>
+
+    <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id" parameterType="com.panda.center.entity.MerchantFile">
+        INSERT INTO merchant_file
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test ='null != merchantCode'>
+                merchant_code,
+            </if>
+            <if test ='null != fileName'>
+                file_name,
+            </if>
+            <if test ='null != fileSize'>
+                file_size,
+            </if>
+            <if test ='null != createTime'>
+                create_time,
+            </if>
+            <if test ='null != endTime'>
+                end_time,
+            </if>
+            <if test ='null != operatName'>
+                operat_name,
+            </if>
+            <if test ='null != pageName'>
+                page_name,
+            </if>
+            <if test ='null != exportRate'>
+                export_rate,
+            </if>
+            <if test ='null != exportParam'>
+                export_param,
+            </if>
+            <if test ='null != exportBean'>
+                export_bean,
+            </if>
+            <if test ='null != status'>
+                status,
+            </if>
+            <if test ='null != remark'>
+                remark,
+            </if>
+            <if test ='null != filePath'>
+                file_path,
+            </if>
+            <if test ='null != ftpFileName'>
+                ftp_file_name,
+            </if>
+            <if test ='null != dataSize'>
+                data_size
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test ='null != merchantCode'>
+                #{merchantCode},
+            </if>
+            <if test ='null != fileName'>
+                #{fileName},
+            </if>
+            <if test ='null != fileSize'>
+                #{fileSize},
+            </if>
+            <if test ='null != createTime'>
+                #{createTime},
+            </if>
+            <if test ='null != endTime'>
+                #{endTime},
+            </if>
+            <if test ='null != operatName'>
+                #{operatName},
+            </if>
+            <if test ='null != pageName'>
+                #{pageName},
+            </if>
+            <if test ='null != exportRate'>
+                #{exportRate},
+            </if>
+            <if test ='null != exportParam'>
+                #{exportParam},
+            </if>
+            <if test ='null != exportBean'>
+                #{exportBean},
+            </if>
+            <if test ='null != status'>
+                #{status},
+            </if>
+            <if test ='null != remark'>
+                #{remark},
+            </if>
+            <if test ='null != filePath'>
+                #{filePath},
+            </if>
+            <if test ='null != ftpFileName'>
+                #{ftpFileName},
+            </if>
+            <if test ='null != dataSize'>
+                #{dataSize},
+            </if>
+        </trim>
+    </insert>
+
+    <delete id="delete" >
+        DELETE FROM merchant_file
+        WHERE id = #{id}
+    </delete>
+
+    <update id="update" parameterType="com.panda.center.entity.MerchantFile">
+        UPDATE merchant_file
+        <set>
+            <if test ='null != merchantCode'>merchant_code = #{merchantCode},</if>
+            <if test ='null != fileName'>file_name = #{fileName},</if>
+            <if test ='null != fileSize'>file_size = #{fileSize},</if>
+            <if test ='null != createTime'>create_time = #{createTime},</if>
+            <if test ='null != endTime'>end_time = #{endTime},</if>
+            <if test ='null != operatName'>operat_name = #{operatName},</if>
+            <if test ='null != pageName'>page_name = #{pageName},</if>
+            <if test ='null != exportRate'>export_rate = #{exportRate},</if>
+            <if test ='null != exportParam'>export_param = #{exportParam},</if>
+            <if test ='null != exportBean'>export_type = #{exportBean},</if>
+            <if test ='null != status'>status = #{status},</if>
+            <if test ='null != remark'>remark = #{remark},</if>
+            <if test ='null != filePath'>file_path = #{filePath}</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="load" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM merchant_file
+        WHERE id = #{id}
+    </select>
+
+    <select id="loadExecuteById" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM merchant_file
+        WHERE status = 1 and data_size <![CDATA[ > ]]>  20000 limit 0,1;;
+    </select>
+
+    <select id="loadInitMaxTaskById" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM merchant_file
+        WHERE status = 0 and data_size <![CDATA[ > ]]>  20000
+        order by create_time
+        limit 0,1;
+    </select>
+
+    <select id="loadInitTaskById" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM merchant_file
+        WHERE status = 0 and data_size <![CDATA[ <= ]]>  20000
+        order by create_time
+    </select>
+
+    <select id="queryExecuteFile" resultMap="BaseResultMap" parameterType="com.panda.center.vo.MerchantFileVo">
+    SELECT <include refid="Base_Column_List" />
+    FROM merchant_file
+    WHERE
+    status = 1
+    <if test="merchantCodes != null">
+        AND merchant_code IN
+        <foreach collection="merchantCodes" item="item" index="index" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </if>
+    <if test=" operatName != null">
+        and operat_name = #{operatName}
+    </if>
+</select>
+
+    <select id="queryFileRate" resultMap="BaseResultMap" parameterType="com.panda.center.vo.MerchantFileVo">
+        SELECT <include refid="Base_Column_List" />
+        FROM merchant_file
+        WHERE
+        <if test="ids != null">
+             id IN
+            <foreach collection="ids" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test=" operatName != null">
+            and operat_name = #{operatName}
+        </if>
+    </select>
+
+    <select id="queryFileByName" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM merchant_file
+        WHERE
+        file_name = #{fileName}
+    </select>
+
+    <select id="getLastNum" resultType="java.lang.Long">
+        SELECT IFNULL(MAX(id),0) FROM merchant_file
+    </select>
+
+    <select id="queryList" resultMap="BaseResultMap" parameterType="com.panda.center.vo.MerchantFileVo">
+        SELECT <include refid="Base_Column_List" />
+        FROM merchant_file
+        <include refid="queryParam"/>
+        ORDER BY create_time desc
+        LIMIT #{start}, #{pageSize}
+    </select>
+
+    <select id="queryListAll" resultMap="BaseResultMap" parameterType="com.panda.center.vo.MerchantFileVo">
+        SELECT <include refid="Base_Column_List" />
+        FROM merchant_file
+        <include refid="queryParam"/>
+        ORDER BY create_time desc
+    </select>
+
+    <select id="queryListExceptionAll" resultMap="BaseResultMap" parameterType="com.panda.center.vo.MerchantFileVo">
+        SELECT <include refid="Base_Column_List" />
+        FROM merchant_file
+        <include refid="queryParam"/>
+        ORDER BY create_time desc
+    </select>
+
+    <select id="queryListCount" resultType="java.lang.Integer" parameterType="com.panda.center.vo.MerchantFileVo">
+        SELECT count(1)
+        FROM merchant_file
+        <include refid="queryParam"/>
+    </select>
+
+    <select id="queryListInitCount" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT count(1)
+        FROM merchant_file
+        where  status in (0,1) and operat_name = #{operatName}
+    </select>
+
+    <select id="queryExistTask" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT <include refid="Base_Column_List" />
+        FROM merchant_file
+        where  status in (0,1) and merchant_code = #{merchantCode}
+    </select>
+    <select id="queryInnerExistTask" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT <include refid="Base_Column_List" />
+        FROM merchant_file
+        where  status in (0,1) and merchant_code is null
+    </select>
+    <sql id="queryParam">
+      <where>
+        <if test=" fileName != null">
+            and file_name like CONCAT('%',#{fileName},'%')
+        </if>
+          <if test=" operatName != null">
+            and operat_name = #{operatName}
+        </if>
+          <if test=" status != null">
+              and status = #{status}
+          </if>
+          <if test=" creatTime != null">
+              and create_time <![CDATA[ < ]]> #{creatTime}
+          </if>
+        <if test="merchantCodes != null">
+            AND merchant_code IN
+            <foreach collection="merchantCodes" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+      </where>
+    </sql>
+
+    <select id="pageList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM merchant_file
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <update id="resetFileStatus">
+        UPDATE merchant_file set status = 3,remark = '重启系统' where status in(0,1)
+    </update>
+
+</mapper>

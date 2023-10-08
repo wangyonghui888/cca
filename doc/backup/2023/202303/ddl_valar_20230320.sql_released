@@ -1,0 +1,2 @@
+truncate table tybss_merchant_common.t_log_history;
+CREATE UNIQUE INDEX index_user_id ON tybss_merchant_common.t_log_history (uid);

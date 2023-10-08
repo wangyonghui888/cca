@@ -1,0 +1,2 @@
+
+update tybss_merchant_common.t_merchant set language_list ='zh,en,tw,vi';

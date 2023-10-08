@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.merchant.mapper.TMerchantGroupInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.panda.sport.merchant.common.po.merchant.TMerchantGroupInfo" >
+        <result column="id" property="id" />
+        <result column="merchant_code" property="merchantCode" />
+        <result column="merchant_name" property="merchantName" />
+        <result column="create_time" property="creatTime" />
+        <result column="merchant_group_id" property="merchantGroupId" />
+        <result column="update_time" property="updateTime" />
+        <result column="operator" property="operator" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+                id,
+                merchant_code,
+                merchant_name,
+                create_time,
+                merchant_group_id,
+                update_time,
+                operator
+    </sql>
+
+    <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id" parameterType="com.panda.sport.merchant.common.po.merchant.TMerchantGroupInfo">
+        INSERT INTO t_merchant_group_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="null != merchantCode and '' != merchantCode">
+                merchant_code,
+            </if>
+            <if test="null != merchantName and '' != merchantName">
+                merchant_name,
+            </if>
+            <if test="null != creatTime and '' != creatTime">
+                create_time,
+            </if>
+            <if test="null != merchantGroupId and '' != merchantGroupId">
+                merchant_group_id,
+            </if>
+            <if test="null != updateTime and '' != updateTime">
+                update_time,
+            </if>
+            <if test="null != operator and '' != operator">
+                operator
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="null != merchantCode and '' != merchantCode">
+                #{merchantCode},
+            </if>
+            <if test="null != merchantName and '' != merchantName">
+                #{merchantName},
+            </if>
+            <if test="null != creatTime and '' != creatTime">
+                #{creatTime},
+            </if>
+            <if test="null != merchantGroupId and '' != merchantGroupId">
+                #{merchantGroupId},
+            </if>
+            <if test="null != updateTime and '' != updateTime">
+                #{updateTime},
+            </if>
+            <if test="null != operator and '' != operator">
+                #{operator}
+            </if>
+        </trim>
+    </insert>
+
+    <delete id="delete" >
+        DELETE FROM t_merchant_group_info
+        WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteByGroupId" >
+        DELETE FROM t_merchant_group_info
+        WHERE merchant_group_id = #{merchantGroupId}
+    </delete>
+
+    <update id="update" parameterType="com.panda.sport.merchant.common.po.merchant.TMerchantGroupInfo">
+        UPDATE t_merchant_group_info
+        <set>
+            <if test="null != merchantCode and '' != merchantCode">merchant_code = #{merchantCode},</if>
+            <if test="null != merchantName and '' != merchantName">merchant_name = #{merchantName},</if>
+            <if test="null != creatTime and '' != creatTime">create_time = #{creatTime},</if>
+            <if test="null != merchantGroupId and '' != merchantGroupId">merchant_group_id = #{merchantGroupId},</if>
+            <if test="null != updateTime and '' != updateTime">update_time = #{updateTime},</if>
+            <if test="null != operator and '' != operator">operator = #{operator}</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+
+    <select id="load" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM t_merchant_group_info
+        WHERE id = #{id}
+    </select>
+
+    <select id="pageList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM t_merchant_group_info
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="tMerchantGroupInfoByGroupId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM t_merchant_group_info
+        WHERE merchant_group_id = #{merchantGroupId}
+    </select>
+
+    <select id="getAllByCode" resultMap="BaseResultMap">
+        SELECT * FROM `t_merchant_group_info`t
+        LEFT JOIN t_merchant_group g on g.id = t.merchant_group_id
+        WHERE g.group_code = #{code}
+    </select>
+    <select id="pageListCount" resultType="java.lang.Integer">
+        SELECT count(1)
+        FROM t_merchant_group_info
+    </select>
+
+</mapper>

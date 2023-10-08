@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.panda.center.mapper.activity.UserReport4Mapper">
+
+    <select id="getActivityBetStatCount" parameterType="com.panda.center.dto.ActivityBetStatDTO" resultType="int">
+
+        SELECT count(*)
+        FROM (
+            SELECT
+                1
+            FROM
+                ac_user_order_day as a
+            where
+                a.time   >= #{startTime}
+                and a.time <![CDATA[ <= ]]> #{endTime}
+
+                <if test="uidList != null">
+                    AND (a.uid in
+                    <foreach item='code' index='index' collection='uidList' open='(' separator=','
+                             close=')'>
+                        #{code}
+                    </foreach>
+
+                    OR
+
+                    <foreach item='code' index='index' collection='uidList' open='(' separator=' or '
+                             close=')'>
+                        a.user_name like CONCAT('%',#{code},'%')
+                    </foreach>
+                 )
+
+                </if>
+
+
+
+                <if test="merchantCodeList != null">
+                    AND ( a.merchant_code in
+                    <foreach item='code' index='index' collection='merchantCodeList' open='(' separator=' , '
+                             close=')'>
+                         #{code}
+                    </foreach>
+                    )
+                </if>
+            GROUP BY
+                a.merchant_code,
+                a.uid
+            ) AS a
+    </select>
+
+    <select id="getActivityBetStatList" parameterType="com.panda.center.dto.ActivityBetStatDTO" resultType="com.panda.center.vo.ActivityBetStatVO">
+        SELECT
+            a.uid,
+            a.user_name as username,
+            m.account,
+            a.merchant_code as merchantCode,
+            sum( a.valid_bet_amount ) AS validBetAmount,
+            sum( a.valid_tickets ) AS validBetNums,
+            count(*) AS valid_bet_days
+        FROM
+            ac_user_order_day as a
+            LEFT join trader.tbl_merchant m ON a.merchant_code = m.id
+        where
+            a.time   >= #{startTime}
+            and a.time <![CDATA[ <= ]]> #{endTime}
+
+
+
+            <if test="uidList != null">
+                AND (a.uid in
+                <foreach item='code' index='index' collection='uidList' open='(' separator=','
+                         close=')'>
+                    #{code}
+                </foreach>
+                OR
+                    a.user_name in
+                <foreach item='code' index='index' collection='uidList' open='(' separator=' , '
+                         close=')'>
+                    #{code}
+                </foreach>
+
+                )
+            </if>
+
+            <if test="merchantCodeList != null">
+            AND a.merchant_code in
+                <foreach item='code' index='index' collection='merchantCodeList' open='(' separator=' , '
+                         close=')'>
+                     #{code}
+                </foreach>
+
+            </if>
+        GROUP BY
+            a.merchant_code,
+            a.uid,
+           a.user_name
+        limit #{startRow}, #{pageSize}
+
+    </select>
+
+</mapper>

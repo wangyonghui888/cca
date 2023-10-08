@@ -1,0 +1,13 @@
+
+#消费者组信息
+panda.rocketmq.consumer.groupName=producer-oubao-group
+#MQ服务地址
+panda.rocketmq.consumer.namesrvAddr=172.18.178.191:9876;172.18.178.192:9876;172.18.178.193:9876
+
+panda.rocketmq.consumer.topic=panda_order_ag
+
+panda.rocketmq.access.key=ag
+
+panda.rocketmq.secret.key=123456
+
+panda.rocketmq.springboot.enabled=true

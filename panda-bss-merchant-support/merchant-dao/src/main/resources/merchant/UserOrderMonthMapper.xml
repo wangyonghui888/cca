@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 用户表(t_user) -->
+<mapper namespace="com.panda.sport.merchant.mapper.UserOrderMonthMapper">
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.panda.sport.merchant.common.po.merchant.UserOrderMonthPO">
+        <result column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="user_name" property="userName" />
+        <result column="merchant_code" property="merchantCode" />
+        <result column="merchant_name" property="merchantName" />
+        <result column="bet_num" property="betNum" />
+        <result column="bet_amount" property="betAmount" />
+        <result column="profit" property="profit" />
+        <result column="profit_rate" property="profitRate" />
+        <result column="settle_order_num" property="settleOrderNum" />
+        <result column="settle_order_amount" property="settleOrderAmount" />
+        <result column="settle_profit" property="settleProfit" />
+        <result column="settle_profit_rate" property="settleProfitRate" />
+        <result column="live_order_num" property="liveOrderNum" />
+        <result column="live_order_amount" property="liveOrderAmount" />
+        <result column="live_profit" property="liveProfit" />
+        <result column="live_profit_rate" property="liveProfitRate" />
+        <result column="time" property="time" />
+        <result column="active_days" property="activeDays" />
+    </resultMap>
+
+    <!-- 表所有字段 -->
+    <sql id="allColumns">
+              id,
+                user_id,
+                user_name,
+                merchant_code,
+                merchant_name,
+                bet_num,
+                bet_amount,
+                profit,
+                profit_rate,
+                settle_order_num,
+                settle_order_amount,
+                settle_profit,
+                settle_profit_rate,
+                live_order_num,
+                live_order_amount,
+                live_profit,
+                live_profit_rate,
+                time,
+                active_days
+    </sql>
+    <select id="selectProfitByUser" resultType="java.util.Map">
+        SELECT
+                sum(settle_profit) as profit,
+                AVG(settle_profit_rate) as profit_rate
+         FROM `user_order_month`
+        where
+           user_id =#{userId} and
+        time > #{endTime}
+
+    </select>
+
+    <select id="selectOrderByUser" resultMap="BaseResultMap">
+        select <include refid="allColumns"></include>
+        FROM `user_order_month`
+        where
+         user_id =#{userId} and
+        time > #{endTime}
+    </select>
+
+    <select id="queryUserOrderList" resultType="com.panda.sport.merchant.common.po.merchant.UserOrderMonthPO">
+        SELECT
+            id,
+            user_id userId,
+            user_name userName,
+            merchant_code merchantCode,
+            merchant_name merchantName,
+            bet_num betNum,
+            bet_amount betAmount,
+            profit,
+            profit_rate profitRate,
+            settle_order_num settleOrderNum,
+            settle_order_amount settleOrderAmount,
+            settle_profit settleProfit,
+            settle_profit_rate settleProfitRate,
+            live_order_num liveOrderNum,
+            live_order_amount liveOrderAmount,
+            live_profit liveProfit,
+            live_profit_rate liveProfitRate,
+            active_days activeDays
+        FROM
+            user_order_month
+        <where>
+            <if test="time != null">
+                time = #{time}
+            </if>
+            <if test="userId != null">
+                AND user_id = #{userId}
+            </if>
+            <if test="userNameList != null">
+               and ( user_id in
+                <foreach collection="userNameList" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+                or user_name in
+                <foreach collection="userNameList" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+                )
+            </if>
+            <if test="userName != null">
+               and ( user_id like CONCAT('%',#{userName},'%')
+                or user_name like CONCAT('%',#{userName},'%')
+                )
+            </if>
+            <if test="merchantCode != null">
+                AND (merchant_code = #{merchantCode} or parent_code = #{merchantCode})
+            </if>
+        </where>
+    </select>
+
+    <select id="queryUserOrderSportList" resultType="com.panda.sport.merchant.common.po.merchant.UserOrderMonthPO">
+        SELECT
+            id,
+            user_id userId,
+            user_name userName,
+            merchant_code merchantCode,
+            merchant_name merchantName,
+            bet_num betNum,
+            bet_amount betAmount,
+            profit,
+            profit_rate profitRate,
+            settle_order_num settleOrderNum,
+            settle_order_amount settleOrderAmount,
+            settle_profit settleProfit,
+            settle_profit_rate settleProfitRate,
+            live_order_num liveOrderNum,
+            live_order_amount liveOrderAmount,
+            live_profit liveProfit,
+            live_profit_rate liveProfitRate,
+            active_days activeDays
+        FROM
+            user_sport_order_month
+        <where>
+            <if test="time != null">
+                time = #{time}
+            </if>
+            <if test="userId != null">
+                AND user_id = #{userId}
+            </if>
+            <if test="userNameList != null">
+                and ( user_id in
+                <foreach collection="userNameList" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+                or user_name in
+                <foreach collection="userNameList" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+                )
+            </if>
+            <if test="userName != null">
+                and ( user_id like CONCAT('%',#{userName},'%')
+                or user_name like CONCAT('%',#{userName},'%')
+                )
+            </if>
+            <if test="merchantCode != null">
+                AND (merchant_code = #{merchantCode} or parent_code = #{merchantCode})
+            </if>
+            <if test="sportId != null">
+                AND sport_id = #{sportId}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryUserOrderListByYear" resultType="com.panda.sport.merchant.common.po.merchant.UserOrderMonthPO">
+        SELECT
+            t.user_id userId,
+            t.`year`,
+            min( t.user_name ) userName,
+            min( t.merchant_code ) merchantCode,
+            min( t.merchant_name ) merchantName,
+            count( profit ) profit,
+            count( profit ) / count( t.bet_amount ) profitRate,
+            count( t.bet_num ) betNum,
+            count( t.bet_amount ) betAmount,
+            count( settle_order_num ) settleOrderNum,
+            count( settle_order_amount ) settleOrderAmount,
+            count( settle_profit ) settleProfit,
+            count( settle_profit ) / count( settle_order_amount ) settleProfitRate,
+            count( live_order_num ) liveOrderNum,
+            count( live_order_amount ) liveOrderAmount,
+            count( live_profit ) liveProfit,
+            count( live_profit ) / count( live_order_amount ) liveProfitRate,
+            count( t.active_days ) activeDays
+        FROM
+            (
+            SELECT
+                *,
+                substring( time, 1, 4 ) AS 'year'
+            FROM
+                user_order_month
+            <where>
+                <if test="time != null">
+                substring( time, 1, 4 ) = #{time}
+                </if>
+                <if test="userId != null">
+                AND user_id = #{userId}
+                </if>
+                <if test="userNameList != null">
+                    and ( user_id in
+                    <foreach collection="userNameList" item="item" index="index" separator="," open="(" close=")">
+                        #{item}
+                    </foreach>
+                    or user_name in
+                    <foreach collection="userNameList" item="item" index="index" separator="," open="(" close=")">
+                        #{item}
+                    </foreach>
+                    )
+                </if>
+                <if test="userName != null">
+                    and ( user_id like CONCAT('%',#{userName},'%')
+                    or user_name like CONCAT('%',#{userName},'%')
+                    )
+                </if>
+                <if test="merchantCode != null">
+                    AND (merchant_code = #{merchantCode} or parent_code = #{merchantCode})
+                </if>
+            </where>
+            ) t
+        GROUP BY
+            t.user_id,
+            t.YEAR
+    </select>
+
+
+    <select id="queryUserOrderSportListByYear" resultType="com.panda.sport.merchant.common.po.merchant.UserOrderMonthPO">
+        SELECT
+            t.user_id userId,
+            t.`year`,
+            min( t.user_name ) userName,
+            min( t.merchant_code ) merchantCode,
+            min( t.merchant_name ) merchantName,
+            count( profit ) profit,
+            count( profit ) / count( t.bet_amount ) profitRate,
+            count( t.bet_num ) betNum,
+            count( t.bet_amount ) betAmount,
+            count( settle_order_num ) settleOrderNum,
+            count( settle_order_amount ) settleOrderAmount,
+            count( settle_profit ) settleProfit,
+            count( settle_profit ) / count( settle_order_amount ) settleProfitRate,
+            count( live_order_num ) liveOrderNum,
+            count( live_order_amount ) liveOrderAmount,
+            count( live_profit ) liveProfit,
+            count( live_profit ) / count( live_order_amount ) liveProfitRate,
+            count( t.active_days ) activeDays
+        FROM
+            (
+            SELECT
+                *,
+                substring( time, 1, 4 ) AS 'year'
+            FROM
+                user_sport_order_month
+            <where>
+                <if test="time != null">
+                    substring( time, 1, 4 ) = #{time}
+                </if>
+                <if test="userId != null">
+                    AND user_id = #{userId}
+                </if>
+                <if test="userNameList != null">
+                    and ( user_id in
+                    <foreach collection="userNameList" item="item" index="index" separator="," open="(" close=")">
+                        #{item}
+                    </foreach>
+                    or user_name in
+                    <foreach collection="userNameList" item="item" index="index" separator="," open="(" close=")">
+                        #{item}
+                    </foreach>
+                    )
+                </if>
+                <if test="userName != null">
+                    and ( user_id like CONCAT('%',#{userName},'%')
+                    or user_name like CONCAT('%',#{userName},'%')
+                    )
+                </if>
+                <if test="merchantCode != null">
+                    AND (merchant_code = #{merchantCode} or parent_code = #{merchantCode})
+                </if>
+                <if test="sportId != null">
+                    AND sport_id = #{sportId}
+                </if>
+            </where>
+            ) t
+        GROUP BY
+            t.user_id,
+            t.YEAR
+    </select>
+
+
+
+
+</mapper>

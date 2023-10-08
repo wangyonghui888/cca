@@ -1,0 +1,7 @@
+
+###业务四个商户主库【tybss_merchant_common，tybss_merchant_y，tybss_merchant_s，tybss_merchant_b】
+
+update tybss_merchant_common.t_user set market_level=0 WHERE user_level =208  and modify_time>1654012802000;
+update tybss_merchant_y.t_user set market_level=0 WHERE user_level =208   and modify_time>1654012802000;
+update tybss_merchant_s.t_user set market_level=0 WHERE user_level =208   and modify_time>1654012802000;
+update tybss_merchant_b.t_user set market_level=0 WHERE user_level =208   and modify_time>1654012802000;

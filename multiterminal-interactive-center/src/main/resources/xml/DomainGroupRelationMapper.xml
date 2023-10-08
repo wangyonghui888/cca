@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.multiterminalinteractivecenter.mapper.DomainGroupRelationMapper">
+
+    <select id="selectDomainSameGroup"
+            resultType="com.panda.multiterminalinteractivecenter.entity.TyDomain">
+        SELECT
+            b.*
+        FROM
+            t_domain_group_relation b
+                JOIN t_domain_ty c ON
+                b.domain_id = c.id,
+            t_domain_group_relation a
+        WHERE
+            a.domain_group_id = b.domain_group_id
+        <if test="isSameDomainGroup != null and isSameDomainGroup == true">
+            AND a.domain_id = ${domainId}
+        </if>
+        <if test="isSameDomainGroup != null and isSameDomainGroup == false">
+            AND a.domain_id != ${domainId}
+        </if>
+          AND b.domain_id != ${domainId}
+
+    </select>
+    <select id="getDomainList" resultType="com.panda.multiterminalinteractivecenter.dto.DomainRelationDto">
+        SELECT b.id,
+               b.domain_group_id domainGroupId,
+               b.domain_id domainId,
+               b.tab tab,
+               c.h5_threshold h5Threshold,
+               c.pc_threshold pcThreshold,
+               c.api_threshold apiThreshold,
+               c.img_threshold imgThreshold,
+               a.domain_name domainName,
+               a.domain_type domainType
+        FROM
+        <if test="null != tab and 'ty' == tab">
+            t_domain_ty
+        </if>
+        <if test="null != tab and 'ty' != tab">
+            t_domain
+        </if> a
+             JOIN t_domain_group_relation b ON
+            a.id = b.domain_id
+             JOIN t_domain_group c ON
+            c.id = b.domain_group_id
+        where a.enable in (1, 2)
+          and c.status = 1
+          and b.tab = #{tab}
+          and a.tab = #{tab}
+    </select>
+
+
+    <delete id="deleteByDomainProgramId">
+        DELETE
+        FROM t_domain_program_relation
+        WHERE
+        program_id = #{programId}
+        AND domain_group_id IN
+        <foreach collection="programRelationList" index="index" item="programRelation" open="(" separator="," close=")">
+            #{programRelation.domainGroupId}
+        </foreach>
+    </delete>
+
+    <select id="selectDomainGroupIds" resultType="java.lang.Long">
+        SELECT tdg.domain_group_id
+        FROM t_domain_ty td
+                 JOIN t_domain_group_relation tdg ON
+            tdg.domain_id = td.id
+        WHERE td.id = #{id}
+        and td.tab = #{tab}
+        and tdg.tab = #{tab}
+    </select>
+
+    <delete id="delProgramRelationByDomainGroupId">
+        DELETE
+        FROM t_domain_program_relation
+        WHERE program_id = #{programId}
+          and domain_group_id = #{domainGroupId}
+    </delete>
+
+    <delete id="deleteByGroupId">
+        DELETE
+        FROM t_domain_program_relation
+        WHERE domain_group_id = #{id}
+    </delete>
+
+</mapper>

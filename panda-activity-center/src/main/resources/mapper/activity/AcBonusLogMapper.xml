@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.center.mapper.activity.AcBonusLogMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.panda.center.entity.AcBonusLog">
+        <id column="id" property="id"/>
+        <result column="merchant_code" property="merchantCode"/>
+        <result column="uid" property="uid"/>
+        <result column="user_name" property="userName"/>
+        <result column="task_id" property="taskId"/>
+        <result column="act_id" property="actId"/>
+        <result column="act_name" property="actName"/>
+        <result column="task_name" property="taskName"/>
+        <result column="ticket_num" property="ticketNum"/>
+        <result column="bonus_id" property="bonusId"/>
+        <result column="receive_time" property="receiveTime"/>
+        <result column="bonus_time" property="bonusTime"/>
+        <result column="created_by" property="createdBy"/>
+        <result column="created_from" property="createdFrom"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        merchant_code,
+        uid,
+        user_name,
+        task_id,
+        act_id,
+        act_name,
+        task_name,
+        ticket_num,
+        bonus_id,
+        receive_time,
+        bonus_time,
+        created_by,
+        created_from
+    </sql>
+</mapper>

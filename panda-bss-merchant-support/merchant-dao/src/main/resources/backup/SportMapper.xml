@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 用户表(t_user) -->
+<mapper namespace="com.panda.sport.backup.mapper.SportMapper">
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.panda.sport.merchant.common.po.bss.SportPO">
+        <result column="id" property="id"/>
+        <result column="visible" property="visible"/>
+        <result column="name_code" property="nameCode"/>
+        <result column="name" property="name"/>
+        <result column="remark" property="remark"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+        <result column="create_user" property="createUser"/>
+        <result column="modify_user" property="modifyUser"/>
+    </resultMap>
+
+
+    <resultMap id="tournamentMap" type="com.panda.sport.merchant.common.po.bss.SportRegionPO">
+        <id property="id" column="id"/>
+        <result property="introduction" column="introduction"/>
+        <result property="spell" column="spell"/>
+        <result property="remark" column="remark"/>
+        <result property="regionId" column="regionId"/>
+        <collection property="tournamentConditionVos" ofType="com.panda.sport.merchant.common.po.bss.TournamentPO">
+            <id property="id" column="tId"/>
+            <result column="sport_id" property="sportId"/>
+            <result column="tournament_level" property="tournamentLevel"/>
+            <result column="zs" property="tournamentName"/>
+            <result column="name_code" property="nameCode"/>
+        </collection>
+    </resultMap>
+
+    <!-- 表所有字段 -->
+    <sql id="allColumns">
+                 id,
+                visible,
+                name_code,
+                name,
+                remark,
+                create_time,
+                modify_time,
+                create_user,
+                modify_user
+    </sql>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT <include refid="allColumns"/>
+        FROM s_sport
+    </select>
+    
+    <select id="getAllSportList" resultType="Map">
+        select s.id, s.name_code as nameCode, l.${language} as name
+        from s_sport s
+                 left join s_language l on s.name_code = l.name_code
+        union
+        select id, vs.name_code as nameCode, vl.${language} as name
+        from s_virtual_sport_type vs
+                 left join s_virtual_language vl on vs.name_code = vl.name_code
+    </select>
+
+    <select id="getAllSportListByFilter" resultType="com.panda.sport.merchant.common.po.bss.SportFilterVo">
+        select s.id, s.name_code as nameCode, l.${language} as name
+        from s_sport s
+                 left join s_language l on s.name_code = l.name_code
+        union
+        select id, vs.name_code as nameCode, vl.${language} as name
+        from s_virtual_sport_type vs
+                 left join s_virtual_language vl on vs.name_code = vl.name_code
+    </select>
+
+
+    <select id="queryTournamentList" resultMap="tournamentMap">
+        SELECT
+            r.id,
+            r.introduction,
+            r.spell,
+            r.remark,
+            t.id tId,
+            t.sport_id ,
+            r.id regionId,
+            t.tournament_level ,
+            t.name_code ,
+            l.zs
+        FROM
+            s_region r
+            LEFT JOIN s_tournament t ON r.id = t.standard_sport_region_id
+            LEFT JOIN s_language l ON l.name_code = t.name_code
+        where
+            r.introduction IS NOT NULL
+            <if test="tournamentLevel!=null">
+              and  t.tournament_level = #{tournamentLevel}
+            </if>
+            <if test="sportId!=null">
+              and  t.sport_id = #{sportId}
+            </if>
+    </select>
+    <select id="queryTournament" resultType="com.panda.sport.merchant.common.vo.TournamentVo">
+        SELECT s.id                                                     as id,
+               CONCAT(l.${language}, '-', sl.${language}, '-',
+                      (CASE
+                           WHEN s.tournament_level = 0 and 'zs' = #{language} THEN '未定级'
+                           when s.tournament_level = 0 and 'en' = #{language} THEN 0
+                           when s.tournament_level != 0 and 'en' = #{language} then CONCAT(s.tournament_level, 'th')
+                           ELSE CONCAT(s.tournament_level, '级联赛') end)) as `name`,
+               CASE s.tournament_level
+                   WHEN 0 THEN 100
+                   ELSE s.tournament_level END                             `level`,
+               s.sport_id                                               as sportId
+        FROM s_tournament s
+                 LEFT JOIN s_sport p on p.id = s.sport_id
+                 LEFT JOIN s_language l on s.name_code = l.name_code
+                 LEFT JOIN s_language sl on p.name_code = sl.name_code
+       <where>
+           s.operator_status =1
+           <if test="sportName != null or  tournamentName != null or level != null">
+           and (
+                <if test="sportName != null">
+                   sl.${language} like CONCAT('%',#{sportName},'%')
+               </if>
+                <if test= "tournamentName != null">
+                    OR l.${language} like CONCAT('%',#{tournamentName},'%')
+                </if>
+                <if test="level != null">
+                    OR s.tournament_level = #{level}
+                </if>
+                 )
+          </if>
+
+       </where>
+        ORDER BY sportId, `level`
+        limit 50
+    </select>
+
+    <select id="queryTournamentBySportId" resultType="com.panda.sport.merchant.common.vo.TournamentVo">
+        SELECT s.id                                                     as id,
+        CONCAT(l.${language}, '-', sl.${language}, '-',
+        (CASE
+        WHEN s.tournament_level = 0 and 'zs' = #{language} THEN '未定级'
+        when s.tournament_level = 0 and 'en' = #{language} THEN 0
+        when s.tournament_level != 0 and 'en' = #{language} then CONCAT(s.tournament_level, 'th')
+        ELSE CONCAT(s.tournament_level, '级联赛') end)) as `name`,
+        CASE s.tournament_level
+        WHEN 0 THEN 100
+        ELSE s.tournament_level END                             `level`,
+        s.sport_id                                               as sportId
+        FROM s_tournament s
+        LEFT JOIN s_sport p on p.id = s.sport_id
+        LEFT JOIN s_language l on s.name_code = l.name_code
+        LEFT JOIN s_language sl on p.name_code = sl.name_code
+        <where>
+            s.operator_status =1
+            <if test="sportId != null">
+                and s.sport_id = #{sportId}
+            </if>
+            <if test=" tournamentName != null or level != null">
+                and (
+                <if test="tournamentName != null">
+                     l.${language} like CONCAT('%',#{tournamentName},'%')
+                </if>
+                <if test="level != null">
+                    OR s.tournament_level = #{level}
+                </if>
+
+                )
+            </if>
+        </where>
+        ORDER BY sportId, `level`
+        limit 50
+    </select>
+
+    <select id="queryFilterTournamentBySportId" resultType="com.panda.sport.merchant.common.vo.TournamentVo">
+        SELECT s.id                                                     as id,
+        s.id as idStr,
+        CONCAT(l.${language}, '-', sl.${language}, '-',
+        (CASE
+        WHEN s.tournament_level = 0 and 'zs' = #{language} THEN '未定级'
+        when s.tournament_level = 0 and 'en' = #{language} THEN 0
+        when s.tournament_level != 0 and 'en' = #{language} then CONCAT(s.tournament_level, 'th')
+        ELSE CONCAT(s.tournament_level, '级联赛') end)) as `name`,
+        CASE s.tournament_level
+        WHEN 0 THEN 100
+        ELSE s.tournament_level END `level`,
+        s.sport_id as sportId,
+        s.data_source_code dataSourceCode
+        FROM s_tournament s
+        LEFT JOIN s_sport p on p.id = s.sport_id
+        LEFT JOIN s_language l on s.name_code = l.name_code
+        LEFT JOIN s_language sl on p.name_code = sl.name_code
+        <where>
+            <if test="tournamentName != null">
+                and l.${language} like CONCAT('%',#{tournamentName},'%')
+            </if>
+            <if test="level != null">
+                and s.tournament_level = #{level}
+            </if>
+            <if test="sportId != null">
+                and s.sport_id = #{sportId}
+            </if>
+            <if test="dataSourceCode != null">
+                and s.data_source_code = #{dataSourceCode}
+            </if>
+            and s.has_relation != 0
+        </where>
+        ORDER BY sportId, `level`
+    </select>
+
+    <select id="queryFilterTournamentById" resultType="com.panda.sport.merchant.common.vo.TournamentVo">
+        SELECT s.id      as id,
+        CONCAT(l.${language}, '-', sl.${language}, '-',
+        (CASE
+        WHEN s.tournament_level = 0 and 'zs' = #{language} THEN '未定级'
+        when s.tournament_level = 0 and 'en' = #{language} THEN 0
+        when s.tournament_level != 0 and 'en' = #{language} then CONCAT(s.tournament_level, 'th')
+        ELSE CONCAT(s.tournament_level, '级联赛') end)) as `name`,
+        CASE s.tournament_level
+        WHEN 0 THEN 100
+        ELSE s.tournament_level END                             `level`,
+        s.sport_id                                               as sportId
+        FROM s_tournament s
+        LEFT JOIN s_sport p on p.id = s.sport_id
+        LEFT JOIN s_language l on s.name_code = l.name_code
+        LEFT JOIN s_language sl on p.name_code = sl.name_code
+        <where>
+            <if test="id != null">
+                and s.id = #{id}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryHotPlayName" resultType="com.panda.sport.merchant.common.vo.HotPlayNameVO">
+        SELECT distinct od.play_id playId, o.zs playName, od.sport_id sportId
+        FROM s_betting_play od
+                 LEFT JOIN s_language o ON o.name_code = od.sport_name_code
+        where od.status = 1
+        <if test="sportId!=null">
+            and od.sport_id =#{sportId}
+        </if>
+        GROUP BY od.play_id, od.sport_id
+        union
+        SELECT distinct od.play_id playId, o.zs playName, od.sport_id sportId
+        FROM s_esport_betting_play od
+                 LEFT JOIN s_esport_language o ON o.name_code = od.play_name_code
+        where od.sport_status = 1
+        <if test="sportId!=null">
+            and od.sport_id =#{sportId}
+        </if>
+        GROUP BY od.play_id, od.sport_id
+        order by playId
+    </select>
+
+    <select id="listTournament" parameterType="com.panda.sport.merchant.common.po.bss.PullDownParamPO"
+            resultType="com.panda.sport.merchant.common.po.bss.PullDownResultPO">
+        SELECT t.id id, l.${language} name
+        FROM s_tournament t
+                 left join s_language l on t.name_code = l.name_code
+        where t.id in (select tournament_id from s_match_info s where begin_time &gt;= #{startTime} and begin_time &lt;= #{endTime})
+        <if test="sportId != null">
+          AND t.sport_id = #{sportId}
+        </if>
+        order by id asc
+        LIMIT #{pageNum},#{pageSize}
+    </select>
+
+</mapper>

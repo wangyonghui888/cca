@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.backup.mapper.BackUpSMatchInfoMapper">
+
+    <select id="getSportIdByMatchIdSMatch" resultType="java.lang.Long">
+        SELECT sport_id FROM ${tableName} WHERE id = #{matchId}
+    </select>
+
+    <select id="getSportIdById" resultType="java.lang.Long">
+        SELECT sport_id FROM s_esport_matches WHERE id = #{id}
+    </select>
+
+    <select id="getSportIdByOutrightIdSMatch" resultType="java.lang.Long">
+        SELECT sport_id FROM s_outright_match_info WHERE id = #{outrightId}
+    </select>
+
+    <select id="getStandardMatchIds" resultType="Long">
+        SELECT t.id FROM ${tableName} t WHERE t.${matchManageIdName} = #{matchManageId}
+    </select>
+
+    <!--根据比赛ID查询赛事信息-->
+    <select id="getMatchInfoByMid" resultType="com.panda.sport.merchant.common.vo.SMatchInfo">
+        select
+       `id` ,
+        `sport_id` as sportId,
+        `tournament_id` as tournamentId ,
+        `third_match_id` as thirdMatchId,
+        `neutral_ground` as neutralGround,
+        `operate_match_status` as operateMatchStatus,
+        `begin_time` as beginTime,
+        `match_manage_id` as matchManageId,
+        `risk_manager_code` as riskManagerCode,
+        `data_source_code` as dataSourceCode ,
+        `remark` ,
+        `create_time` as createTime ,
+        `modify_time` as  modifyTime,
+        `name_code` as nameCode ,
+        `pre_match_business` as preMatchBusiness,
+        `live_odd_business` as liveOddBusiness,
+        `match_over` as  matchOver,
+        `score` as score,
+        `match_test_score` as matchTestScore,
+        `match_period_id` as matchPeriodId,
+        `match_status` as matchStatus,
+        `remaining_time` as remainingTime,
+        `seconds_match_start` as secondsMatchStart,
+        frist_servise as fristServise,
+        live_risk_manager_code as liveRiskManagerCode,
+        pre_risk_manager_code as preRiskManagerCode,
+        match_format as matchFormat,
+        match_handicap_status as matchHandicapStatus,
+
+       first_num as firstNum,
+       second_num  as  secondNum,
+       animation_status as animationStatus,
+       video_status  as videoStatus,
+
+        `update_time` as updateTime,
+        china_betting as chinaBetting
+        from s_match_info mi
+        WHERE mi.id = #{ mid }
+    </select>
+</mapper>

@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.panda.multiterminalinteractivecenter.mapper.MerchantGroupMapper">
+    <sql id="Base_Column_List">
+        id
+        ,
+                group_name,
+                group_type,
+                group_code,
+                times,
+                time_type,
+                update_time,
+                status,
+                program_id,
+                alarm_num
+    </sql>
+
+    <select id="selectMerchantGroup" resultType="com.panda.multiterminalinteractivecenter.po.MerchantGroupPO">
+        SELECT
+        tmg.id,
+        tmg.group_name,
+        tmg.group_type,
+        tmg.group_code,
+        tmg.times,
+        tmg.time_type,
+        tmg.update_time,
+        tmg.STATUS,
+        tmg.third_status,
+        tmg.alarm_num,
+        tmg.program_id,
+        tdp.program_name
+        FROM
+        t_merchant_group_ty tmg
+        LEFT JOIN t_domain_program tdp ON tmg.program_id = tdp.id
+        <where>
+            <if test="status!=null">
+                AND tmg.status = #{status}
+            </if>
+            <if test="groupType!=null">
+                AND tmg.group_type IN (2,3)
+            </if>
+            <if test="groupCode!=null">
+                AND tmg.group_code = #{groupCode}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectMerchantGroupById" resultType="com.panda.multiterminalinteractivecenter.po.MerchantGroupPO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        <if test="null != tab and 'ty' == tab">
+            ,third_status
+        </if>
+        from
+        <if test="null != tab and 'ty' == tab">
+            t_merchant_group_ty
+        </if>
+        <if test="null != tab and 'ty' != tab">
+            t_merchant_group
+        </if>
+        where id = #{id}
+        <if test="tab != null and 'ty' != tab">
+            and tab = #{tab}
+        </if>
+    </select>
+
+
+    <select id="findMerchantGroupCount" resultType="java.lang.Integer">
+        SELECT
+            COUNT(1)
+        from
+        <if test="null != tab and 'ty' == tab">
+            t_merchant_group_ty
+        </if>
+        <if test="null != tab and 'ty' != tab">
+            t_merchant_group
+        </if>
+        where program_id = #{programId}
+        <if test="groupType != null and 'ty' == tab">
+            and group_type = #{groupType}
+        </if>
+        <if test="tab != null and 'ty' != tab">
+            and tab = #{tab}
+        </if>
+    </select>
+
+
+    <update id="updateMerchantGroup" parameterType="com.panda.multiterminalinteractivecenter.po.MerchantGroupPO">
+        UPDATE t_merchant_group_ty
+        <set>
+            <if test='null != thirdStatus'>`third_status` = #{thirdStatus},</if>
+            <if test='null != status'>`status` = #{status},</if>
+            <if test='null != groupName'>group_name = #{groupName},</if>
+            <if test='null != groupCode'>group_code = #{groupCode},</if>
+            <if test='null != times'>times = #{times},</if>
+            <if test='null != timeType'>time_type = #{timeType},</if>
+            <if test='null != updateTime'>update_time = #{updateTime},</if>
+            <if test='null != alarmNum'>
+                alarm_num = #{alarmNum},
+            </if>
+            <if test='null != programId'>
+                program_id = #{programId},
+            </if>
+        </set>
+        where id =#{id}
+    </update>
+
+
+    <delete id="deleteMerchantGroup" parameterType="com.panda.multiterminalinteractivecenter.po.MerchantGroupPO">
+        delete
+        FROM t_merchant_group_ty
+        where id = #{id}
+    </delete>
+
+    <insert id="createMerchantGroup" useGeneratedKeys="true" keyColumn="id" keyProperty="id"
+            parameterType="com.panda.multiterminalinteractivecenter.po.MerchantGroupPO">
+        insert into t_merchant_group_ty (id, group_name, group_type, group_code, times, time_type, status, program_id)
+        values (#{id}, #{groupName}, #{groupType}, #{groupCode}, #{times}, #{timeType}, #{status}, #{programId})
+    </insert>
+
+    <select id="findProgram" resultType="com.panda.multiterminalinteractivecenter.vo.DomainProgramVO">
+        SELECT
+        max(tdg.id) id,
+        (SELECT program_name FROM t_domain_program WHERE id = max(tdg.id)) programName
+        FROM t_domain_program tdg
+        where tdg.status = 1 and tdg.del_tag = 1
+            <if test="groupType != '' and groupType != null">
+                and tdg.group_type = #{groupType}
+            </if>
+            <if test="null != tab and '' != tab">
+                and tdg.tab = #{tab}
+            </if>
+    </select>
+
+
+    <update id="updateMerchantGroupByProgramId">
+        UPDATE
+        <if test="null != tab and '' != tab and 'ty' == tab">
+            t_merchant_group_ty tm
+        </if>
+        <if test="null != tab and '' != tab and 'ty' != tab">
+            t_merchant_group tm
+        </if>
+        set tm.program_id = null
+        WHERE tm.program_id = #{programId}
+        <if test="groupType != '' and groupType != null">
+            and tm.group_type = #{groupType}
+        </if>
+    </update>
+
+    <select id="getMerchantGroupInfoByThirdCode" resultType="com.panda.multiterminalinteractivecenter.vo.TMerchantGroupInfoVo">
+        SELECT
+            i.merchant_code AS id,
+            t.group_name,
+            i.merchant_name AS account,
+            d.domain_type AS type,
+            d.domain_name AS url
+        FROM
+            t_merchant_group_ty t
+            LEFT JOIN t_merchant_group_info i ON i.merchant_group_id = t.id
+            LEFT JOIN t_domain_ty d ON d.merchant_group_id = t.id
+        WHERE
+            t.group_code = #{groupCode}
+            AND d.ENABLE = 1
+        <if test="null != account and '' != account">
+            and i.merchant_name = #{account}
+        </if>
+    </select>
+    <select id="getMerchantGroupNameByDomainId" resultType="java.lang.String">
+        SELECT
+            tmg.group_name
+        FROM
+        <if test="null != tab and '' != tab and 'ty' == tab">
+            t_merchant_group_ty
+        </if>
+        <if test="null != tab and '' != tab and 'ty' != tab">
+            t_merchant_group
+        </if> tmg
+                LEFT JOIN t_domain_program tdp ON tmg.program_id = tdp.id
+                LEFT JOIN t_domain_program_relation tdpr ON tdp.id = tdpr.program_id
+                LEFT JOIN t_domain_group tdg ON tdpr.domain_group_id = tdg.id
+                LEFT JOIN t_domain_group_relation tdgr ON tdg.id = tdgr.domain_group_id
+                LEFT JOIN m_domain_area mda ON tdg.belong_area = mda.id
+                LEFT JOIN (SELECT * FROM t_domain WHERE status = 1 AND enable = 1) td ON tdgr.domain_id = td.id
+        WHERE
+            tmg.tab = #{tab}
+          and td.id = #{domainId}
+        GROUP BY
+            tdg.id,
+            td.domain_type
+
+    </select>
+
+    <select id="getMerchantGroup" resultType="com.panda.multiterminalinteractivecenter.vo.MerchantGroupDomainVO">
+        SELECT
+            tg.group_name AS groupName,
+            tg.group_type AS groupType
+        FROM
+            t_merchant_group_ty tg
+    </select>
+
+    <select id="getMerchantGroupDomain" resultType="com.panda.multiterminalinteractivecenter.vo.MerchantGroupDomainVO">
+        SELECT
+            tg.group_name AS groupName,
+            tg.group_type AS groupType,
+            tm.merchant_code AS merchantCode,
+            tm.merchant_name AS merchantName,
+            td.id AS domainGroupId,
+            td.belong_area AS areaId,
+        CASE
+                WHEN td.exclusive_type = 2 THEN
+                'VIP'
+                WHEN td.belong_area = 0 THEN
+                '默认'
+                WHEN td.exclusive_type = 1 THEN
+                ( SELECT ma.NAME FROM merchant.m_domain_area ma WHERE ma.id = td.belong_area )
+            END AS areaName,
+            ta.domain_type AS domainType,
+            ta.id AS domainId,
+            ta.domain_name AS domainName
+        FROM
+        <if test="null != tab and '' != tab and 'ty' == tab">
+            tybss_merchant_common.t_merchant
+        </if>
+        <if test="null != tab and '' != tab and 'ty' != tab">
+            t_merchant_group_info
+        </if>
+             tm
+            JOIN
+        <if test="null != tab and '' != tab and 'ty' == tab">
+            merchant.t_merchant_group_ty
+        </if>
+        <if test="null != tab and '' != tab and 'ty' != tab">
+            merchant.t_merchant_group
+        </if>
+            tg ON tm.merchant_group_id = tg.id
+            LEFT JOIN merchant.t_domain_program tp ON tg.program_id = tp.id
+            LEFT JOIN merchant.t_domain_program_relation tr ON tp.id = tr.program_id
+            LEFT JOIN merchant.t_domain_group td ON tr.domain_group_id = td.id
+            LEFT JOIN merchant.t_domain_group_relation dr ON td.id = dr.domain_group_id
+            LEFT JOIN
+        <if test="null != tab and '' != tab and 'ty' == tab">
+            merchant.t_domain_ty
+        </if>
+        <if test="null != tab and '' != tab and 'ty' != tab">
+            merchant.t_domain
+        </if>
+            ta ON dr.domain_id = ta.id
+        <where>
+            <if test="null != tab and '' != tab and 'ty' != tab">
+                AND tg.tab = #{tab}
+            </if>
+            <if test="tab != null and '' != tab">
+                AND tp.tab = #{tab}
+                AND td.tab = #{tab}
+                AND dr.tab = #{tab}
+                AND ta.tab = #{tab}
+            </if>
+            <if test="groupName !=null and '' != groupName">
+                AND tg.group_name = #{groupName}
+            </if>
+            <if test="groupType !=null and '' != groupType">
+                AND tg.group_type = #{groupType}
+            </if>
+            <if test="domainType !=null and '' != domainType">
+                AND ta.domain_type = #{domainType}
+            </if>
+            <if test="domainName !=null and '' != domainName">
+                AND ta.domain_name = #{domainName}
+            </if>
+            AND ta.ENABLE = 1
+            GROUP BY dr.id
+            ORDER BY
+            areaName DESC,
+            ta.domain_type
+        </where>
+    </select>
+    <select id="getMerchantNotInParamGroup" resultType="java.lang.Long">
+        SELECT
+            id
+        FROM
+            t_merchant_group_ty tmg
+        WHERE
+            tmg.id IN
+            <foreach item='id' index='index' collection='merchantGroupCodeList' open='(' separator=','
+                     close=')'>
+                #{id}
+            </foreach>
+          AND tmg.group_type != 4
+    </select>
+
+    <select id="queryMerchantDomain" resultType="com.panda.multiterminalinteractivecenter.vo.MerchantDomainVO">
+        SELECT
+            t.config_key AS groupName,
+            t.config_value AS domainName
+        FROM
+            tybss_merchant_common.t_system_config t
+        WHERE
+            t.config_key LIKE CONCAT('%','merchantDomain','%')
+    </select>
+
+    <update id="changeMerchantDomain">
+        UPDATE tybss_merchant_common.t_system_config
+        SET config_value = #{newMerchantDomain},
+        update_time = UNIX_TIMESTAMP(now()) * 1000
+        WHERE
+            config_value = #{oldMerchantDomain}
+    </update>
+
+    <update id="updateMerchantDomain">
+        UPDATE tybss_merchant_common.t_merchant
+        <set>
+            <if test="newMerchantDomain !=null and '' != newMerchantDomain and domainGroup != null and ''!= domainGroup and domainGroup == 'H5'">
+                h5_domain = #{newMerchantDomain},
+            </if>
+            <if test="newMerchantDomain !=null and '' != newMerchantDomain and domainGroup != null and ''!= domainGroup and domainGroup == 'PC'">
+                pc_domain = #{newMerchantDomain},
+            </if>
+            update_time = now()
+        </set>
+        <where>
+            <if test="oldMerchantDomain !=null and '' != oldMerchantDomain and domainGroup != null and ''!= domainGroup and domainGroup == 'H5'">
+                AND h5_domain = #{oldMerchantDomain}
+            </if>
+            <if test="oldMerchantDomain !=null and '' != oldMerchantDomain and domainGroup != null and ''!= domainGroup and domainGroup == 'PC'">
+                AND pc_domain = #{oldMerchantDomain}
+            </if>
+        </where>
+    </update>
+
+</mapper>

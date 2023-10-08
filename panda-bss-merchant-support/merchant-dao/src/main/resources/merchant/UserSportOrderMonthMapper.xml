@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 用户表(t_user) -->
+<mapper namespace="com.panda.sport.merchant.mapper.UserSportOrderMonthMapper">
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.panda.sport.merchant.common.po.merchant.UserSportOrderMonthPO">
+        <result column="id" property="id" />
+        <result column="sport_id" property="sportId" />
+        <result column="user_id" property="userId" />
+        <result column="user_name" property="userName" />
+        <result column="merchant_code" property="merchantCode" />
+        <result column="bet_num" property="betNum" />
+        <result column="bet_amount" property="betAmount" />
+        <result column="profit" property="profit" />
+        <result column="profit_rate" property="profitRate" />
+        <result column="settle_order_num" property="settleOrderNum" />
+        <result column="settle_order_amount" property="settleOrderAmount" />
+        <result column="settle_profit" property="settleProfit" />
+        <result column="settle_profit_rate" property="settleProfitRate" />
+        <result column="live_order_num" property="liveOrderNum" />
+        <result column="live_order_amount" property="liveOrderAmount" />
+        <result column="live_profit" property="liveProfit" />
+        <result column="live_profit_rate" property="liveProfitRate" />
+        <result column="time" property="time" />
+        <result column="active_days" property="activeDays" />
+        <result column="merchant_name" property="merchantName" />
+    </resultMap>
+
+    <!-- 表所有字段 -->
+    <sql id="allColumns">
+                 id,
+                sport_id,
+                user_id,
+                user_name,
+                merchant_code,
+                bet_num,
+                bet_amount,
+                profit,
+                profit_rate,
+                settle_order_num,
+                settle_order_amount,
+                settle_profit,
+                settle_profit_rate,
+                live_order_num,
+                live_order_amount,
+                live_profit,
+                live_profit_rate,
+                time,
+                active_days,
+                merchant_name
+    </sql>
+
+</mapper>

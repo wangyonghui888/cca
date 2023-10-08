@@ -1,0 +1,46 @@
+aLTER TABLE tybss_merchant_common.t_user  ADD unactive bigint(1)  default 0    COMMENT '是否沉默用户 0 为否 1为是';
+
+alter table `tybss_merchant_common`.t_merchant
+    add column serial_number bigint (10)  DEFAULT null COMMENT '商户流水';
+
+
+
+drop table if exists `tybss_merchant_common`.`t_merchant_code_config`;
+CREATE TABLE `tybss_merchant_common`.`t_merchant_code_config`
+(
+    `id`             bigint(20)                                                    NOT NULL AUTO_INCREMENT COMMENT 'id',
+    `code`            varchar(10)                                                    NOT NULL COMMENT '商户等级',
+    `start_value`            bigint(20)                                                    NOT NULL  COMMENT '月货量（万） 最少值',
+    `end_value`            bigint(20)                                                     null  COMMENT '月货量（万） 最大值',
+    `remark`            varchar(1000)                                                     null  COMMENT '备注',
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+COMMENT='商户等级设置表';
+
+
+
+drop table if exists `tybss_merchant_common`.`t_merchant_code_log`;
+CREATE TABLE `tybss_merchant_common`.`t_merchant_code_log`
+(
+    `id`             bigint(20)                                                    NOT NULL AUTO_INCREMENT COMMENT 'id',
+    `merchant_code`   varchar(20)                                                    NOT NULL COMMENT '商户Code',
+    `code`            varchar(10)                                                    NOT NULL COMMENT '商户代码',
+    `month`            varchar(10)                                                    NOT NULL COMMENT '月份',
+    `create_time`    bigint(20)                                                    NOT NULL COMMENT '创建时间',
+    PRIMARY KEY (`id`),
+    KEY `idx_code_log_merchant_code` (`merchant_code`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1 COMMENT='商户代码日志表';
+
+
+
+insert into `tybss_merchant_common`.`t_merchant_code_config`(id,code,start_value,end_value,remark)
+values (1,'A',75000,null,'预估额度级别为5级')
+,(2,'B',30000,75000,'预估额度级别为4-5级')
+,(3,'C',15000,30000,'预估额度级别为3-4级')
+,(4,'D',3000,15000,'预估额度级别为2-3级')
+,(5,'E',1500,3000,'预估额度级别为1-2级')
+,(6,'F',300,1500,'预估额度级别为1级')
+,(7,'G',0,300,'预估额度级别为1级');
+

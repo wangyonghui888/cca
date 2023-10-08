@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.panda.multiterminalinteractivecenter.mapper.MerchantLogMapper">
+
+    <resultMap id="BaseResultMap" type="com.panda.multiterminalinteractivecenter.dto.MerchantLogDTO">
+        <result column="id" property="id"/>
+        <result column="operat_by" property="operatBy"/>
+        <result column="operat_type" property="operatType"/>
+        <result column="page_name" property="pageName"/>
+        <result column="page_code" property="pageCode"/>
+        <result column="merchant_code" property="merchantCode"/>
+        <result column="merchant_name" property="merchantName"/>
+        <result column="data_id" property="dataId"/>
+        <result column="operat_field" property="operatField"/>
+        <result column="before_values" property="beforeValues"/>
+        <result column="after_values" property="afterValues"/>
+        <result column="log_tag" property="logTag"/>
+        <result column="log_source" property="logSource"/>
+        <result column="operat_time" property="operatTime"/>
+        <result column="domain_self_result" property="domainSelfResult"/>
+        <result column="domain_third_result" property="domainThirdResult"/>
+        <result column="domain_type" property="domainType"/>
+        <result column="type_name" property="typeName"/>
+        <result column="ip" property="ip"/>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id"
+            parameterType="com.panda.multiterminalinteractivecenter.po.MerchantLogPO">
+        INSERT INTO merchant_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test='null != userId'>
+                user_id,
+            </if>
+            <if test='null != userName'>
+                user_name,
+            </if>
+            <if test='null != operatType'>
+                operat_type,
+            </if>
+            <if test='null != typeName'>
+                type_name,
+            </if>
+            <if test='null != pageName'>
+                page_name,
+            </if>
+            <if test='null != pageCode'>
+                page_code,
+            </if>
+            <if test='null != merchantCode'>
+                merchant_code,
+            </if>
+            <if test='null != merchantName'>
+                merchant_name,
+            </if>
+            <if test='null != dataId'>
+                data_id,
+            </if>
+            <if test='null != operatField'>
+                operat_field,
+            </if>
+            <if test='null != beforeValues'>
+                before_values,
+            </if>
+            <if test='null != afterValues'>
+                after_values,
+            </if>
+            <if test='null != logTag'>
+                log_tag,
+            </if>
+            <if test='null != operatTime'>
+                operat_time,
+            </if>
+            <if test='null != domainSelfResult'>
+                domain_self_result,
+            </if>
+            <if test='null != domainThirdResult'>
+                domain_third_result,
+            </if>
+            <if test='null != domainType'>
+                domain_type,
+            </if>
+            <if test='null != ip'>
+                ip
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test='null != userId'>
+                #{userId},
+            </if>
+            <if test='null != userName'>
+                #{userName},
+            </if>
+            <if test='null != operatType'>
+                #{operatType},
+            </if>
+            <if test='null != typeName'>
+                #{typeName},
+            </if>
+            <if test='null != pageName'>
+                #{pageName},
+            </if>
+            <if test='null != pageCode'>
+                #{pageCode},
+            </if>
+            <if test='null != merchantCode'>
+                #{merchantCode},
+            </if>
+            <if test='null != merchantName'>
+                #{merchantName},
+            </if>
+            <if test='null != dataId'>
+                #{dataId},
+            </if>
+            <if test='null != operatField'>
+                #{operatField},
+            </if>
+            <if test='null != beforeValues'>
+                #{beforeValues},
+            </if>
+            <if test='null != afterValues'>
+                #{afterValues},
+            </if>
+            <if test='null != logTag'>
+                #{logTag},
+            </if>
+            <if test='null != operatTime'>
+                #{operatTime},
+            </if>
+            <if test='null != domainSelfResult'>
+                #{domainSelfResult},
+            </if>
+            <if test='null != domainThirdResult'>
+                #{domainThirdResult},
+            </if>
+            <if test='null != domainType'>
+                #{domainType},
+            </if>
+            <if test='null != ip'>
+                #{ip}
+            </if>
+        </trim>
+    </insert>
+
+
+    <sql id="queryPageParam">
+        <if test="operatBy != null  and operatBy!= ''">
+            AND  user_name = #{operatBy}
+        </if>
+        <if test="pageCode != null and pageCode != '' and pageCodes.size lt 1 ">
+            AND page_code = #{pageCode}
+        </if>
+        <if test="pageCodes != null and pageCodes.size > 0">
+            AND page_code IN
+            <foreach collection="pageCodes" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="operatField != null and operatField != ''">
+            AND operat_field LIKE CONCAT('%',#{operatField},'%')
+        </if>
+        <if test="operatType != null">
+            AND operat_type = #{operatType}
+        </if>
+        <if test="operatTypes != null">
+            AND operat_type IN
+            <foreach collection="operatTypes" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="dataId != null">
+            AND
+            ( data_id  LIKE CONCAT('%',#{dataId},'%')
+            OR
+            merchant_name = #{dataId})
+        </if>
+        <if test="merchantCodes != null">
+            AND merchant_code IN
+            <foreach collection="merchantCodes" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="merchantCode != null and merchantCode!= ''">
+            AND merchant_code = #{merchantCode}
+        </if>
+        <if test="startTime != null">
+            AND operat_time  BETWEEN #{startTime} and #{endTime}
+        </if>
+    </sql>
+
+    <sql id="queryPageParam2">
+        <if test="operatBy != null and operatBy!= ''">
+            AND  operators = #{operatBy}
+        </if>
+        <if test="operatType != null">
+            AND operation_type = #{operatType}
+        </if>
+        <if test="operatTypes != null">
+            AND operation_type IN
+            <foreach collection="operatTypes" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="dataId != null">
+            AND id = #{dataId}
+        </if>
+        <if test="startTime != null">
+            AND create_time  BETWEEN #{startTime} and #{endTime}
+        </if>
+        <if test="operatField != null and operatField != ''">
+            AND server_name LIKE CONCAT('%',#{operatField},'%')
+        </if>
+      <!--  <if test="pageCodes != null and pageCodes.size > 0">
+            AND 1 = 2
+        </if>-->
+    </sql>
+
+
+    <select id="pageListCount" resultType="java.lang.Integer"
+            parameterType="com.panda.multiterminalinteractivecenter.vo.MerchantLogQueryVO">
+            select  count(1) from (
+            select
+                id, 1  as log_source
+            from merchant_log
+            where log_tag in(2,3)
+                <include refid="queryPageParam"/>
+            union
+            select
+                id, 2  as log_source
+            from merchant_log
+            where operat_type in (42, 45, 43, 46, 41, 44) and log_tag in(0,1)
+                <include refid="queryPageParam"/>
+         <if test="isQueryMaintenanceLog != 0">
+            union
+            select
+                id, 3  as log_source
+            from m_maintenance_log
+            where 1=1
+            <include refid="queryPageParam2"/>
+         </if>
+        <if test="isQueryKickUserLog != 0">
+            union
+            select
+                id, 4  as log_source
+            from m_kick_user_log
+            where 1=1
+                <include refid="queryPageParam2"/>
+         </if>
+            ) t1
+    </select>
+
+
+    <select id="pageList" resultMap="BaseResultMap"
+            parameterType="com.panda.multiterminalinteractivecenter.vo.MerchantLogQueryVO">
+        select  * from (
+                select id,
+                       ip,
+                       operat_time,
+                       user_name operat_by,
+                       page_name,
+                       operat_field,
+                       operat_type,
+                       before_values,
+                       after_values,
+                       domain_type,
+                       data_id,
+                       type_name,
+                       merchant_code,
+                       merchant_name,
+                       domain_self_result,
+                       domain_third_result,
+                        1   as log_source
+                from merchant_log
+                where log_tag in(2,3)
+                    <include refid="queryPageParam"/>
+            union
+                select id,
+                       ip,
+                       operat_time,
+                       user_name operat_by,
+                       page_name,
+                       operat_field,
+                       operat_type,
+                       before_values,
+                       after_values,
+                       domain_type,
+                       data_id,
+                       type_name,
+                       merchant_code,
+                       merchant_name,
+                       domain_self_result,
+                       domain_third_result,
+                       2  as log_source
+                from merchant_log
+                where operat_type in (42, 45, 43, 46, 41, 44) and log_tag in(0,1)
+                    <include refid="queryPageParam"/>
+        <if test="isQueryMaintenanceLog != 0">
+            union
+                select id,
+                       operation_ip      as ip,
+                       create_time       as operat_time,
+                       operators         as operat_by,
+                       "维护设置-维护控制台" as page_name,
+                       server_name       as operat_field,
+                       operation_type    as operat_type,
+                       null              as before_values,
+                       operation_content as after_values,
+                       null              as domain_type,
+                       null              as data_id,
+                       null              as type_name,
+                       null              as merchant_code,
+                       null              as merchant_name,
+                       null              as domain_self_result,
+                       null              as domain_third_result,
+                       3                 as log_source
+                from m_maintenance_log
+                where 1=1
+                    <include refid="queryPageParam2"/>
+        </if>
+        <if test="isQueryKickUserLog = 0">
+            union
+                select id,
+                       operation_ip      as ip,
+                       create_time       as operat_time,
+                       operators         as operat_by,
+                       "维护设置-踢用户"    as page_name,
+                       server_name       as operat_field,
+                       operation_type    as operat_type,
+                       null              as before_values,
+                       operation_content as after_values,
+                       null              as domain_type,
+                       null              as data_id,
+                       null              as type_name,
+                       null              as merchant_code,
+                       null              as merchant_name,
+                       null              as domain_self_result,
+                       null              as domain_third_result,
+                       4                 as log_source
+                from m_kick_user_log
+                where 1=1
+                    <include refid="queryPageParam2"/>
+         </if>
+                       ) t1
+        ORDER BY operat_time desc
+        LIMIT #{start}, #{pageSize}
+    </select>
+</mapper>

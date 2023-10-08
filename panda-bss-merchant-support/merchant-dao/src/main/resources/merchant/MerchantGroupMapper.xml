@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.merchant.mapper.MerchantGroupMapper">
+
+    <resultMap id="BaseResultMap" type="com.panda.sport.merchant.common.po.merchant.TMerchantGroup">
+        <result column="id" property="id"/>
+        <result column="group_name" property="groupName"/>
+        <result column="group_type" property="groupType"/>
+        <result column="group_code" property="groupCode"/>
+        <result column="status" property="status"/>
+        <result column="time_type" property="timeType"/>
+        <result column="times" property="times"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="alarm_num" property="alarmNum"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+                id,
+                group_name,
+                group_type,
+                group_code,
+                status,
+                time_type,
+                times,
+                update_time,
+                alarm_num
+    </sql>
+
+    <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id"
+            parameterType="com.panda.sport.merchant.common.po.merchant.TMerchantGroup">
+        INSERT INTO t_merchant_group
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="null != groupName and '' != groupName">
+                group_name,
+            </if>
+            <if test="null != groupType and '' != groupType">
+                group_type,
+            </if>
+            <if test="null != groupCode and '' != groupCode">
+                group_code,
+            </if>
+            <if test="null != status and '' != status">
+                status,
+            </if>
+            <if test="null != timeType and '' != timeType">
+                time_type,
+            </if>
+            <if test="null != times and '' != times">
+                times,
+            </if>
+            <if test="null != updateTime and '' != updateTime">
+                update_time,
+            </if>
+            <if test="null != alarmNum and '' != alarmNum">
+                alarm_num
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="null != groupName and '' != groupName">
+                #{groupName},
+            </if>
+            <if test="null != groupType and '' != groupType">
+                #{groupType},
+            </if>
+            <if test="null != groupCode and '' != groupCode">
+                #{groupCode},
+            </if>
+            <if test="null != status and '' != status">
+                #{status},
+            </if>
+            <if test="null != timeType and '' != timeType">
+                #{timeType},
+            </if>
+            <if test="null != times and '' != times">
+                #{times},
+            </if>
+            <if test="null != updateTime and '' != updateTime">
+                #{updateTime},
+            </if>
+            <if test="null != alarmNum and '' != alarmNum">
+                #{alarmNum}
+            </if>
+        </trim>
+    </insert>
+
+    <delete id="delete">
+        DELETE
+        FROM t_merchant_group
+        WHERE id = #{id}
+    </delete>
+
+    <update id="update" parameterType="com.panda.sport.merchant.common.po.merchant.TMerchantGroup">
+        UPDATE t_merchant_group
+        <set>
+            <if test="null != groupName and '' != groupName">group_name = #{groupName},</if>
+            <if test="null != groupType and '' != groupType">group_type = #{groupType},</if>
+            <if test="null != groupCode and '' != groupCode">group_code = #{groupCode},</if>
+            <if test="null != status and '' != status">status = #{status},</if>
+            <if test="null != timeType and '' != timeType">time_type = #{timeType},</if>
+            <if test="null != times and '' != times">times = #{times},</if>
+            <if test="null != updateTime and '' != updateTime">update_time = #{updateTime},</if>
+            <if test="null != alarmNum and '' != alarmNum">alarm_num = #{alarmNum}</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+
+    <select id="load" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM t_merchant_group
+        WHERE id = #{id}
+    </select>
+
+    <select id="loadIdByGroupName" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM t_merchant_group
+        WHERE group_name = #{groupName} and group_code = #{groupCode}
+    </select>
+
+    <select id="pageList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM t_merchant_group
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="pageListCount" resultType="java.lang.Integer">
+        SELECT count(1)
+        FROM t_merchant_group
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM t_merchant_group
+        where
+        group_code = #{groupCode}
+    </select>
+
+    <select id="getMerchantGroupInfoByThirdCode" resultType="com.panda.sport.merchant.common.vo.TMerchantGroupInfoVo">
+        SELECT
+        i.merchant_code as id,
+        t.group_name,
+        i.merchant_name as account,
+        d.domain_type as type,
+        d.domain_name as url
+        FROM t_merchant_group t
+        LEFT JOIN t_merchant_group_info i on i.merchant_group_id = t.id
+        LEFT JOIN t_domain d on d.merchant_group_id = t.id
+        where
+        t.group_code = #{groupCode}
+        and
+        d.enable = 1
+        <if test="null != account and '' != account">
+            and i.merchant_name = #{account}
+        </if>
+    </select>
+
+    <select id="selectAllByStatus" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM t_merchant_group
+        where
+        status = #{status}
+    </select>
+</mapper>

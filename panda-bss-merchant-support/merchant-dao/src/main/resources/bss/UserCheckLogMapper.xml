@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 用户表(t_settle) -->
+<mapper namespace="com.panda.sport.bss.mapper.UserCheckMapper">
+
+    <resultMap id="userCheckLogMap" type="com.panda.sport.merchant.common.po.bss.UserCheckLogPO">
+        <result column="id" property="id"/>
+        <result column="uid" property="uid"/>
+        <result column="merchant_code" property="merchantCode"/>
+        <result column="check_reason" property="checkReason"/>
+        <result column="check_explain" property="checkExplain"/>
+        <result column="user_name" property="userName"/>
+        <result column="submit_user" property="submitUser"/>
+        <result column="check_user" property="checkUser"/>
+        <result column="check_time" property="checkTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_user" property="createUser"/>
+        <result column="modify_time" property="modifyTime"/>
+        <result column="modify_user" property="modifyUser"/>
+        <result column="check_result" property="checkResult"/>
+        <result column="result_explain" property="resultExplain"/>
+        <result column="status" property="status"/>
+    </resultMap>
+
+    <select id="selectList" resultType="com.panda.sport.merchant.common.po.bss.UserCheckLogPO">
+        select s.id,
+        s.uid           uid,
+        s.user_name userName,
+        s.merchant_code merchantCode,
+        s.check_reason checkReason,
+        s.check_explain checkExplain,
+        s.submit_user   submitUser,
+        s.check_user   checkUser,
+        s.check_time   checkTime,
+        s.create_user   createUser,
+        s.create_time   createTime,
+        s.modify_user modifyUser,
+        s.modify_time   modifyTime,
+        s.status   status,
+        s.check_result  checkResult,
+        s.result_explain  resultExplain
+        FROM t_user_check_log s
+        <where>
+          <if test="startTime!=null">
+             and  s.create_time <![CDATA[ >= ]]> #{startTime}
+          </if>
+            <if test="endTime!=null">
+                AND s.create_time <![CDATA[ < ]]> #{endTime}
+            </if>
+            <if test="merchantCode!=null">
+                AND s.merchant_code= #{merchantCode}
+            </if>
+            <if test="status!=null">
+                AND s.status= #{status}
+            </if>
+            <if test="userName!=null">
+                AND s.user_name= #{userName}
+            </if>
+            <if test="uid!=null">
+                AND s.uid= #{uid}
+            </if>
+            <if test="merchantCodeList != null">
+                AND s.merchant_code in
+                <foreach collection="merchantCodeList" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <!-- 距离上次查询时间不足3天 -->
+    <select id="countCheckUserByDays" resultType="java.lang.Integer">
+        select count(1)
+        FROM t_user_check_log s
+        where
+            s.create_time <![CDATA[ >= ]]>  unix_timestamp(DATE_SUB(now(),INTERVAL 3 DAY))*1000
+            <if test="uid!=null">
+                AND s.uid= #{uid}
+            </if>
+    </select>
+    <select id="countByToday" resultType="java.lang.Integer">
+        select count(1)
+        FROM t_user_check_log s
+        where
+        s.create_time <![CDATA[ >= ]]>  unix_timestamp(curdate())*1000
+       and  s.create_time <![CDATA[ < ]]>  unix_timestamp(now())*1000
+        <if test="userName!=null">
+            AND s.user_name = #{userName}
+        </if>
+    </select>
+
+    <insert id="insertUserCheckLog" useGeneratedKeys="true" keyColumn="id" keyProperty="id"
+            parameterType="com.panda.sport.merchant.common.po.bss.UserCheckLogPO">
+        INSERT INTO t_user_check_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test='null != uid'>
+                uid,
+            </if>
+            <if test='null != merchantCode'>
+                merchant_code,
+            </if>
+            <if test='null != checkExplain'>
+                check_explain,
+            </if>
+            <if test='null != checkReason'>
+                check_reason,
+            </if>
+            <if test='null != userName'>
+                user_name,
+            </if>
+            <if test='null != submitUser'>
+                `submit_user`,
+            </if>
+            <if test='null != createUser'>
+                create_user,
+            </if>
+            <if test='null != modifyUser'>
+                modify_user,
+            </if>
+             modify_time,
+             create_time
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test='null != uid'>
+                #{uid},
+            </if>
+            <if test='null != merchantCode'>
+                #{merchantCode},
+            </if>
+            <if test='null != checkExplain'>
+                #{checkExplain},
+            </if>
+            <if test='null != checkReason'>
+                #{checkReason},
+            </if>
+            <if test='null != userName'>
+                #{userName},
+            </if>
+            <if test='null != submitUser'>
+                #{submitUser},
+            </if>
+            <if test='null != createUser'>
+                #{createUser},
+            </if>
+            <if test='null != modifyUser'>
+                #{modifyUser},
+            </if>
+            #{modifyTime},
+            #{createTime}
+        </trim>
+    </insert>
+
+
+</mapper>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.bss.mapper.SLanguageMapper">
+
+    <select id="getLanguageInNameCode" resultType="com.panda.sport.merchant.common.po.bss.SLanguagePO">
+        SELECT
+            name_code, zs, en
+        FROM s_language  s
+        WHERE name_code IN
+        <foreach collection="nameCode" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+</mapper>

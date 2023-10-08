@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.panda.center.mapper.trader.ActivityOrderMapper">
+    <select id="queryDJDailyBetTimesUsers1" resultType="Long">
+        SELECT distinct o.member_id
+        FROM `tbl_bet_order` o
+        where o.settle_time <![CDATA[ >= ]]> #{startTimeL}
+          and o.settle_time <![CDATA[ <= ]]> #{endTimeL}
+          and o.bet_status in (5, 6, 8, 9)
+        <if test="betAmount !=null">
+          and o.bet_amount >= #{betAmount}
+        </if>
+        <if test="sportList != null and sportList.size() > 0">
+          and o.game_id in
+            <foreach item='code' index='index' collection='sportList'
+                     open='(' separator=',' close=')'>
+                #{code}
+            </foreach>
+        </if>
+        <if test="playList != null and playList.size() > 0">
+          and o.match_type in
+            <foreach item='code' index='index' collection='playList'
+                     open='(' separator=',' close=')'>
+                #{code}
+            </foreach>
+        </if>
+          and o.odd >= 1.5
+          and o.parley_type = 1
+    </select>
+
+    <select id="queryDJDailyBetTimesUsers2" resultType="Map">
+        select a.member_id uid, a.userName
+        from (SELECT o.member_id, min(o.member_account) userName, count(o.id) times
+              FROM `tbl_bet_order` o
+              where o.settle_time <![CDATA[ >= ]]> #{startTimeL}
+                and o.settle_time <![CDATA[ <= ]]> #{endTimeL}
+                and o.bet_status in (5, 6, 8, 9)
+              <if test="userList != null and userList.size() > 0">
+                and o.member_id in
+                 <foreach item='code' index='index' collection='userList'
+                          open='(' separator=',' close=')'>
+                    #{code}
+                </foreach>
+              </if>
+              <if test="betAmount !=null">
+                and o.bet_amount >= #{betAmount}
+              </if>
+              <if test="sportList != null and sportList.size() > 0">
+                and o.game_id in
+                <foreach item='code' index='index' collection='sportList'
+                         open='(' separator=',' close=')'>
+                    #{code}
+                </foreach>
+              </if>
+              <if test="playList != null and playList.size() > 0">
+                and o.match_type in
+                <foreach item='code' index='index' collection='playList'
+                         open='(' separator=',' close=')'>
+                    #{code}
+                </foreach>
+              </if>
+                and o.odd >= 1.5
+                and o.parley_type = 1
+              group by o.member_id) a
+        where a.times >= #{times}
+    </select>
+
+    <select id="queryDJBetAmountUser" resultType="Map">
+        SELECT distinct o.member_id uid, o.member_account userName
+        FROM `tbl_bet_order` o
+        where o.settle_time <![CDATA[ >= ]]> #{startTimeL}
+          and o.settle_time <![CDATA[ <= ]]> #{endTimeL}
+        <if test="betAmount !=null">
+          and o.bet_amount >= #{betAmount}
+        </if>
+        <if test="sportList != null and sportList.size() > 0">
+          and o.game_id in
+            <foreach item='code' index='index' collection='sportList'
+                     open='(' separator=',' close=')'>
+                #{code}
+            </foreach>
+        </if>
+        <if test="playList != null and playList.size() > 0">
+          and o.match_type in
+            <foreach item='code' index='index' collection='playList'
+                     open='(' separator=',' close=')'>
+                #{code}
+            </foreach>
+        </if>
+          and o.odd >= 1.5
+          and o.bet_status IN (5, 6, 8, 9)
+          and o.parley_type = 1
+    </select>
+
+    <select id="queryDJDailyVirtualBetTimesUsers1" resultType="Long">
+        SELECT distinct o.member_id
+        FROM `tbl_bet_order` o
+        where o.settle_time <![CDATA[ >= ]]> #{startTimeL}
+          and o.settle_time <![CDATA[ <= ]]> #{endTimeL}
+        <if test="betAmount !=null">
+          and o.bet_amount >= #{betAmount}
+        </if>
+          and o.manager_code = 3
+        <if test="sportList != null and sportList.size() > 0">
+          and o.game_id in
+            <foreach item='code' index='index' collection='sportList'
+                     open='(' separator=',' close=')'>
+                #{code}
+            </foreach>
+        </if>
+          and o.odd >= 1.5
+          and o.bet_status IN (5, 6, 8, 9)
+          and o.parley_type = 1
+    </select>
+
+    <select id="queryDJDailyVirtualBetTimesUsers2" resultType="Map">
+        select a.member_id uid, a.username userName
+        from (SELECT o.member_id, count(distinct o.match_id) times, o.member_account username
+              FROM `tbl_bet_order` o
+              where o.settle_time <![CDATA[ >= ]]> #{startTimeL}
+                and o.settle_time <![CDATA[ <= ]]> #{endTimeL}
+              <if test="userList != null and userList.size() > 0">
+                and o.member_id in
+                <foreach item='code' index='index' collection='userList'
+                         open='(' separator=',' close=')'>
+                    #{code}
+                </foreach>
+              </if>
+              <if test="betAmount !=null">
+                and o.bet_amount >= #{betAmount}
+              </if>
+                and o.manager_code = 3
+              <if test="sportList != null and sportList.size() > 0">
+                and o.game_id in
+                <foreach item='code' index='index' collection='sportList'
+                         open='(' separator=',' close=')'>
+                    #{code}
+                </foreach>
+              </if>
+                and o.odd >= 1.5
+                and o.bet_status IN (5, 6, 8, 9)
+                and o.parley_type = 1
+              group by o.member_id) a
+        where a.times >= #{times}
+    </select>
+
+    <select id="queryDJSeriesTimesUser1" resultType="Long">
+        SELECT distinct o.member_id
+        FROM `tbl_bet_order` o
+        where o.settle_time <![CDATA[ >= ]]> #{startTimeL}
+          and o.settle_time <![CDATA[ <= ]]> #{endTimeL}
+          and o.bet_status IN (5, 6, 8, 9)
+        <if test="betAmount !=null">
+          and o.bet_amount >= #{betAmount}
+        </if>
+        <if test="orderType !=null">
+          and o.order_type = #{orderType}
+        </if>
+          and o.parley_type != 1
+    </select>
+
+    <select id="queryDJSeriesTimesUser2" resultType="Map">
+        select a.member_id uid, a.userName
+        from (SELECT o.member_id, count(o.id) times, o.member_account username
+              FROM `tbl_bet_order` o
+              where o.settle_time <![CDATA[ >= ]]> #{startTimeL}
+                and o.settle_time <![CDATA[ <= ]]> #{endTimeL}
+                and o.bet_status IN (5, 6, 8, 9)
+              <if test="userList != null and userList.size() > 0">
+                and o.member_id in
+                <foreach item='code' index='index' collection='userList'
+                         open='(' separator=',' close=')'>
+                    #{code}
+                </foreach>
+              </if>
+              <if test="betAmount !=null">
+                and o.bet_amount >= #{betAmount}
+              </if>
+              <if test="orderType !=null">
+                and o.order_type = #{orderType}
+              </if>
+                and o.parley_type != 1
+              group by o.member_id) a
+        where a.times >= #{times}
+    </select>
+</mapper>

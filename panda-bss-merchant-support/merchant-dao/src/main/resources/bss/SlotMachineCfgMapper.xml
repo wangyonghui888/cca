@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.bss.mapper.SlotMachineCfgMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.panda.sport.merchant.common.po.bss.SlotMachineCfg">
+        <id column="id" property="id"/>
+        <result column="slot_machine_name" property="slotMachineName"/>
+        <result column="slot_ticket_id" property="slotTicketId"/>
+        <result column="lottery_number" property="lotteryNumber"/>
+        <result column="daily_game_number" property="dailyGameNumber"/>
+        <result column="props_cfg" property="propsCfg"/>
+        <result column="state" property="state"/>
+        <result column="sort_no" property="sortNo"/>
+        <result column="create_time" property="createTime"/>
+        <result column="last_update_time" property="lastUpdateTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        slot_machine_name,
+        slot_ticket_id,
+        lottery_number,
+        daily_game_number,
+        props_cfg,
+        state,
+        sort_no,
+        create_time,
+        last_update_time
+    </sql>
+
+    <select id="selectMaxSortNo" resultType="java.lang.Integer">
+        select ifnull(max(sort_no), 0)
+        from s_slot_machine_cfg
+    </select>
+</mapper>

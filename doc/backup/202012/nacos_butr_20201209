@@ -1,0 +1,6 @@
+
+# on开启所有用户禁止登录注册
+all_user_login_off = off
+
+#商户下用户禁止登录注册  多个商户以,逗号分隔
+merchant_user_login_off =

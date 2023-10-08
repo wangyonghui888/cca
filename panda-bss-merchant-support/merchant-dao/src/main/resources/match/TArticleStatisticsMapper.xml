@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.match.mapper.TArticleStatisticsMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.panda.sport.merchant.common.po.bss.TArticleStatistics">
+        <result column="article_id" property="articleId"/>
+        <result column="read_counts" property="readCounts"/>
+        <result column="real_read_counts" property="realReadCounts"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        article_id,
+        read_counts,
+        real_read_counts,
+        create_time,
+        update_time
+    </sql>
+    
+    <select id="selectForPage" parameterType="com.panda.sport.merchant.common.dto.AricleStatisticsDto" resultType="com.panda.sport.merchant.common.vo.AricleStatisticsVO">
+        SELECT
+            t1.article_id articleId,
+            t1.real_read_counts realReadCounts,
+            t2.article_tittle articleTittle,
+            t2.tag_id tagId,
+            t2.tag_name tagName,
+            t2.show_time showTime,
+            t2.key_words keyWords
+        FROM
+            t_article_statistics t1
+                LEFT JOIN t_article t2 ON t1.article_id = t2.id
+            <where>
+                <if test="articleId != null">
+                    AND t1.article_id = #{articleId}
+                </if>
+                <if test="articleTittle != null and articleTittle != ''">
+                    AND t2.article_tittle LIKE concat('%',#{articleTittle},'%')
+                </if>
+                <if test="tagId != null">
+                    AND t2.tag_id = #{tagId}
+                </if>
+                <if test="keyWords != null and keyWords != ''">
+                    AND t2.key_words LIKE  concat('%',#{keyWords},'%')
+                </if>
+                <if test="startTime != null">
+                    AND t2.show_time >= #{startTime}
+                </if>
+                <if test="endTime != null">
+                    AND t2.show_time &lt;= #{endTime}
+                </if>
+            </where>
+            ORDER BY t2.show_time DESC
+    </select>
+</mapper>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.panda.multiterminalinteractivecenter.mapper.DataRolePermissionsMapper">
+
+    <select id="findDataPermissionsByRoleId" resultType="com.panda.multiterminalinteractivecenter.entity.DataPermissions">
+         SELECT r.* FROM m_data_permissions r
+         left join m_roles_data_permissions ur on r.id = ur.data_permission_id WHERE ur.role_id = #{userId};
+    </select>
+
+</mapper>

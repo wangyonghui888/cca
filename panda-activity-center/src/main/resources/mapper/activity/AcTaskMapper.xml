@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.center.mapper.activity.AcTaskMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.panda.center.entity.AcTask">
+        <id column="id" property="id"/>
+        <result column="act_id" property="actId"/>
+        <result column="act_name" property="actName"/>
+        <result column="task_name" property="taskName"/>
+        <result column="condition_id" property="conditionId"/>
+        <result column="task_condition" property="taskCondition"/>
+        <result column="task_condition2" property="taskCondition2"/>
+        <result column="task_condition3" property="taskCondition3"/>
+        <result column="forward_url" property="forwardUrl"/>
+        <result column="type" property="type"/>
+        <result column="ticket_num" property="ticketNum"/>
+        <result column="status" property="status"/>
+        <result column="invalidation" property="invalidation"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="remark" property="remark"/>
+        <result column="order_no" property="orderNo"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        act_id,
+        act_name,
+        task_name,
+        condition_id,
+        task_condition,
+        task_condition2,
+        task_condition3,
+        forward_url,
+        type,
+        ticket_num,
+        status,
+        invalidation,
+        create_time,
+        update_time,
+        remark,
+        order_no
+    </sql>
+
+    <select id="getCurMaxNo" resultType="java.lang.Integer">
+        select ifnull(max(order_no), 0) as orderNo
+        from t_ac_task
+        where act_id = #{actId};
+    </select>
+</mapper>

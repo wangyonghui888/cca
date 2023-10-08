@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.bss.mapper.TAccountChangeHistoryMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="recordMap" type="com.panda.sport.merchant.common.po.bss.AccountChangeHistoryPO">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="uid" property="uid" jdbcType="BIGINT"/>
+        <result column="change_type" property="changeType" jdbcType="INTEGER"/>
+        <result column="biz_type" property="bizType" jdbcType="INTEGER"/>
+        <result column="current_balance" property="currentBalance" jdbcType="BIGINT"/>
+        <result column="before_transfer" property="beforeTransfer" jdbcType="BIGINT"/>
+        <result column="after_transfer" property="afterTransfer" jdbcType="BIGINT"/>
+        <result column="change_amount" property="changeAmount" jdbcType="BIGINT"/>
+        <result column="order_no" property="orderNo" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="BIGINT"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+    
+    <!-- 表所有字段 -->
+    <sql id="allColumns">
+        id,
+        uid,
+        change_type,
+        current_balance,
+        biz_type,
+        change_amount,
+        before_transfer,
+        after_transfer,
+        order_no,
+        create_time,
+        remark
+    </sql>
+    
+    <insert id="insert" parameterType="com.panda.sport.merchant.common.po.bss.AccountChangeHistoryPO">
+        insert into t_account_change_history
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id
+            </if>
+            <if test="uid != null">
+                ,uid
+            </if>
+            <if test="currentBalance != null">
+                ,current_balance
+            </if>
+            <if test="changeAmount != null">
+                ,change_amount
+            </if>
+            <if test="changeType != null">
+                ,change_type
+            </if>
+            <if test="bizType != null">
+                ,biz_type
+            </if>
+            <if test="remark != null">
+                ,remark
+            </if>
+            <if test="createUser != null">
+                ,create_user
+            </if>
+                ,create_time
+            <if test="modifyUser != null">
+                ,modify_user
+            </if>
+                ,modify_time
+            <if test="orderNo != null">
+                ,order_no
+            </if>
+            <if test="beforeTransfer != null">
+                ,before_transfer
+            </if>
+            <if test="afterTransfer != null">
+                ,after_transfer
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id}
+            </if>
+            <if test="uid != null">
+                ,#{uid,jdbcType=BIGINT}
+            </if>
+            <if test="currentBalance != null">
+                ,#{currentBalance}
+            </if>
+            <if test="changeAmount != null">
+                ,#{changeAmount}
+            </if>
+            <if test="changeType != null">
+                ,#{changeType}
+            </if>
+            <if test="bizType != null">
+                ,#{bizType}
+            </if>
+            <if test="remark != null">
+                ,#{remark}
+            </if>
+            <if test="createUser != null">
+                ,#{createUser}
+            </if>
+                ,#{createTime}
+            <if test="modifyUser != null">
+                ,#{modifyUser}
+            </if>
+                ,#{createTime}
+            <if test="orderNo != null">
+                ,#{orderNo}
+            </if>
+            <if test="beforeTransfer != null">
+                ,#{beforeTransfer}
+            </if>
+            <if test="afterTransfer != null">
+                ,#{afterTransfer}
+            </if>
+        </trim>
+    </insert>
+</mapper>

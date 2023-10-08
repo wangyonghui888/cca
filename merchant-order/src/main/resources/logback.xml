@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <property name="app.name" value="merchant-order"/>
+    <property name="log.path" value="/opt/logs/panda-merchant-group/${app.name}"/>
+    <property name="log.pattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS}  &#45;traceId:[%X{TRACE_ID:-}] [%thread] %-5level %logger{36} #-# %msg%n"/>
+
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder charset="UTF-8" class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <jsonFactoryDecorator class="net.logstash.logback.decorate.CharacterEscapesJsonFactoryDecorator">
+                <escape>
+                    <targetCharacterCode>10</targetCharacterCode>
+                    <escapeSequence>\u2028</escapeSequence>
+                </escape>
+            </jsonFactoryDecorator>
+            <providers>
+                <pattern>
+                    <pattern>
+                        {
+                        "serviceName": "merchant-order",
+                        "date":"%d{yyyy-MM-dd HH:mm:ss.SSS}",
+                        "logLevel": "%level",
+                        "pid": "${PID:-}",
+                        "traceId":"%X{TRACE_ID:-}",
+                        "thread": "%thread",
+                        "class": "%logger{40}",
+                        "msg":"%msg",
+                        "stackTrace" : "%exception"
+                        }
+                    </pattern>
+                </pattern>
+            </providers>
+        </encoder>
+    </appender>
+
+
+    <appender name="file_info" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.path}/${app.name}-info.log</file>
+        <!-- 循环政策：基于时间创建日志文件 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 日志文件名格式 -->
+            <fileNamePattern>${log.path}/${app.name}-info.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- 日志最大的历史 15天 -->
+            <maxHistory>15</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${log.pattern}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="file_error" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.path}/${app.name}-error.log</file>
+        <!-- 循环政策：基于时间创建日志文件 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 日志文件名格式 -->
+            <fileNamePattern>${log.path}/${app.name}-error.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- 日志最大的历史 15天 -->
+            <maxHistory>15</maxHistory>
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <!-- 过滤的级别 -->
+            <level>ERROR</level>
+            <!-- 匹配时的操作：接收（记录） -->
+            <onMatch>ACCEPT</onMatch>
+            <!-- 不匹配时的操作：拒绝（不记录） -->
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>${log.pattern}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="file_debug" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.path}/${app.name}-debug.log</file>
+        <!-- 循环政策：基于时间创建日志文件 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 日志文件名格式 -->
+            <fileNamePattern>${log.path}/${app.name}-debug.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- 日志最大的历史 15天 -->
+            <maxHistory>15</maxHistory>
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <!-- 过滤的级别 -->
+            <level>DEBUG</level>
+            <!-- 匹配时的操作：接收（记录） -->
+            <onMatch>ACCEPT</onMatch>
+            <!-- 不匹配时的操作：拒绝（不记录） -->
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>${log.pattern}</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="com.panda" level="info"/>
+
+    <logger name="org.springframework" level="info"/>
+
+    <logger name="com.panda.sport.bss.mapper" level="info"/>
+
+    <root level="info">
+        <appender-ref ref="console"/>
+    </root>
+
+    <root level="info">
+        <appender-ref ref="file_info"/>
+        <appender-ref ref="file_error"/>
+        <appender-ref ref="file_debug"/>
+    </root>
+
+</configuration>

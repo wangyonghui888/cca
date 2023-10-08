@@ -1,0 +1,5 @@
+
+-- 业务汇总库t_user create_time 表加索引
+ALTER TABLE t_user
+    ADD INDEX `idx_tu_create`(`create_time`) USING BTREE;
+

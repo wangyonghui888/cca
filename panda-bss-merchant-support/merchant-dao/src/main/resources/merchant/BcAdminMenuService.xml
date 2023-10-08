@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 用户表(t_user) -->
+<mapper namespace="com.panda.sport.merchant.mapper.MerchantOrderMonthMapper">
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.panda.sport.merchant.common.po.merchant.MerchantSportOrderPO">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="sport_id" jdbcType="TINYINT" property="sportId" />
+        <result column="merchant_code" jdbcType="VARCHAR" property="merchantCode" />
+        <result column="time" jdbcType="INTEGER" property="time" />
+        <result column="bet_user_rate" jdbcType="INTEGER" property="betUserRate" />
+        <result column="profit" jdbcType="DECIMAL" property="profit" />
+        <result column="return_rate" jdbcType="INTEGER" property="returnRate" />
+        <result column="return_Amount" jdbcType="DECIMAL" property="returnAmount" />
+        <result column="merchant_level" jdbcType="TINYINT" property="merchantLevel" />
+        <result column="bet_amount" jdbcType="DECIMAL" property="betAmount" />
+        <result column="order_num" jdbcType="INTEGER" property="orderNum" />
+        <result column="bet_user_amount" jdbcType="INTEGER" property="betUserAmount" />
+        <result column="register_amount" jdbcType="INTEGER" property="registerAmount" />
+        <result column="add_user" jdbcType="INTEGER" property="addUser" />
+        <result column="settile_user_rate" jdbcType="INTEGER" property="settileUserRate" />
+        <result column="settle_profit" jdbcType="DECIMAL" property="settleProfit" />
+        <result column="settle_return" jdbcType="DECIMAL" property="settleReturn" />
+        <result column="settle_return_rate" jdbcType="INTEGER" property="settleReturnRate" />
+        <result column="settle_bet_amount" jdbcType="DECIMAL" property="settleBetAmount" />
+        <result column="settle_order_num" jdbcType="INTEGER" property="settleOrderNum" />
+        <result column="live_user_rate" jdbcType="INTEGER" property="liveUserRate" />
+        <result column="live_profit" jdbcType="DECIMAL" property="liveProfit" />
+        <result column="live_return" jdbcType="DECIMAL" property="liveReturn" />
+        <result column="live_return_rate" jdbcType="INTEGER" property="liveReturnRate" />
+        <result column="live_bet_amount" jdbcType="DECIMAL" property="liveBetAmount" />
+        <result column="live_order_num" jdbcType="INTEGER" property="liveOrderNum" />
+        <result column="merchant_name" jdbcType="VARCHAR" property="merchantName" />
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+    id, merchant_code, `time`, bet_user_rate, profit, return_rate, return_amount, merchant_level,
+    bet_amount, order_num, bet_user_amount, settile_user_rate, settle_profit, settle_return,
+    settle_return_rate, settle_bet_amount, settle_order_num, live_user_rate, live_profit, merchant_name,
+    live_return, live_return_rate, live_bet_amount, live_order_num,register_amount,add_user
+  </sql>
+
+    <select id="queryMerchantOrderList" parameterType="com.panda.sport.merchant.common.po.merchant.MerchantSportOrderPO" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM
+        merchant_order_month
+        <where>
+            <if test="time != null">
+                time = #{time}
+            </if>
+            <if test="merchantName != null">
+                AND merchant_name = #{merchantName}
+            </if>
+            <if test="sportId != null">
+                AND sport_id = #{sportId}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryMerchantSportOrderList" parameterType="com.panda.sport.merchant.common.po.merchant.MerchantSportOrderPO" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM
+        merchant_sport_order_month
+        <where>
+            <if test="time != null">
+                time = #{time}
+            </if>
+            <if test="merchantName != null">
+                AND merchant_name = #{merchantName}
+            </if>
+            <if test="sportId != null">
+                AND sport_id = #{sportId}
+            </if>
+        </where>
+    </select>
+</mapper>

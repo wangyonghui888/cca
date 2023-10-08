@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.multiterminalinteractivecenter.mapper.MaintenanceRecordMapper">
+
+    <resultMap id="BaseResultMap" type="com.panda.multiterminalinteractivecenter.entity.MaintenanceRecord" >
+        <result column="id" property="id" />
+        <result column="maintenance_platform_id" property="maintenancePlatformId" />
+        <result column="maintenance_start_time" property="maintenanceStartTime" />
+        <result column="maintenance_end_time" property="maintenanceEndTime" />
+        <result column="real_start_time" property="realStartTime" />
+        <result column="plan_end_time" property="planEndTime" />
+        <result column="remind_time" property="remindTime" />
+        <result column="is_remind" property="isRemind" />
+        <result column="superimpose_time" property="superimposeTime" />
+        <result column="is_send_notice" property="isSendNotice" />
+        <result column="notice_send_status" property="noticeSendStatus" />
+        <result column="is_kick_user" property="isKickUser" />
+        <result column="maintenance_status" property="maintenanceStatus" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+                id,
+                maintenance_platform_id,
+                maintenance_start_time,
+                maintenance_end_time,
+                real_start_time,
+                plan_end_time,
+                remind_time,
+                superimpose_time,
+                is_send_notice,
+                notice_send_status,
+                is_kick_user,
+                maintenance_status,
+                create_time,
+                update_time
+    </sql>
+
+    <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id" parameterType="com.panda.multiterminalinteractivecenter.entity.MaintenanceRecord">
+        INSERT INTO m_maintenance_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="null != maintenancePlatformId">
+                maintenance_platform_id,
+            </if>
+            <if test="null != maintenanceStartTime">
+                maintenance_start_time,
+            </if>
+            <if test="null != maintenanceEndTime">
+                maintenance_end_time,
+            </if>
+            <if test="null != realStartTime">
+                real_start_time,
+            </if>
+            <if test="null != planEndTime">
+                plan_end_time,
+            </if>
+            <if test="null != remindTime">
+                remind_time,
+            </if>
+            <if test="null != isRemind">
+                is_remind,
+            </if>
+            <if test="null != superimposeTime">
+                superimpose_time,
+            </if>
+            <if test="null != isSendNotice">
+                is_send_notice,
+            </if>
+            <if test="null != noticeSendStatus">
+                notice_send_status,
+            </if>
+            <if test="null != isKickUser">
+                is_kick_user,
+            </if>
+            <if test="null != maintenanceStatus">
+                maintenance_status,
+            </if>
+            <if test="null != createTime">
+                create_time,
+            </if>
+            <if test="null != updateTime">
+                update_time
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="null != maintenancePlatformId">
+                #{maintenancePlatformId},
+            </if>
+            <if test="null != maintenanceStartTime">
+                #{maintenanceStartTime},
+            </if>
+            <if test="null != maintenanceEndTime">
+                #{maintenanceEndTime},
+            </if>
+            <if test="null != realStartTime">
+                #{realStartTime},
+            </if>
+            <if test="null != planEndTime">
+                #{planEndTime},
+            </if>
+            <if test="null != remindTime">
+                #{remindTime},
+            </if>
+            <if test="null != isRemind">
+                #{isRemind},
+            </if>
+            <if test="null != superimposeTime">
+                #{superimposeTime},
+            </if>
+            <if test="null != isSendNotice">
+                #{isSendNotice},
+            </if>
+            <if test="null != noticeSendStatus">
+                #{noticeSendStatus},
+            </if>
+            <if test="null != isKickUser">
+                #{isKickUser},
+            </if>
+            <if test="null != maintenanceStatus">
+                #{maintenanceStatus},
+            </if>
+            <if test="null != createTime">
+                #{createTime},
+            </if>
+            <if test="null != updateTime">
+                #{updateTime}
+            </if>
+        </trim>
+    </insert>
+
+    <delete id="delete" >
+        DELETE FROM m_maintenance_record
+        WHERE id = #{id}
+    </delete>
+
+    <update id="update" parameterType="com.panda.multiterminalinteractivecenter.entity.MaintenanceRecord">
+        UPDATE m_maintenance_record
+        <set>
+            <if test="null != maintenancePlatformId">maintenance_platform_id = #{maintenancePlatformId},</if>
+            <if test="null != maintenanceStartTime">maintenance_start_time = #{maintenanceStartTime},</if>
+            <if test="null != maintenanceEndTime">maintenance_end_time = #{maintenanceEndTime},</if>
+            <if test="null != realStartTime">real_start_time = #{realStartTime},</if>
+            <if test="null != planEndTime">plan_end_time = #{planEndTime},</if>
+            <if test="null != remindTime">remind_time = #{remindTime},</if>
+            <if test="null != isRemind">is_remind = #{isRemind},</if>
+            <if test="null != superimposeTime">superimpose_time = #{superimposeTime},</if>
+            <if test="null != isSendNotice">is_send_notice = #{isSendNotice},</if>
+            <if test="null != noticeSendStatus">notice_send_status = #{noticeSendStatus},</if>
+            <if test="null != isKickUser">is_kick_user = #{isKickUser},</if>
+            <if test="null != maintenanceStatus">maintenance_status = #{maintenanceStatus},</if>
+            <if test="null != createTime">create_time = #{createTime},</if>
+            <if test="null != updateTime">update_time = #{updateTime}</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+
+    <select id="load" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM m_maintenance_record
+        WHERE id = #{id}
+    </select>
+
+    <select id="pageList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM m_maintenance_record
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="pageListCount" resultType="java.lang.Integer">
+        SELECT count(1)
+        FROM m_maintenance_record
+    </select>
+
+    <select id="checkListByServerCode" resultMap="BaseResultMap">
+        SELECT m.*
+        FROM m_maintenance_record m
+        left join  m_maintenance_platform p on m.maintenance_platform_id = p.id
+        <where>
+            <if test="serverCodes != null and serverCodes.size() > 0">
+                and p.serve_code in
+                <foreach item='code' index='index' collection='serverCodes'
+                         open='(' separator=',' close=')'>
+                    #{code}
+                </foreach>
+            </if>
+            and m.maintenance_status = 2
+        </where>
+    </select>
+
+    <select id="getRuningPlatform"  resultMap="BaseResultMap">
+        SELECT m.*
+        FROM m_maintenance_record m
+        left join  m_maintenance_platform p on m.maintenance_platform_id = p.id
+        where p.data_code = #{dataCode} and m.maintenance_status in(1,2)
+    </select>
+
+    <update id="starMaintenancePlatform">
+        update m_maintenance_record set maintenance_status = 2 where maintenance_status = 1 and maintenance_start_time <![CDATA[ <= ]]> #{starTime}
+    </update>
+
+    <select id="getStarMaintenanceRecord"  resultMap="BaseResultMap">
+        select * from m_maintenance_record  where maintenance_status = 1 and maintenance_start_time <![CDATA[ <= ]]> #{starTime}
+    </select>
+
+    <select id="getStarMaintenanceRecordIsRemind"  resultMap="BaseResultMap">
+           SELECT m.*
+        FROM m_maintenance_record m
+           left join  m_maintenance_platform p on m.maintenance_platform_id = p.id
+          where p.serve_code = 'ty_server' and  m.is_remind = 1 and m.remind_status = 0 and (ifnull(m.maintenance_start_time,0) - ifnull(m.remind_time * 60 * 1000,0)) <![CDATA[ <= ]]> #{starTime}
+    </select>
+
+    <update id="updateStarMaintenanceRecordIsRemind">
+        update m_maintenance_record set remind_status = 1 where id  = #{id}
+    </update>
+</mapper>

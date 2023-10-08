@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.bss.mapper.MerchantRateMapper">
+  <resultMap id="BaseResultMap" type="com.panda.sport.merchant.common.po.merchant.MerchantRatePO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="computing_standard" jdbcType="VARCHAR" property="computingStandard" />
+    <result column="range_amount_begin" jdbcType="BIGINT" property="rangeAmountBegin" />
+    <result column="range_amount_end" jdbcType="BIGINT" property="rangeAmountEnd" />
+    <result column="terrace_rate" jdbcType="INTEGER" property="terraceRate" />
+    <result column="payment_cycle" jdbcType="INTEGER" property="paymentCycle" />
+    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    <result column="create_time" jdbcType="BIGINT" property="createTime" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="modify_time" jdbcType="BIGINT" property="modifyTime" />
+    <result column="modify_user" jdbcType="VARCHAR" property="modifyUser" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, computing_standard, range_amount_begin, range_amount_end, terrace_rate, payment_cycle, 
+   remarks,
+    create_time, create_user, modify_time, modify_user
+  </sql>
+
+  <select id="selectById" parameterType="Long" resultType="com.panda.sport.merchant.common.po.merchant.MerchantRatePO">
+    select
+    <include refid="Base_Column_List" />
+    from t_merchant_rate
+    where
+    1=1
+    <if test="id != null" >
+      and id = #{id,jdbcType=VARCHAR}
+    </if>
+    ORDER BY terrace_rate desc
+  </select>
+
+  <select id="selectMaxId"  resultType="Long">
+    SELECT MAX(id) FROM t_merchant_rate
+  </select>
+
+  <select id="selectByRateVO" parameterType="com.panda.sport.merchant.common.po.merchant.MerchantRatePO" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_merchant_rate
+    where
+     1=1
+     <if test="id != null" >
+     and id = #{id,jdbcType=VARCHAR}
+     </if>
+     ORDER BY terrace_rate desc
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from t_merchant_rate
+    where 1=1
+    <if test="id !=null ">
+        id = #{id}
+    </if>
+  </delete>
+
+  <insert id="insert" parameterType="com.panda.sport.merchant.common.po.merchant.MerchantRatePO">
+    insert into t_merchant_rate ( computing_standard, range_amount_begin,
+      range_amount_end, terrace_rate, payment_cycle,
+       remarks, create_time,
+      create_user, modify_time, modify_user
+      )
+    values (#{computingStandard}, #{rangeAmountBegin},
+      #{rangeAmountEnd}, #{terraceRate}, #{paymentCycle},
+      #{remarks}, #{createTime},
+      #{createUser}, #{modifyTime}, #{modifyUser}
+      )
+  </insert>
+
+  <insert id="insertSelective" parameterType="com.panda.sport.merchant.common.po.merchant.MerchantRatePO">
+    insert into t_merchant_rate
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="computingStandard != null">
+        computing_standard,
+      </if>
+      <if test="rangeAmountBegin != null">
+        range_amount_begin,
+      </if>
+      <if test="rangeAmountEnd != null">
+        range_amount_end,
+      </if>
+      <if test="terraceRate != null">
+        terrace_rate,
+      </if>
+      <if test="paymentCycle != null">
+        payment_cycle,
+      </if>
+      <if test="remarks != null">
+        remarks,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+      <if test="modifyUser != null">
+        modify_user,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id},
+      </if>
+      <if test="computingStandard != null">
+        #{computingStandard},
+      </if>
+      <if test="rangeAmountBegin != null">
+        #{rangeAmountBegin},
+      </if>
+      <if test="rangeAmountEnd != null">
+        #{rangeAmountEnd},
+      </if>
+      <if test="terraceRate != null">
+        #{terraceRate},
+      </if>
+      <if test="paymentCycle != null">
+        #{paymentCycle},
+      </if>
+      <if test="remarks != null">
+        #{remarks},
+      </if>
+      <if test="createTime != null">
+        #{createTime},
+      </if>
+      <if test="createUser != null">
+        #{createUser},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime},
+      </if>
+      <if test="modifyUser != null">
+        #{modifyUser},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.panda.sport.merchant.common.po.merchant.MerchantRatePO">
+    update t_merchant_rate
+    <set>
+      <if test="computingStandard != null">
+        computing_standard = #{computingStandard},
+      </if>
+      <if test="rangeAmountBegin != null">
+        range_amount_begin = #{rangeAmountBegin},
+      </if>
+      <if test="rangeAmountEnd != null">
+        range_amount_end = #{rangeAmountEnd},
+      </if>
+      <if test="terraceRate != null">
+        terrace_rate = #{terraceRate},
+      </if>
+      <if test="paymentCycle != null">
+        payment_cycle = #{paymentCycle},
+      </if>
+      <if test="remarks != null">
+        remarks = #{remarks},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime},
+      </if>
+      <if test="modifyUser != null">
+        modify_user = #{modifyUser},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="com.panda.sport.merchant.common.po.merchant.MerchantRatePO">
+    update t_merchant_rate
+    set computing_standard = #{computingStandard},
+      range_amount_begin = #{rangeAmountBegin},
+      range_amount_end = #{rangeAmountEnd},
+      terrace_rate = #{terraceRate},
+      payment_cycle = #{paymentCycle},
+      remarks = #{remarks},
+      create_time = #{createTime},
+      create_user = #{createUser},
+      modify_time = #{modifyTime},
+      modify_user = #{modifyUser}
+    where id = #{id}
+  </update>
+
+</mapper>

@@ -1,0 +1,11 @@
+
+### 拉取IP文件开关
+pullIpPackageJob.switches=on
+### 文件夹路径
+pullIpPackageJob.folderPath=/usr/local/ipipnet
+### 文件名
+pullIpPackageJob.fileName=mydata4vipweek2.ipdb
+### 临时文件名
+pullIpPackageJob.fileNameTemp=temp_mydata4vipweek2.ipdb
+### IP库拉取URL
+pullIpPackageJob.ipDatabaseUrl=https://user.ipip.net/download.php?type=ipdb&token=179eeee842e084b14c800cc9132a785f6f0fde30

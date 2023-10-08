@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.match.mapper.VirtualSportTypePOMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.panda.sport.merchant.common.po.bss.VirtualSportTypePO">
+        <id column="id" property="id" />
+        <result column="name_code" property="nameCode" />
+        <result column="virtual_sport_id" property="virtualSportId" />
+        <result column="data_source_code" property="dataSourceCode" />
+        <result column="introduction" property="introduction" />
+        <result column="remark" property="remark" />
+        <result column="create_time" property="createTime" />
+        <result column="modify_time" property="modifyTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name_code, virtual_sport_id, data_source_code, introduction, remark, create_time, modify_time
+    </sql>
+
+</mapper>

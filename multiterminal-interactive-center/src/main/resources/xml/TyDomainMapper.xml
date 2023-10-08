@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.multiterminalinteractivecenter.mapper.TyDomainMapper">
+
+    <resultMap id="BaseResultMap" type="com.panda.multiterminalinteractivecenter.entity.TyDomain">
+        <result column="id" property="id"/>
+        <result column="domain_type" property="domainType"/>
+        <result column="domain_name" property="domainName"/>
+        <result column="group_type" property="groupType"/>
+        <result column="status" property="status"/>
+        <result column="line_carrier_id" property="lineCarrierId"/>
+        <result column="self_test_tag" property="selfTestTag"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_user" property="createUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="tab" property="tab"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+            tdty.id,
+                tdty.domain_type domainType,
+                tdty.domain_name domainName,
+                tdty.group_type groupType,
+                tdty.line_carrier_id lineCarrierId,
+                tdty.status,
+                tdty.enable,
+                tdty.self_test_tag selfTestTag,
+                tdty.create_time createTime,
+                tdty.create_user createUser,
+                tdty.update_time updateTime,
+                tdty.update_user updateUser,
+                tdty.tab tab
+    </sql>
+
+    <select id="pageList" resultType="com.panda.multiterminalinteractivecenter.entity.TyDomain">
+        SELECT
+            <include refid="Base_Column_List"/>
+            ,tlc.line_carrier_name lineCarrierName
+            ,GROUP_CONCAT(distinct tdg.id) domainGroupId
+            ,GROUP_CONCAT(distinct tdg.domain_group_name) domainGroupName
+            ,GROUP_CONCAT(distinct tdg.id,':',tdg.domain_group_name) domainGroupDetail
+        FROM t_domain_ty tdty
+        LEFT JOIN t_line_carrier tlc ON tdty.line_carrier_id = tlc.id
+        LEFT JOIN (SELECT * FROM t_domain_group_relation WHERE tab= #{tab}) tdgr ON tdty.id = tdgr.domain_id
+        LEFT JOIN t_domain_group tdg ON tdgr.domain_group_id = tdg.id
+        WHERE 1=1
+        <if test="null != domainName and '' != domainName">
+            AND tdty.domain_name LIKE CONCAT('%',#{domainName},'%')
+        </if>
+        <if test="null != domainType and '' != domainType and 0 != domainType">
+            AND tdty.domain_type = #{domainType}
+        </if>
+        <if test="null != domainTypes and domainTypes.size() > 0">
+            AND tdty.domain_type in
+            <foreach item='option' index='index' collection='domainTypes' open='(' separator=',' close=')'> #{option} </foreach>
+        </if>
+        <if test="null != lineCarrierId and '' != lineCarrierId and 0 != lineCarrierId">
+            AND tdty.line_carrier_id = #{lineCarrierId}
+        </if>
+        <if test="null != used and true == used">
+            AND tdty.status = 1
+            AND tdty.enable = 1
+        </if>
+        <if test="null != groupType and '' != groupType and 0 != groupType">
+            AND tdty.group_type = #{groupType}
+        </if>
+        <if test="null != tab and '' != tab">
+            AND tdty.tab = #{tab}
+        </if>
+        <if test="null != domainGroupId and '' != domainGroupId">
+            AND tdg.id = #{domainGroupId}
+        </if>
+        GROUP BY tdty.id
+        HAVING 1=1
+        <if test="null != domainGroupId and '' != domainGroupId">
+            AND domainGroupId = #{domainGroupId}
+        </if>
+        <if test="null != domainGroupName and '' != domainGroupName">
+            AND domainGroupName like CONCAT('%',#{domainGroupName},'%')
+        </if>
+        ORDER BY tdty.update_time DESC
+    </select>
+
+    <select id="countByName" resultType="int">
+        SELECT COUNT(1) FROM t_domain_ty
+        WHERE domain_name = #{domainName}
+        <if test="null != groupType">
+            AND group_type = #{groupType}
+        </if>
+        <if test="null != id">
+            AND id != #{id}
+        </if>
+    </select>
+
+    <update id="closeDomain" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" separator=";">
+            update t_domain_ty
+            <set>
+                status = 0
+            </set>
+            where id = #{item,jdbcType=TINYINT}
+        </foreach>
+    </update>
+
+    <update id="switchStatus">
+        update t_domain_ty tdty
+        SET tdty.status = #{status},
+            tdty.enable = #{enable},
+            tdty.update_user = #{updateUser},
+            tdty.update_time = #{enableTime}
+            <if test="enable != null and enable ==1">
+                ,tdty.enable_time = #{enableTime}
+            </if>
+        where id = #{id}
+    </update>
+
+    <update id="switchSelfTestTag">
+        update t_domain_ty tdty
+        SET tdty.self_test_tag = #{tyDomain.selfTestTag},
+            tdty.update_time = #{tyDomain.updateTime}
+        where id = #{tyDomain.id}
+    </update>
+
+    <update id="closeDomainByLineId">
+        update
+        <if test="null != tab and 'ty' == tab">
+            t_domain_ty
+        </if>
+        <if test="null != tab and 'ty' != tab">
+            t_domain
+        </if> td
+        SET td.status = 0,
+        <if test="null != enable and '' != enable">
+            td.enable = #{enable}
+        </if>
+        <if test="null == enable or '' == enable">
+            td.enable = 2
+        </if>
+        where td.line_carrier_id = #{id}
+        AND td.tab = #{tab}
+    </update>
+    <update id="offDomain">
+        UPDATE t_domain_ty
+        SET enable = 2
+        WHERE id in
+        <foreach item='option' index='index' collection='ids' open='(' separator=','
+                 close=')'>
+            #{option}
+        </foreach>
+    </update>
+
+    <select id="getDomainGroupByMerchant" resultType="com.panda.multiterminalinteractivecenter.vo.api.DomainGroupApiVO">
+        SELECT distinct tdg.id,
+                        tdg.domain_group_name domainGroupName,
+                        tdg.group_type        groupType,
+                        tdg.exclusive_type    exclusiveType,
+                        tdg.belong_area       belongArea,
+                        CASE
+                        WHEN tdg.exclusive_type = 2   THEN
+                        "VIP"
+                        WHEN tdg.belong_area = 0   THEN
+                        "默认"
+                        WHEN tdg.exclusive_type = 1 THEN
+                        ( SELECT ma.NAME FROM merchant.m_domain_area ma WHERE ma.id = tdg.belong_area )
+                        END AS areaName,
+                        tdg.status
+        FROM t_domain_group tdg
+                 LEFT JOIN t_domain_program_relation tdpr ON tdg.id = tdpr.domain_group_id
+                 LEFT JOIN t_domain_program tdp ON tdpr.program_id = tdp.id
+                 LEFT JOIN t_merchant_group_ty tmg ON tdp.id = tmg.program_id
+        WHERE tdg.status = 1
+        <if test="null != merchantgroupid">
+            AND tmg.id = #{merchantgroupid}
+        </if>
+        <if test="null != groupType">
+            AND tdg.group_type = #{groupType}
+        </if>
+        <if test="null != tab">
+            AND tdg.tab = #{tab}
+        </if>
+    </select>
+
+    <select id="getDomainByDomainGroupId" resultType="com.panda.multiterminalinteractivecenter.vo.api.DomainApiVO">
+        SELECT distinct tdty.id,
+                        tdty.domain_type       domainType,
+                        tdty.domain_name       domainName,
+                        tdty.merchant_group_id merchantGroupId,
+                        tdg.id as              domainGroupId,
+                        tdty.status,
+                        tdty.enable
+        FROM t_domain_ty tdty
+                 LEFT JOIN t_domain_group_relation tdgr ON tdty.id = tdgr.domain_id
+                 LEFT JOIN t_domain_group tdg ON tdgr.domain_group_id = tdg.id
+        WHERE tdty.group_type = #{groupType}
+        <if test="null != domainGroupId">
+            AND tdg.id = #{domainGroupId}
+        </if>
+          AND tdty.status = 1
+          AND tdty.enable = 1
+          AND tdg.status = 1
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_domain 1 = 1
+        <if test="enable != null">
+            and enable = #{enable}
+        </if>
+        <if test="domainType != null">
+            and domain_type = #{domainType}
+        </if>
+        <if test="domainName != null">
+            and domain_name like concat('%',#{domainName},'%')
+        </if>
+        <if test="starDate != null">
+            AND enable_time BETWEEN #{starDate} and #{endDate}
+        </if>
+        <if test="null != merchantGroupId">
+            and merchant_group_id = #{merchantGroupId}
+        </if>
+    </select>
+    <select id="getDomainByDomainByParam" resultType="com.panda.multiterminalinteractivecenter.entity.TyDomain">
+        SELECT DISTINCT(f.domain_id) id,f.domain_name domainName
+        FROM `t_domain_ty` a
+                 LEFT JOIN t_domain_group_relation b ON a.id = b.domain_id
+                 LEFT JOIN t_domain_group c ON c.id = b.domain_group_id
+                 JOIN(SELECT a.id AS domain_id,
+                             a.domain_name,
+                             a.group_type,
+                             a.domain_type,
+                             a.enable,
+                             a.status,
+                             a.self_test_tag,
+                             c.id AS group_id,
+                             c.exclusive_type,
+                             a.line_carrier_id,
+                             c.belong_area
+                      FROM `t_domain_ty` a
+                               LEFT JOIN t_domain_group_relation b ON
+                          a.id = b.domain_id
+                               LEFT JOIN t_domain_group c ON
+                          c.id = b.domain_group_id
+                      where a.status = 1
+                        and c.status = 1
+                      ) f ON f.group_type = a.group_type
+        <where>
+                a.id != #{domain.id}
+            AND f.domain_id != #{domain.id}
+            and a.enable = 2
+            and f.enable = 2
+            and a.status = 1
+            and f.status = 1
+            and a.self_test_tag = 1
+            and f.self_test_tag = 1
+            and a.domain_type = #{domain.domainType}
+            and f.domain_type = #{domain.domainType}
+            and a.group_type = #{domain.groupType}
+            and f.group_type = #{domain.groupType}
+            <if test="sqlDTO.isSameDomainGroup != null and sqlDTO.isSameDomainGroup == true  ">
+               and  f.group_id = c.id
+                <if test="sqlDTO.isVIP != null and sqlDTO.isVIP == true  ">
+                    and f.exclusive_type = 2
+                </if>
+                <if test="sqlDTO.isVIP != null and sqlDTO.isVIP == false ">
+                    and f.exclusive_type = 1
+                </if>
+            </if>
+            <if test="sqlDTO.isSameDomainGroup != null and sqlDTO.isSameDomainGroup == false">
+                and  f.group_id != c.id
+            </if>
+            <if test="sqlDTO.isSameLineCarrier != null  and  sqlDTO.isSameLineCarrier == true">
+                AND a.`line_carrier_id` = #{domain.lineCarrierId}
+                AND f.`line_carrier_id` = #{domain.lineCarrierId}
+            </if>
+            <if test="sqlDTO.isSameLineCarrier != null  and  sqlDTO.isSameLineCarrier == false">
+                AND a.`line_carrier_id` != #{domain.lineCarrierId}
+                AND f.`line_carrier_id` != #{domain.lineCarrierId}
+            </if>
+        </where>
+    </select>
+
+    <select id="list" resultType="com.panda.multiterminalinteractivecenter.dto.DomainRelationDto">
+        SELECT *
+        FROM `t_domain_ty` a
+                 LEFT JOIN t_domain_group_relation b ON
+            a.id = b.domain_id
+                 LEFT JOIN t_domain_group c ON
+            c.id = b.domain_group_id
+    </select>
+
+    <select id="getNewDomainByGroupId" resultType="com.panda.multiterminalinteractivecenter.entity.TyDomain">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_domain_ty tdty
+        LEFT JOIN (SELECT * FROM t_domain_group_relation WHERE tab= #{param.tab}) tdgr ON tdty.id = tdgr.domain_id
+        LEFT JOIN t_domain_group tdg ON tdgr.domain_group_id = tdg.id
+        WHERE tdg.id = #{param.domainGroupId}
+        AND tdty.domain_type = #{param.domainType}
+        AND tdty.status = 1
+        AND tdty.enable = 2
+        AND tdty.tab = #{param.tab}
+        AND tdty.group_type = #{param.groupType}
+
+        <if test="param.isSameLineCarrier != null  and  param.isSameLineCarrier == true">
+            AND tdty.line_carrier_id = #{param.lineCarrierId}
+        </if>
+        <if test="param.isSameLineCarrier != null  and  param.isSameLineCarrier == false">
+            AND tdty.line_carrier_id != #{param.lineCarrierId}
+        </if>
+
+    </select>
+    <select id="getDomainListByLineId" resultType="com.panda.multiterminalinteractivecenter.entity.TyDomain">
+        SELECT <include refid="Base_Column_List"/>
+        FROM t_domain_ty tdty
+        WHERE tdty.line_carrier_id = #{id}
+        AND tdty.tab = #{tab}
+    </select>
+
+    <select id="getDomainListByNames" resultType="com.panda.multiterminalinteractivecenter.entity.TyDomain">
+        SELECT <include refid="Base_Column_List"/>
+        FROM t_domain_ty tdty
+        WHERE tdty.domain_name in
+        <foreach item='domain' index='index' collection='domainNameList' open='(' separator=','
+                 close=')'>
+            #{domain}
+        </foreach>
+        AND tdty.tab = #{tab}
+    </select>
+
+    <select id="getDomainListByIds" resultType="com.panda.multiterminalinteractivecenter.entity.TyDomain">
+        SELECT <include refid="Base_Column_List"/>
+        FROM t_domain_ty tdty
+        WHERE tdty.id in
+        <foreach item='domain' index='index' collection='domainIdList' open='(' separator=','
+                 close=')'>
+            #{domain}
+        </foreach>
+        AND tdty.tab = #{tab}
+    </select>
+
+
+    <delete id="deleteByDomainId">
+        DELETE
+        FROM t_domain_group_relation
+        WHERE domain_id = #{id}
+    </delete>
+</mapper>

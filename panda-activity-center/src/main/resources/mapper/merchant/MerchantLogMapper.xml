@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.center.mapper.merchant.MerchantLogMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.panda.center.entity.MerchantLog">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="user_name" property="userName"/>
+        <result column="operat_type" property="operatType"/>
+        <result column="type_name" property="typeName"/>
+        <result column="page_name" property="pageName"/>
+        <result column="page_code" property="pageCode"/>
+        <result column="merchant_code" property="merchantCode"/>
+        <result column="merchant_name" property="merchantName"/>
+        <result column="data_id" property="dataId"/>
+        <result column="operat_field" property="operatField"/>
+        <result column="before_values" property="beforeValues"/>
+        <result column="after_values" property="afterValues"/>
+        <result column="log_tag" property="logTag"/>
+        <result column="operat_time" property="operatTime"/>
+        <result column="domain_self_result" property="domainSelfResult"/>
+        <result column="domain_third_result" property="domainThirdResult"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        user_id,
+        user_name,
+        operat_type,
+        type_name,
+        page_name,
+        page_code,
+        merchant_code,
+        merchant_name,
+        data_id,
+        operat_field,
+        before_values,
+        after_values,
+        log_tag,
+        operat_time,
+        domain_self_result,
+        domain_third_result
+    </sql>
+</mapper>

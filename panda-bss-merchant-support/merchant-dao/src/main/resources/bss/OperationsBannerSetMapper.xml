@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.bss.mapper.OperationsBannerSetMapper">
+    <select id="getMerchantList" resultType="com.panda.sport.merchant.common.vo.MerchantTreeVO">
+        SELECt m.merchant_name,
+               m.merchant_code,
+               m.id,
+               m.parent_id,
+               cg.merchant_tag
+        FROM t_merchant m
+                     LEFT JOIN t_merchant_config cg ON (cg.merchant_code = m.merchant_code)
+        where m.`status` = 1
+          and m.agent_level in (0, 1, 2)
+        order by m.parent_id
+    </select>
+
+    <select id="getList" resultType="com.panda.sport.merchant.common.vo.OperationsBannerVO">
+        SELECT *
+        FROM t_operations_banner_set
+                WHERE logic_delete = 0
+        <if test="banner.status != null">
+            AND status = #{banner.status}
+        </if>
+        <if test="banner.type != null and banner.type != ''">
+            AND t_type = #{banner.type}
+        </if>
+        <if test="banner.ids != null and banner.ids.size() > 0">
+            AND id IN
+            <foreach collection="banner.ids" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        order by order_num desc
+    </select>
+
+    <select id="getOldOneInfo" resultType="com.panda.sport.merchant.common.vo.OperationsBannerVO">
+        SELECT *
+        FROM t_operations_banner_set
+        WHERE logic_delete = 0
+            AND id = #{id}
+        order by order_num desc
+    </select>
+
+    <select id="getMerchantName" resultType="java.lang.String">
+        SELECt merchant_name
+        FROM t_merchant
+                where 1 = 1
+        <if test="merchants != null">
+            and merchant_code in
+            <foreach item='code' index='index' collection='merchants' open='(' separator=',' close=')'>
+                #{code}
+            </foreach>
+        </if>
+    </select>
+</mapper>

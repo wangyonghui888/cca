@@ -1,0 +1,22 @@
+
+ALTER TABLE `tybss_report`.`r_merchant_finance_day`
+    ADD COLUMN `order_valid_bet_money` decimal(32, 0) NULL DEFAULT NULL COMMENT '投注有效投注金额' AFTER `vr_settle_original_platform_profit`,
+    ADD COLUMN `settle_valid_bet_money` decimal(32, 0) NULL DEFAULT NULL COMMENT '结算有效投注金额' AFTER `order_valid_bet_money`;
+
+ALTER TABLE `tybss_report`.`r_merchant_finance_day_utc8`
+    ADD COLUMN `order_valid_bet_money` decimal(32, 0) NULL DEFAULT NULL COMMENT '投注有效投注金额' AFTER `vr_settle_original_platform_profit`,
+    ADD COLUMN `settle_valid_bet_money` decimal(32, 0) NULL DEFAULT NULL COMMENT '结算有效投注金额' AFTER `order_valid_bet_money`;
+
+
+ALTER TABLE `tybss_report`.`r_merchant_finance_month`
+    ADD COLUMN `order_valid_bet_money` decimal(32, 0) NULL DEFAULT NULL COMMENT '投注有效投注金额' AFTER `adjust_cause`,
+    ADD COLUMN `settle_valid_bet_money` decimal(32, 0) NULL DEFAULT NULL COMMENT '结算有效投注金额' AFTER `order_valid_bet_money`;
+
+
+ALTER TABLE `tybss_report`.`r_merchant_finance_month_utc8`
+    ADD COLUMN `order_valid_bet_money` decimal(32, 0) NULL DEFAULT NULL COMMENT '投注有效投注金额' AFTER `adjust_cause`,
+    ADD COLUMN `settle_valid_bet_money` decimal(32, 0) NULL DEFAULT NULL COMMENT '结算有效投注金额' AFTER `order_valid_bet_money`;
+
+
+
+

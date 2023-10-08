@@ -1,0 +1,43 @@
+select id                      as "id",
+       merchant_code           as "merchantCode",
+       `time`                  as "time",
+       bet_user_rate           as "betUserRate",
+       profit                  as "profit",
+       register_total_user_sum as "registerTotalUserSum",
+       return_rate             as "returnRate",
+       return_amount           as "returnAmount",
+       merchant_level          as "merchantLevel",
+       bet_amount              as "betAmount",
+       valid_bet_amount        as "validBetAmount",
+       filed_bet_amount        as "filedBetAmount",
+       order_sum               as "orderSum",
+       valid_tickets           as "validTickets",
+       filed_tickets           as "filedTickets",
+       first_bet_user_sum      as "firstBetUserSum",
+       bet_user_sum            as "betUserSum",
+       valid_bet_users         as "validBetUsers",
+       settile_user_rate       as "settileUserRate",
+       settle_profit           as "settleProfit",
+       settle_return           as "settleReturn",
+       settle_return_rate      as "settleReturnRate",
+       settle_bet_amount       as "settleBetAmount",
+       settle_order_num        as "settleOrderNum",
+       merchant_name           as "merchantName",
+       add_user                as "addUser",
+       parent_code             as parentCode,
+       parent_name             as parentName,
+       settle_users               settleUsers,
+       agent_level                agentLevel,
+       bet_amount_settled         betAmountSettled,
+       ticket_settled             ticketSettled,
+       bet_settled_users          betSettledUsers,
+       profit_rate                profitRate,
+       order_valid_bet_money   as orderValidBetMoney,
+       settle_valid_bet_money  as settleValidBetMoney,
+       updated_time            AS updatedTime
+from tybss_report.r_merchant_order_month
+WHERE (updated_time >= :sql_last_value AND updated_time < UNIX_TIMESTAMP(now()))
+  and id is not null
+  and id != ''
+ORDER BY updated_time ASC
+LIMIT 100000;

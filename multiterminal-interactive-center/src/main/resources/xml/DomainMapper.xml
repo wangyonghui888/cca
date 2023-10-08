@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.multiterminalinteractivecenter.mapper.DomainMapper">
+
+    <resultMap id="BaseResultMap" type="com.panda.multiterminalinteractivecenter.entity.TDomain">
+        <result column="id" property="id"/>
+        <result column="domain_type" property="domainType"/>
+        <result column="domain_name" property="domainName"/>
+        <result column="enable" property="enable"/>
+        <result column="enable_time" property="enableTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_user" property="createUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="merchant_group_id" property="merchantGroupId"/>
+        <result column="tab" property="tab"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        ,
+                    domain_type,
+                    domain_name,
+                    enable,
+                    enable_time,
+                    create_time,
+                    create_user,
+                    update_time,
+                    update_user,
+                    merchant_group_id
+    </sql>
+
+    <sql id="queryParam">
+        <where>
+            <if test="enable != null">
+                and enable = #{enable}
+            </if>
+            <if test="domainType != null">
+                and domain_type = #{domainType}
+            </if>
+            <if test="domainName != null">
+                and domain_name like concat('%',#{domainName},'%')
+            </if>
+            <if test="starDate != null">
+                AND enable_time BETWEEN #{starDate} and #{endDate}
+            </if>
+            <if test="null != merchantGroupId">
+                and merchant_group_id = #{merchantGroupId}
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT
+        id
+        ,
+        domain_type,
+        domain_name,
+        enable,
+        enable_time,
+        create_user,
+        update_user,
+        merchant_group_id
+        FROM t_domain_ty
+        where status = 1
+        <if test="enable != null">
+            and enable = #{enable}
+        </if>
+        <if test="domainType != null">
+            and domain_type = #{domainType}
+        </if>
+        <if test="domainName != null">
+            and domain_name like concat('%',#{domainName},'%')
+        </if>
+        <if test="starDate != null">
+            AND enable_time BETWEEN #{starDate} and #{endDate}
+        </if>
+        <if test="null != merchantGroupId">
+            and merchant_group_id = #{merchantGroupId}
+        </if>
+    </select>
+
+
+    <insert id="saveDomian" useGeneratedKeys="true" keyColumn="id" keyProperty="id"
+            parameterType="com.panda.multiterminalinteractivecenter.entity.TDomain">
+        INSERT INTO t_domain_ty
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="null != domainType and '' != domainType">
+                domain_type,
+            </if>
+            <if test="null != domainName and '' != domainName">
+                domain_name,
+            </if>
+            <if test="null != status and '' != status">
+                status,
+            </if>
+            <if test="null != enable and '' != enable">
+                enable,
+            </if>
+            <if test="null != enableTime">
+                enable_time,
+            </if>
+            <if test="null != createTime">
+                create_time,
+            </if>
+            <if test="null != createUser and '' != createUser">
+                create_user,
+            </if>
+            <if test="null != updateTime">
+                update_time,
+            </if>
+            <if test="null != updateUser and '' != updateUser">
+                update_user,
+            </if>
+            <if test="null != merchantGroupId">
+                merchant_group_id,
+            </if>
+            <if test="lineCarrierId != null">
+                line_carrier_id,
+            </if>
+
+            <if test="groupType != null">
+                group_type,
+            </if>
+
+            <if test="null != tab">
+                tab
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="null != domainType and '' != domainType">
+                #{domainType},
+            </if>
+            <if test="null != domainName and '' != domainName">
+                #{domainName},
+            </if>
+            <if test="null != status and '' != status">
+                 #{status},
+            </if>
+            <if test="null != enable and '' != enable">
+                #{enable},
+            </if>
+            <if test="null != enableTime">
+                #{enableTime},
+            </if>
+            <if test="null != createTime">
+                #{createTime},
+            </if>
+            <if test="null != createUser and '' != createUser">
+                #{createUser},
+            </if>
+            <if test="null != updateTime">
+                #{updateTime},
+            </if>
+            <if test="null != updateUser and '' != updateUser">
+                #{updateUser},
+            </if>
+            <if test="null != merchantGroupId">
+                #{merchantGroupId},
+            </if>
+
+            <if test="lineCarrierId != null" >
+                #{lineCarrierId},
+            </if>
+
+            <if test="groupType != null" >
+                #{groupType},
+            </if>
+
+            <if test="null != tab">
+                #{tab}
+            </if>
+        </trim>
+    </insert>
+
+    <update id="resetDomain">
+        UPDATE t_domain_ty
+        set enable = 2,
+            status = 0
+        WHERE id = #{id}
+    </update>
+
+    <update id="reset2Domain">
+        UPDATE t_domain_ty
+        set enable = 2,
+            status = 1
+        WHERE id = #{id}
+    </update>
+
+
+    <update id="updateDomainEnableTimeById">
+        update t_domain_ty
+        set enable      = 1,
+            status      = 1,
+            enable_time = #{enableTime}
+        where id = #{id}
+    </update>
+
+
+    <select id="getMerchantGroupDomainRelationDataList"
+            resultType="com.panda.multiterminalinteractivecenter.vo.MerchantDomainVO">
+        SELECT
+        tg.id AS merchantGroupId,
+        tg.group_code AS groupCode,
+        tg.group_name AS groupName,
+        tg.program_id AS programId,
+        ta.domain_type AS domainType,
+        ta.id AS domainId,
+        td.user_value AS userValue,
+        ta.domain_name AS domainName,
+        td.id AS domainGroupId,
+        CASE
+        WHEN td.exclusive_type = 2   THEN
+        "VIP"
+        WHEN td.belong_area = 0   THEN
+        "默认"
+        WHEN td.exclusive_type = 1 THEN
+        ( SELECT ma.NAME FROM merchant.m_domain_area ma WHERE ma.id = td.belong_area )
+        END AS areaName
+        FROM merchant.t_merchant_group_ty tg
+        LEFT JOIN merchant.t_domain_program tp ON tg.program_id = tp.id and tg.group_type = tp.group_type
+        LEFT JOIN merchant.t_domain_program_relation tr ON tp.id = tr.program_id
+        LEFT JOIN merchant.t_domain_group td ON tr.domain_group_id = td.id and td.group_type = tp.group_type
+        LEFT JOIN merchant.t_domain_group_relation dr ON td.id = dr.domain_group_id
+        LEFT JOIN merchant.t_domain_ty ta ON dr.domain_id = ta.id and td.group_type = ta.group_type
+        where
+        ta.status = 1
+        and ta.enable = 1
+        <if test="null != merchantGroupId and '' != merchantGroupId">
+            and tg.id = #{merchantGroupId}
+        </if>
+
+        <if test="null != programId and '' != programId">
+            and tg.program_id = #{programId}
+        </if>
+
+        <if test="null != domainType and '' != domainType">
+            and ta.domain_type = #{domainType}
+        </if>
+        <if test="null != groupType and '' != groupType">
+            and tg.group_type = #{groupType}
+        </if>
+        GROUP BY dr.id
+        ORDER BY CASE WHEN areaName = '默认' THEN 1 ELSE 0 END DESC,domain_type ASC
+    </select>
+
+
+    <select id="getDomainNameList"
+            resultType="com.panda.multiterminalinteractivecenter.vo.DomainGroupVO">
+        SELECT domain_type domainType,
+               CASE
+                   WHEN domain_type = 1 THEN
+                       "h5域名"
+                   WHEN domain_type = 2 THEN
+                       "PC域名"
+                   WHEN domain_type = 3 THEN
+                       "App域名"
+                   WHEN domain_type = 4 THEN
+                       "图片域名"
+                   WHEN domain_type = 5 THEN
+                       "其他域名"
+                   END AS  `domainName`
+        FROM t_domain_ty
+        where 1 = 1
+        GROUP BY domain_type
+    </select>
+
+
+    <update id="updateDomainProgram" parameterType="com.panda.multiterminalinteractivecenter.vo.MerchantDomainVO">
+        UPDATE t_merchant_group_ty
+        <set>
+            <if test="null != programId and '' != programId">program_id = #{programId}</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+
+    <update id="updateDomainByMerchantGroupId">
+        UPDATE t_domain_ty
+        <set>
+            merchant_group_id = 0
+        </set>
+
+        WHERE merchant_group_id = #{merchantGroupId}
+    </update>
+
+
+    <delete id="deleteAll" parameterType="com.panda.multiterminalinteractivecenter.vo.DomainVO">
+        DELETE FROM t_domain_ty
+        <where>
+            <if test="enable != null">
+                and enable = #{enable}
+            </if>
+            <if test="domainType != null">
+                and domain_type = #{domainType}
+            </if>
+            <if test="domainName != null">
+                and domain_name like concat('%',#{domainName},'%')
+            </if>
+            <if test="starDate != null">
+                AND enable_time BETWEEN #{starDate} and #{endDate}
+            </if>
+            <if test="null != merchantGroupId">
+                and merchant_group_id = #{merchantGroupId}
+            </if>
+        </where>
+    </delete>
+
+
+    <select id="selectDomainList"
+            resultType="com.panda.multiterminalinteractivecenter.entity.TyDomain">
+        SELECT
+        tdty.id,
+        tdty.domain_type domainType,
+        tdty.domain_name domainName,
+        tdty.group_type groupType,
+        tdty.line_carrier_id lineCarrierId,
+        tdty.status,
+        tdty.enable,
+        tdty.self_test_tag selfTestTag,
+        tdty.create_time createTime,
+        tdty.create_user createUser,
+        tdty.update_time updateTime,
+        tdty.update_user updateUser,
+        (SELECT GROUP_CONCAT( DISTINCT tdtmp.domain_group_id)
+        FROM t_domain_group_relation tdtmp
+        WHERE tdtmp.domain_id = tdty.id AND tdtmp.tab = #{tab} ) AS allDomainGroupDetail,
+        tdty.tab tab
+        ,tlc.line_carrier_name lineCarrierName
+        ,GROUP_CONCAT(distinct tdg.id) domainGroupId
+        ,GROUP_CONCAT(distinct tdg.domain_group_name) domainGroupName
+        ,GROUP_CONCAT(distinct tdg.id,':',tdg.domain_group_name) domainGroupDetail
+        FROM t_domain_ty tdty
+        LEFT JOIN t_line_carrier tlc ON tdty.line_carrier_id = tlc.id
+        LEFT JOIN t_domain_group_relation tdgr ON tdty.id = tdgr.domain_id
+        LEFT JOIN t_domain_group tdg ON tdgr.domain_group_id = tdg.id
+        where
+        tdty.enable  = 2
+        and tdty.status = 1
+        <if test="null != domainName and '' != domainName">
+            AND tdty.domain_name LIKE CONCAT('%',#{domainName},'%')
+        </if>
+        <if test="null != domainType and '' != domainType and 0 != domainType">
+            AND tdty.domain_type = #{domainType}
+        </if>
+        <if test="null != lineCarrierId and '' != lineCarrierId and 0 != lineCarrierId">
+            AND tdty.line_carrier_id = #{lineCarrierId}
+        </if>
+        <if test="null != groupType and '' != groupType and 0 != groupType">
+            AND tdty.group_type = #{groupType}
+        </if>
+        <if test="null != tab and '' != tab">
+            AND tdty.tab = #{tab}
+        </if>
+        <if test="null != domainGroupId and '' != domainGroupId">
+            AND tdg.id = #{domainGroupId}
+        </if>
+        GROUP BY tdty.id
+        HAVING 1=1
+        <if test="null != domainGroupName and '' != domainGroupName">
+            AND domainGroupName like CONCAT('%',#{domainGroupName},'%')
+        </if>
+        ORDER BY tdty.update_time DESC
+    </select>
+
+    <update id="updateDomainEnable">
+        update  t_domain_ty set enable = #{enable} where domain_name = #{domainName}
+    </update>
+
+    <select id="getAvailableDomainByGroup" resultType="Map" parameterType="String">
+        select a.domain_name domainName, (select group_name from t_merchant_group_ty where id = a.merchant_group_id) groupName
+        from t_domain_ty a
+        where a.merchant_group_id in
+              (SELECT DISTINCT merchant_group_id FROM `t_domain_ty` where domain_name = #{domainName})
+          and a.enable in (0, 2)
+          and a.domain_name is not null
+          and a.domain_type = 2
+        order by a.create_time desc
+            limit 1
+    </select>
+
+    <select id="getDomainByTypeAndGroupId" resultType="com.panda.multiterminalinteractivecenter.vo.TDomainVo">
+        SELECT domain_name as domainName, domain_type as domainType
+        FROM t_domain_ty
+        where merchant_group_id = #{merchantGroupId}
+          and domain_type = #{domainType}
+          and enable = 2
+            LIMIT 1
+    </select>
+
+
+    <update id="updateByDomainTypeAndName">
+        update t_domain_ty
+        set enable      = #{newEnable},
+            enable_time = #{enableTime}
+        where domain_type = #{type}
+          and domain_name = #{domainName}
+          and merchant_group_id = #{merchantGroupId}
+    </update>
+
+    <select id="getTypeByDomainName" resultType="com.panda.multiterminalinteractivecenter.vo.TDomainVo">
+        SELECT domain_name as domainName, domain_type as domainType, merchant_group_id as merchantGroupId
+        FROM t_domain
+        where domain_name = #{domainName} and merchant_group_id = #{merchantGroupId}
+            LIMIT 1
+    </select>
+
+    <select id="findDomainByGroupType" resultType="com.panda.multiterminalinteractivecenter.entity.TyDomain">
+        SELECT
+            domain_name as domainName,
+            domain_type as domainType,
+            group_type as groupType
+        FROM
+            t_domain_ty
+        where
+            status = 1
+        AND
+            tab = 'ty'
+        AND
+            enable in(2)
+        AND
+            domain_type = 3
+    </select>
+
+    <select id="getLineCarrierOne" resultType="java.lang.Long">
+        SELECT id FROM t_line_carrier where line_carrier_status = 1 limit 1
+    </select>
+    <select id="getDomainGroupByProgramId"
+            resultType="com.panda.multiterminalinteractivecenter.vo.MerchantDomainVO">
+        SELECT
+            tg.id AS merchantGroupId,
+            tg.group_code AS groupCode,
+            tg.group_name AS groupName,
+            tg.program_id AS programId,
+            td.user_value AS userValue,
+            td.id AS domainGroupId,
+            CASE
+                WHEN td.exclusive_type = 2   THEN
+                    "VIP"
+                WHEN td.belong_area = 0   THEN
+                    "默认"
+                WHEN td.exclusive_type = 1 THEN
+                    ( SELECT ma.NAME FROM merchant.m_domain_area ma WHERE ma.id = td.belong_area )
+                END AS areaName
+        FROM merchant.t_merchant_group_ty tg
+                 LEFT JOIN merchant.t_domain_program tp ON tg.program_id = tp.id
+                 LEFT JOIN merchant.t_domain_program_relation tr ON tp.id = tr.program_id
+                 LEFT JOIN merchant.t_domain_group td ON tr.domain_group_id = td.id
+                 LEFT JOIN merchant.t_domain_group_relation dr ON td.id = dr.domain_group_id
+        where
+            tp.tab = #{tab}
+          and tp.id = #{programId}
+        GROUP BY areaName
+    </select>
+
+    <select id="getDomainGroupListByMerchantCode" resultType="java.util.Map">
+        select
+        domain_group_id domainGroupId,
+        CASE
+        WHEN tdg.exclusive_type = 2   THEN "VIP"
+        WHEN tdg.belong_area = 0   THEN "默认"
+        WHEN tdg.belong_area is null  THEN "默认"
+        WHEN tdg.exclusive_type = 1 THEN
+        ( SELECT ma.NAME FROM merchant.m_domain_area ma WHERE ma.id = tdg.belong_area )
+        END AS areaName
+        from t_domain_program_relation tdpr
+        left join t_domain_group tdg on tdpr.domain_group_id = tdg.id
+        where tdpr.program_id = #{merchantDomainVO.programId}
+        <if test="domainGroupIds != null and domainGroupIds.size() > 0">
+            AND tdpr.domain_group_id NOT IN
+            <foreach collection="domainGroupIds" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+</mapper>

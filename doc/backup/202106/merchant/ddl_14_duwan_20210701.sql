@@ -1,0 +1,1 @@
+alter table `merchant`.`merchant_file` modify column export_param varchar(2048);

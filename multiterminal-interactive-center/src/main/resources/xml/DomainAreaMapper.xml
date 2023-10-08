@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.multiterminalinteractivecenter.mapper.DomainAreaMapper">
+
+    <resultMap id="BaseResultMap" type="com.panda.multiterminalinteractivecenter.entity.DomainArea" >
+        <result column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="code" property="code" />
+        <result column="status" property="status"/>
+        <result column="delete_tag" property="deleteTag" />
+        <result column="create_time" property="createTime" />
+        <result column="create_user" property="createUser" />
+        <result column="update_time" property="updateTime" />
+        <result column="update_user" property="updateUser" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,
+                `name`,
+                `code`,
+                status,
+               delete_tag,
+                create_time,
+                create_user,
+                update_time,
+                update_user
+    </sql>
+
+    <update id="logicDeleteById">
+        UPDATE m_domain_area SET delete_tag = 1 WHERE id = #{id}
+    </update>
+
+    <select id="pageList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>,
+        ( SELECT COUNT(1) FROM t_domain_group_relation tdgr WHERE FIND_IN_SET(tdgr.domain_group_id,
+        (SELECT GROUP_CONCAT(tdg.id) AS domain_group_id FROM t_domain_group tdg WHERE tdg.belong_area = mda.id)
+        )) AS domainCount
+        FROM
+         m_domain_area mda
+        WHERE mda.delete_tag = 0
+        <if test="null != name and '' != name">
+            AND mda.name like CONCAT('%',#{name},'%')
+        </if>
+        ORDER BY mda.id ASC,mda.update_time DESC
+    </select>
+
+    <select id="simpleList" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT mda.id,mda.name,mda.code
+        FROM m_domain_area mda
+        WHERE mda.delete_tag = 0
+        <if test="null != name and '' != name">
+            AND mda.name like CONCAT('%',#{name},'%')
+        </if>
+        ORDER BY mda.name ASC
+    </select>
+
+    <select id="countByName" resultType="int">
+        SELECT COUNT(1) FROM m_domain_area
+        WHERE name = #{name} AND delete_tag = 0
+        <if test="null != id">
+            AND id != #{id}
+        </if>
+    </select>
+
+    <select id="getById" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from  m_domain_area WHERE id = #{id}
+    </select>
+
+</mapper>

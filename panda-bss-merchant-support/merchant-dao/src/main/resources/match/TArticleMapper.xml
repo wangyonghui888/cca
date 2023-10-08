@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.match.mapper.TArticleMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.panda.sport.merchant.common.po.bss.TArticle">
+        <id column="id" property="id"/>
+        <result column="sport_id" property="sportId"/>
+        <result column="sport_name" property="sportName"/>
+        <result column="match_id" property="matchId"/>
+        <result column="match_detail" property="matchDetail"/>
+        <result column="home_name" property="homeName"/>
+        <result column="away_name" property="awayName"/>
+        <result column="play_id" property="playId"/>
+        <result column="league_id" property="leagueId"/>
+        <result column="league_name" property="leagueName"/>
+        <result column="league_sort" property="leagueSort"/>
+        <result column="category_id" property="categoryId"/>
+        <result column="category_name" property="categoryName"/>
+        <result column="author_id" property="authorId"/>
+        <result column="author_name" property="authorName"/>
+        <result column="article_id" property="articleId"/>
+        <result column="article_tittle" property="articleTittle"/>
+        <result column="thumbnails" property="thumbnails"/>
+        <result column="summary" property="summary"/>
+        <result column="is_show" property="isShow"/>
+        <result column="is_top" property="isTop"/>
+        <result column="is_champion" property="isChampion"/>
+        <result column="top_start_time" property="topStartTime"/>
+        <result column="top_end_time" property="topEndTime"/>
+        <result column="online_time" property="onlineTime"/>
+        <result column="factor" property="factor"/>
+        <result column="permanent_top" property="permanentTop"/>
+        <result column="tag_id" property="tagId"/>
+        <result column="tag_name" property="tagName"/>
+        <result column="article_content" property="articleContent"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="sort_priority" property="sortPriority"/>
+        <result column="show_time" property="showTime"/>
+        <result column="key_words" property="keyWords"/>
+        <result column="tag_color" property="tagColor"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        sport_id,
+        sport_name,
+        match_id,
+        match_detail,
+        home_name,
+        away_name,
+        play_id,
+        league_id,
+        league_name,
+        league_sort,
+        category_id,
+        category_name,
+        author_id,
+        author_name,
+        article_id,
+        article_tittle,
+        thumbnails,
+        summary,
+        is_show,
+        is_top,
+        is_champion,
+        top_start_time,
+        top_end_time,
+        online_time,
+        factor,
+        permanent_top,
+        tag_id,
+        tag_name,
+        article_content,
+        create_time,
+        update_time,
+        sort_priority,
+        show_time,
+        key_words,
+        tag_color
+    </sql>
+
+    <select id="selectDelay" resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List" />
+        from t_article
+        where online_time > 0 or top_start_time >0 or top_end_time > 0
+    </select>
+
+    <update id="showBatch" parameterType="java.util.List">
+        UPDATE t_article
+        SET is_show = 1,
+            online_time = NULL,
+            update_time = unix_timestamp( now( ) ) * 1000
+        WHERE
+            id in
+        <foreach collection="list" item="item"  separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <update id="offlineBatch" parameterType="java.util.List">
+        UPDATE t_article
+        SET is_show = 0,
+        online_time = NULL,
+        update_time = unix_timestamp( now( ) ) * 1000
+        WHERE
+        id in
+        <foreach collection="list" item="item"  separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <update id="clearMatchInfo">
+        UPDATE t_article
+        SET match_id = null,match_detail = null,home_name = null,away_name = null,away_name = null,play_id = null,league_id = null,league_name = null,
+            update_time = unix_timestamp( now( ) ) * 1000
+        WHERE
+             id = #{id}
+    </update>
+</mapper>

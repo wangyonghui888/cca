@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 用户表(t_user) -->
+<mapper namespace="com.panda.sport.merchant.mapper.AdminPermissionMapper">
+
+    <select id="getPermissionInMenuIds" resultType="com.panda.sport.merchant.common.po.merchant.AdminPermission">
+        SELECT * FROM admin_permission WHERE pid > 0 AND menu_id IN
+            <foreach collection="menuIds" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+    </select>
+
+    <select id="getPermission" resultType="com.panda.sport.merchant.common.po.merchant.AdminPermission">
+         SELECT * FROM admin_permission;
+    </select>
+</mapper>

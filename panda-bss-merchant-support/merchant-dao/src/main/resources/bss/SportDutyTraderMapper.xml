@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 用户表(s_sport_duty_trader) -->
+<mapper namespace="com.panda.sport.bss.mapper.SportDutyTraderMapper">
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.panda.sport.merchant.common.po.bss.SportDutyTraderPO">
+        <result column="id" property="id" />
+        <result column="shift" property="shift" />
+        <result column="user_code" property="userCode" />
+        <result column="user_id" property="userId" />
+        <result column="sport_id" property="sportId" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into tybss_report.s_sport_duty_trader (
+        shift,
+        user_code,
+        user_id,
+        sport_id,
+        create_time
+        )values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.shift},
+            #{item.userCode},
+            #{item.userId},
+            #{item.sportId},
+            NOW()
+            )
+        </foreach>
+    </insert>
+</mapper>

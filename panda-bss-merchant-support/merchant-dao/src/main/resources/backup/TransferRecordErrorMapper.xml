@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.backup.mapper.BackupTransferRecordErrorMapper">
+    <!-- 结果映射 -->
+    <resultMap id="recordMap" type="com.panda.sport.merchant.common.po.bss.TransferRecordPO">
+        <id column="transfer_id" property="transferId" jdbcType="BIGINT"/>
+        <result column="user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="merchant_code" property="merchantCode" jdbcType="VARCHAR"/>
+        <result column="transfer_type" property="transferType" jdbcType="INTEGER"/>
+        <result column="biz_type" property="bizType" jdbcType="INTEGER"/>
+        <result column="amount" property="amount" jdbcType="BIGINT"/>
+        <result column="before_transfer" property="beforeTransfer" jdbcType="BIGINT"/>
+        <result column="after_transfer" property="afterTransfer" jdbcType="BIGINT"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="mag" property="mag" jdbcType="VARCHAR"/>
+        <result column="transfer_mode" property="transferMode" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="BIGINT"/>
+        <result column="orderStr" property="orderStr" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!-- 表所有字段 -->
+    <sql id="allColumns">
+        transfer_id,
+        user_id,
+        merchant_code,
+        transfer_type,
+        biz_type,
+        amount,
+        before_transfer,
+        after_transfer,
+        status,
+        mag,
+        transfer_mode,
+        create_time,
+        orderStr
+    </sql>
+
+
+    <select id="findTransferRecord" parameterType="com.panda.sport.merchant.common.vo.UserAccountFindVO"
+            resultType="com.panda.sport.merchant.common.vo.TransferRecordVO">
+        SELECT t.transferId,
+               t.afterTransfer,
+               t.amount,
+               t.beforeTransfer,
+               t.bizType,
+               t.createTime,
+               t.mag,
+               t.merchantCode,
+               (select merchant_name from t_merchant where merchant_code = t.merchantCode)
+                            as merchantName,
+               t.orderStr,
+               t.`status`,
+               t.transferMode,
+               t.transferType,
+               t.userId,
+               u.username   as userName,
+               u.fake_name  as fakeName,
+               c.country_cn as currency
+        from t_user u
+                 right join (SELECT t1.transfer_id             as transferId,
+                                    (t1.after_transfer / 100)  as afterTransfer,
+                                    (t1.amount / 100)          as amount,
+                                    (t1.before_transfer / 100) as beforeTransfer,
+                                    t1.biz_type                as bizType,
+                                    t1.create_time             as createTime,
+                                    t1.mag                     as mag,
+                                    t1.merchant_code           as merchantCode,
+                                    t1.orderStr                as orderStr,
+                                    t1.`status`                as status,
+                                    t1.transfer_mode           as transferMode,
+                                    t1.transfer_type           as transferType,
+                                    t1.user_id                 as userId
+                             FROM t_transfer_record_error t1
+                        <where>
+                            <if test="startTime != null">
+                                AND t1.create_time  BETWEEN #{startTime} and #{endTime}
+                            </if>
+                            <if test="bizTypeList != null">
+                                AND t1.biz_type IN
+                                <foreach collection="bizTypeList" item="item" index="index" separator="," open="("
+                                         close=")">
+                                    #{item}
+                                </foreach>
+                            </if>
+                            <if test="merchantCodes != null">
+                                AND t1.merchant_code IN
+                                <foreach collection="merchantCodes" item="item" index="index" separator="," open="("
+                                         close=")">
+                                    #{item}
+                                </foreach>
+                            </if>
+                            <if test="username != null">
+                                AND t1.user_id in (select uid from t_user where username = #{username})
+                            </if>
+                            <if test="fakeName != null">
+                                AND t1.user_id in (select uid from t_user where fake_name = #{fakeName})
+                            </if>
+                             <if test="uid != null">
+                                AND t1.user_id = #{uid}
+                            </if>
+                            <if test="userIdList != null and userIdList.size()>0">
+                                AND t1.user_id IN
+                                <foreach collection="userIdList" item="item" index="index" separator="," open="("
+                                         close=")">
+                                    #{item}
+                                </foreach>
+                            </if>
+                            <if test="orderId != null">
+                                AND t1.orderStr like   CONCAT('%', #{orderId},'%')
+                            </if>
+                            <if test="transferId != null">
+                                AND t1.transfer_id = #{transferId}
+                            </if>
+                            <if test="status != null">
+                                AND t1.status = #{status}
+                            </if>
+                            <if test="transferMode != null">
+                                AND t1.transfer_mode = #{transferMode}
+                            </if>
+                            <if test="amountTag != null and amountTag == 0 ">
+                                AND t1.after_transfer <![CDATA[ < ]]> 0
+                            </if>
+                            <if test="retryCount != null">
+                                AND t1.retry_count  <![CDATA[ < ]]>  #{retryCount}
+                            </if>
+                            <if test="minRetryCount != null">
+                                AND t1.retry_count  <![CDATA[ >= ]]>  #{minRetryCount}
+                            </if>
+                            <if test="orderNo != null">
+                                AND t1.orderStr like  CONCAT('%', #{orderNo},'%')
+                            </if>
+                        </where>
+                             ORDER BY t1.create_time desc
+                             LIMIT #{start}, #{pageSize}) t on t.userId = u.uid
+                 left join t_currency_rate c on u.currency_code = c.currency_code
+    </select>
+
+
+    <select id="findTransferRecordCount" resultType="java.lang.Integer"
+            parameterType="com.panda.sport.merchant.common.vo.UserAccountFindVO">
+        SELECT count(1)
+        FROM t_transfer_record_error t
+        <include refid="queryParam"/>
+    </select>
+
+    <select id="countTransferGroup" resultType="Map">
+        SELECT merchant_code as merchantCode, COUNT(1) as sumNum
+        FROM `t_transfer_record_error`
+        where status = 0
+          and retry_count >= 35
+          and retry_count <![CDATA[ < ]]> 102
+          and merchant_code not in ('XZ650')
+          and create_time >= (unix_timestamp(now()) * 1000 - 1000 * 60 * 60 * 24 * 5)
+        group by merchant_code
+    </select>
+
+    <select id="findRecordError" resultType="com.panda.sport.merchant.common.vo.TransferRecordVO">
+       SELECT t1.transfer_id   as transferId,
+              t1.mag           as mag,
+              t1.merchant_code as merchantCode,
+              t1.orderStr      as orderStr,
+              t1.transfer_mode as transferMode,
+              t1.transfer_type as transferType
+       FROM t_transfer_record_error t1
+       where t1.status = 0
+         and t1.retry_count >= 35
+         and t1.retry_count <![CDATA[ < ]]> 102
+         and t1.merchant_code = #{merchantCode}
+         and t1.create_time >= (unix_timestamp(now()) * 1000 - 1000 * 60 * 60 * 24 * 5)
+       ORDER BY t1.create_time desc
+    </select>
+
+    <sql id="queryParam">
+        <where>
+            <if test="startTime != null">
+                AND t.create_time  BETWEEN #{startTime} and #{endTime}
+            </if>
+            <if test="retryCount != null">
+                AND t.retry_count  <![CDATA[ < ]]>  #{retryCount}
+            </if>
+            <if test="minRetryCount != null">
+                AND t.retry_count  <![CDATA[ >= ]]>  #{minRetryCount}
+            </if>
+            <if test="bizTypeList != null">
+                AND t.biz_type IN
+                <foreach collection="bizTypeList" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="merchantCodes != null">
+                AND t.merchant_code IN
+                <foreach collection="merchantCodes" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="username != null">
+                AND t.user_id in (select uid from t_user where username = #{username})
+            </if>
+            <if test="fakeName != null">
+                AND t.user_id in (select uid from t_user where fake_name = #{fakeName})
+            </if>
+             <if test="uid != null">
+                AND t.user_id = #{uid}
+            </if>
+            <if test="userIdList != null and userIdList.size()>0">
+                AND t.user_id IN
+                <foreach collection="userIdList" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="orderId != null">
+                AND t.orderStr like   CONCAT('%', #{orderId},'%')
+            </if>
+            <if test="transferId != null">
+                AND t.transfer_id = #{transferId}
+            </if>
+  			<if test="status != null">
+                AND t.status = #{status}
+            </if>
+            <if test="transferMode != null">
+                AND t.transfer_mode = #{transferMode}
+            </if>
+            <if test="amountTag != null and amountTag == 0 ">
+                AND t.after_transfer <![CDATA[ < ]]> 0
+            </if>
+            <if test="orderNo != null">
+                AND t.orderStr like  CONCAT('%', #{orderNo},'%')
+            </if>
+        </where>
+    </sql>
+
+
+
+</mapper>

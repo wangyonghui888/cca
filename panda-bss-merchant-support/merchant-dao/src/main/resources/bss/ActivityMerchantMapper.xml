@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.bss.mapper.ActivityMerchantMapper">
+    <resultMap id="BaseResultMap" type="com.panda.sport.merchant.common.po.bss.ActivityMerchantPo" >
+        <result column="id" property="id" />
+        <result column="activity_id" property="activityId" />
+        <result column="merchant_code" property="merchantCode" />
+        <result column="status" property="status" />
+        <result column="entrance_status" property="entranceStatus" />
+    </resultMap>
+    <sql id="Base_Column_List">
+                id,
+                activity_id,
+                merchant_code,
+                entrance_status,
+                status
+    </sql>
+    <insert id="insert" parameterType="com.panda.sport.merchant.common.po.bss.ActivityMerchantPo">
+        insert into t_activity_merchant (activity_id,
+        merchant_code, entrance_status
+        )
+        values (#{activityId},
+            #{merchantCode},
+            #{entranceStatus})
+    </insert>
+    <update id="update">
+        UPDATE t_activity_merchant
+        SET
+        entrance_status = #{status}
+        WHERE
+        id = #{id}
+    </update>
+    <select id="getActivityMerchantById" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM t_activity_merchant where id =#{id}
+    </select>
+    <select id="getActivityMerchantByCode" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM t_activity_merchant where merchant_code=#{merchantCode} and activity_id in ('10007','10009','10008','10010')
+    </select>
+    <update id="activityTimeUpdate">
+       update t_activity_config t set
+       t.in_start_time = #{inStartTime},t.in_end_time=#{inEndTime},t.type=#{activityType} where t.id=#{id}
+    </update>
+    <select id="getActivityMerchantPO" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM t_activity_merchant where activity_id = #{id} and merchant_code = #{merchantCode}
+    </select>
+    <delete id="deleteActivityMerchant" >
+        delete FROM t_activity_merchant where merchant_code=#{merchantCode}
+    </delete>
+    <delete id="deleteActivityMerchantPO" >
+        delete FROM t_activity_merchant where merchant_code=#{merchantCode} and activity_id=#{activityId}
+    </delete>
+    <delete id="deleteActityMerchant" >
+        delete FROM t_activity_merchant where merchant_code=#{merchantCode}
+        and activity_id in
+        <foreach collection="list" item="item" open=" (" close=")" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+    <select id="queryActivityMerchantCode" resultType="java.lang.String">
+      SELECT DISTINCT A.merchant_code as merchantCode FROM t_activity_merchant A inner join t_merchant B on A.merchant_code=B.merchant_code where B.status=1
+      and A.activity_id in (10007,10008,10009,10010)
+    </select>
+    <select id="queryMerchantCode" resultType="java.lang.String">
+      SELECT DISTINCT merchant_code FROM t_merchant where status=1
+    </select>
+    <select id="queryMerchant" resultMap="BaseResultMap">
+      SELECT <include refid="Base_Column_List" />
+      FROM t_merchant where status=1
+    </select>
+    <delete id="deleteAllActityMerchant" >
+        delete FROM t_activity_merchant where activity_id in
+        <foreach collection="list" item="item" open=" (" close=")" separator=",">
+        #{item}
+        </foreach>
+    </delete>
+    <delete id="deleteActityMerchantByCode" >
+        delete FROM t_activity_merchant where merchant_code  in
+        <foreach collection="list" item="item" open=" (" close=")" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+    <select id="queryActivityIdsByName" resultType="java.lang.Long">
+        SELECT A.id FROM t_activity_config A  where A.id in ('10007','10009','10008','10010')
+    </select>
+    <select id="queryMerchantByMerchantCode" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM t_activity_merchant where merchant_code in
+        <foreach collection="list" item="item" open=" (" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="queryMerchantByMerchant" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM t_activity_merchant t where t.activity_id in (10007,10008,10009,10010)
+    </select>
+    <select id="queryActivityMerchantById" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM t_activity_merchant
+        where merchant_code in (select merchant_code from t_activity_merchant where id=#{id})
+    </select>
+
+    <select id="queryActivityMerchant" resultType="com.panda.sport.merchant.common.vo.api.TActivityMerchant">
+        SELECT a.id,
+               a.activity_id    activityId,
+               ac.name,
+               a.status,
+               ac.start_time    startTime,
+               ac.end_time      endTime,
+               ac.in_start_time inStartTime,
+               ac.in_end_time   inEndTime,
+               ac.pc_url        pcUrl,
+               ac.h5_url        h5Url,
+               ac.type          type
+        FROM `t_activity_merchant` a
+                 left join t_activity_config ac on a.activity_id = ac.id
+        where a.status = 1
+          and ac.status = 1
+          and a.merchant_code = #{merchantCode}
+    </select>
+
+    <update id="updateActivityMerchantEntrance">
+        UPDATE t_activity_merchant
+        SET
+        entrance_status = #{status},
+        status=#{status}
+        WHERE activity_id in (10007,10008,10009,10010) and merchant_code in
+        <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+    <update id="updateActivityMerchantEntranceAll">
+        UPDATE t_activity_merchant
+        SET
+        entrance_status = #{status},
+        status=#{status}
+        WHERE activity_id in (10007,10008,10009,10010)
+    </update>
+    <update id="updateMerchantActivity">
+        UPDATE t_activity_merchant
+        SET
+        status = #{status}
+        WHERE activity_id in (10007,10008,10009,10010) and merchant_code in
+        <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+    <update id="updateMerchantActivityAll">
+        UPDATE t_activity_merchant
+        SET
+        status = #{status}
+        WHERE activity_id in (10007,10008,10009,10010)
+    </update>
+    <delete id="deleteMerchantActivity" >
+        delete FROM t_activity_merchant where activity_id in (10007,10008,10009,10010) and merchant_code in
+        <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+    <delete id="deleteMerchantActivityAll" >
+        delete FROM t_activity_merchant where activity_id in (10007,10008,10009,10010)
+    </delete>
+
+    <select id="getSummerTaskActivity" resultType="Map">
+        SELECT id, name, in_start_time inStartTime, in_end_time inEndTime
+        FROM `t_activity_config`
+        where id = 10008
+    </select>
+
+</mapper>

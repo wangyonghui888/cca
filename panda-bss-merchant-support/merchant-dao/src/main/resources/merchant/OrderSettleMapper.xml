@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.merchant.mapper.OrderSettleMapper">
+
+    <resultMap id="BaseResultMap" type="com.panda.sport.merchant.common.po.merchant.OrderSettlePO">
+        <result column="id" property="id"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="uid" property="uid"/>
+        <result column="user_name" property="userName"/>
+        <result column="order_status" property="orderStatus"/>
+        <result column="bet_count" property="betCount"/>
+        <result column="series_type" property="seriesType"/>
+        <result column="series_value" property="seriesValue"/>
+        <result column="bet_amount" property="betAmount"/>
+        <result column="order_amount_total" property="orderAmountTotal"/>
+        <result column="settle_amount" property="settleAmount"/>
+        <result column="return_amount" property="returnAmount"/>
+        <result column="merchant_code" property="merchantCode"/>
+        <result column="create_time" property="createTime"/>
+        <result column="settle_time" property="settleTime"/>
+        <result column="insert_time" property="insertTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+
+    <resultMap id="orderResult" type="com.panda.sport.merchant.common.vo.merchant.OrderSettle">
+        <id property="orderNo" column="order_no"/>
+        <result property="uid" column="uid"/>
+        <result property="userName" column="user_name"/>
+        <result property="orderStatus" column="order_status"/>
+        <result property="betCount" column="bet_count"/>
+
+        <result property="seriesType" column="series_type"/>
+        <result property="seriesValue" column="series_value"/>
+        <result property="merchantCode" column="merchant_code"/>
+        <result property="betAmount" column="bet_amount"/>
+        <result property="orderAmountTotal" column="order_amount_total"/>
+
+        <result column="settle_amount" property="settleAmount"/>
+
+        <result column="create_time" property="createTime"/>
+        <result column="settle_time" property="settleTime"/>
+
+        <collection property="orderDetailList" ofType="com.panda.sport.merchant.common.vo.merchant.OrderSettleDetail">
+            <id property="betNo" column="bet_no"/>
+            <result column="market_id" property="marketId"/>
+            <result column="play_options_id" property="playOptionsId"/>
+            <result column="play_options" property="playOptions"/>
+            <result column="play_id" property="playId"/>
+            <result column="play_name" property="playName"/>
+            <result column="match_id" property="matchId"/>
+            <result column="match_name" property="matchName"/>
+            <result column="sport_name" property="sportName"/>
+            <result column="sport_id" property="sportId"/>
+            <result column="create_time" property="createTime"/>
+            <result column="market_match_result" property="marketMatchResult"/>
+            <result column="tournament_id" property="tournamentId"/>
+            <result column="settle_result" property="settleResult"/>
+            <result column="settle_time" property="settleTime"/>
+        </collection>
+    </resultMap>
+
+
+
+    <sql id="Base_Column_List">
+                id,
+                order_no,
+                uid,
+                user_name,
+                order_status,
+                bet_count,
+                series_type,
+                series_value,
+                bet_amount,
+                order_amount_total,
+                settle_amount,
+                return_amount,
+                settle_status,
+                create_time,
+                settle_time,
+                insert_time,
+                update_time,
+                merchant_code
+    </sql>
+
+    <insert id="batchInsertOrder" useGeneratedKeys="true" keyColumn="id" keyProperty="id" parameterType="com.panda.sport.merchant.common.po.merchant.OrderSettlePO">
+        INSERT INTO t_order_settle
+        ( order_no,
+        user_id,
+        user_name,
+        order_status,
+        series_type,
+        series_value,
+        amount_total,
+        settle_amount,
+        profit_amount,
+        outcome,
+        create_time,
+         settle_time,
+        insert_time,
+        merchant_code,
+        tag)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.orderNo,jdbcType=VARCHAR},
+            #{item.userId},
+            #{item.userName,jdbcType=VARCHAR},
+            #{item.orderStatus,jdbcType=INTEGER},
+            #{item.seriesType,jdbcType=INTEGER},
+            #{item.seriesValue,jdbcType=VARCHAR},
+            #{item.amountTotal,jdbcType=DECIMAL},
+            #{item.settleAmount,jdbcType=DECIMAL},
+            #{item.profitAmount,jdbcType=DECIMAL},
+            #{item.outcome,jdbcType=INTEGER},
+            #{item.createTime,jdbcType=TIMESTAMP},
+            #{item.settleTime,jdbcType=TIMESTAMP},
+            unix_timestamp(now()),
+            #{item.merchantCode,jdbcType=VARCHAR},
+            #{item.tag,jdbcType=VARCHAR}
+            )
+        </foreach>
+    </insert>
+
+    <update id="update" parameterType="com.panda.sport.merchant.common.po.merchant.OrderSettlePO">
+        UPDATE t_order_settle
+        <set>
+            <if test='null != orderStatus'>order_status = #{orderStatus},</if>
+            <if test='null != settleAmount'>settle_amount = #{settleAmount},</if>
+            <if test='null != returnAmount'>return_amount = #{returnAmount},</if>
+            <if test='null != settleStatus'>settle_status = #{settleStatus},</if>
+            <if test='null != settleTime'>settle_time = #{settleTime},</if>
+            <if test='null != updateTime'>update_time = #{updateTime}</if>
+        </set>
+        WHERE order_no = #{orderNo} and uid=#{uid}
+    </update>
+
+    <select id="countOrder" resultType="int">
+        SELECT count(*) t_order_settle o LEFT JOIN t_order_settle_detail d
+        ON o.order_no = d.order_no
+        WHERE
+            o.create_time <![CDATA[ > ]]> #{startTime}
+          AND o.create_time <![CDATA[ <= ]]> #{endTime}
+    </select>
+
+    <select id="queryOrderList" resultMap="orderResult">
+        SELECT
+        o.order_no,
+        o.uid,
+        o.user_name,
+        o.order_status,
+        o.play_option_id,
+        o.series_type,
+        o.series_value,
+        o.bet_amount,
+        o.order_amount_total,
+        o.settle_amount,
+        o.return_amount,
+        o.settle_status,
+        o.create_time,
+        d.bet_no,
+        d.market_id,
+        d.play_options_id,
+        d.play_options,
+        d.play_id,
+        d.play_name,
+        d.match_id,
+        d.match_name,
+        d.sport_name,
+        d.sport_id,
+        d.create_time,
+        d.market_match_result,
+        d.tournament_id,
+        d.settle_result,
+        d.settle_time
+        FROM
+        t_order_settle o
+        LEFT JOIN t_order_settle_detail d ON o.order_no = d.order_no
+        WHERE
+        o.create_time <![CDATA[ > ]]> #{startTime}
+        AND o.create_time <![CDATA[ <= ]]> #{endTime}
+        <if test="merchantCode != null">
+            and o.merchant_code = #{merchantCode}
+        </if>
+        LIMIT 0,10
+    </select>
+    <select id="countOrderList" resultType="int">
+        SELECT
+        count(1)
+        FROM
+        t_order_settle o
+        LEFT JOIN t_order_settle_detail d ON o.order_no = d.order_no
+        WHERE
+        o.create_time <![CDATA[ > ]]> #{startTime}
+        AND o.create_time <![CDATA[ <= ]]> #{endTime}
+        <if test="merchantCode != null">
+            and o.merchant_code = #{merchantCode}
+        </if>
+    </select>
+    <select id="queryMerchantList" resultType="java.lang.String">
+        select distinct(merchant_code)
+        from t_order_settle
+        WHERE create_time <![CDATA[ > ]]> #{startTime}
+          AND create_time <![CDATA[ <= ]]> #{endTime}
+    </select>
+
+
+</mapper>

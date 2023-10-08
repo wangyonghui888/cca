@@ -1,0 +1,8 @@
+alter table tybss_new.s_match_info
+    add column match_pre_update bigint NULL COMMENT '提前结算状态最后更新时间' after match_pre_status;
+
+alter table tybss_new.s_match_info_cur
+    add column match_pre_update bigint NULL COMMENT '提前结算状态最后更新时间' after match_pre_status;
+
+alter table tybss_merchant_common.s_match_info
+    add column match_pre_update bigint NULL COMMENT '提前结算状态最后更新时间' after match_pre_status;

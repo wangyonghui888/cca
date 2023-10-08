@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.match.mapper.SportPOMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.panda.sport.merchant.common.po.bss.SportPO">
+        <id column="id" property="id"/>
+        <result column="name_code" property="nameCode"/>
+        <result column="name" property="name"/>
+        <result column="remark" property="remark"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+        <result column="spell" property="spell"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        name_code,
+        name,
+        remark,
+        create_time,
+        modify_time,
+        spell
+    </sql>
+
+    <select id="getListByIds" resultType="com.panda.sport.merchant.common.vo.SportVO">
+        select name_code as sport_id,
+               name      as sport_name
+        from s_sport
+                where name_code in
+        <foreach collection="ids" item="id" index="index" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </select>
+
+
+    <select id="getFromAndTo" resultType="java.util.Map">
+        SELECT s.addition2, s.addition3,s.addition5 FROM  s_market s WHERE s.id = #{marketId} LIMIT 1
+    </select>
+</mapper>

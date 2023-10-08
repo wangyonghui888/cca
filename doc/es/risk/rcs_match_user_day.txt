@@ -1,0 +1,148 @@
+put http://lan-es75.sportxxxr1pub.com/rcs_match_user_day
+
+{
+  "mappings": {
+    "properties": {
+      "mudId": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+
+      "matchManageId":{
+        "type": "long"
+      },
+      "tournamentName":{
+        "type": "text",
+          "fields": {
+            "keyword": {
+              "ignore_above": 256,
+              "type": "keyword"
+            }
+         }
+      },
+      "preDataSourse": {
+        "type": "text",
+          "fields": {
+            "keyword": {
+              "ignore_above": 256,
+              "type": "keyword"
+            }
+         }
+      },
+      "liveDataSourse": {
+        "type": "text",
+          "fields": {
+            "keyword": {
+              "ignore_above": 256,
+              "type": "keyword"
+            }
+         }
+      },
+
+      "profitAmount": {
+        "type": "double"
+      },
+      "matchInfo": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "preProfitAmount": {
+        "type": "double"
+      },
+      "liveBetAmount": {
+        "type": "double"
+      },
+      "usertags": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "orderNum": {
+        "type": "long"
+      },
+      "preBetAmount": {
+        "type": "double"
+      },
+      "uid": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "levelId": {
+        "type": "long"
+      },
+      "tournamentId": {
+        "type": "long"
+      },
+      "beginTime": {
+        "type": "long"
+      },
+      "preTwoOrderNum": {
+        "type": "long"
+      },
+      "matchId": {
+        "type": "long"
+      },
+      "liveOrderNum": {
+        "type": "long"
+      },
+      "preOneProfitAmount": {
+        "type": "double"
+      },
+      "liveProfitAmount": {
+        "type": "double"
+      },
+      "betAmount": {
+        "type": "double"
+      },
+      "preTwoBetAmount": {
+        "type": "double"
+      },
+      "sportId": {
+        "type": "long"
+      },
+      "preOrderNum": {
+        "type": "long"
+      },
+      "preTwoProfitAmount": {
+        "type": "double"
+      },
+      "preOneBetAmount": {
+        "type": "double"
+      },
+      "totalBetAmount": {
+        "type": "double"
+      },
+      "preOneOrderNum": {
+        "type": "long"
+      },
+      "username": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,1 @@
+DELETE  FROM  admin_roles_menus where role_id in (SELECT role_id FROM `admin_user` WHERE agent_level = 2) and menu_id = 5;

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.panda.sport.bss.mapper.UserLevelRelationMapper">
+
+    <resultMap id="resultMap" type="com.panda.sport.merchant.common.po.bss.UserLevelRelationVO">
+        <result column="id" property="id"/>
+        <result column="uid" property="uid"/>
+        <result column="level_id" property="levelId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_user" property="createUser"/>
+        <result column="modify_time" property="modifyTime"/>
+        <result column="modify_user" property="modifyUser"/>
+        <result column="remark" property="remark"/>
+        <result column="sport_json" property="sportJson"/>
+        <result column="tournament_json" property="tournamentJson"/>
+        <result column="order_type_json" property="orderTypeJson"/>
+        <result column="play_json" property="playJson"/>
+        <result column="order_stage_json" property="orderStageJson"/>
+        <result column="merchant_code" property="merchantCode"/>
+        <result column="pre_order_count" property="preOrderCount"/>
+        <result column="pre_win_rate" property="preWinRate"/>
+        <result column="pre_profit_rate" property="preProfitRate"/>
+        <result column="total_order_count" property="totalOrderCount"/>
+        <result column="total_win_rate" property="totalWinRate"/>
+        <result column="total_profit_rate" property="totalProfitRate"/>
+        <result column="tag_user_risk_control_status" property="tagUserRiskControlStatus"/>
+    </resultMap>
+
+     <sql id="Base_Column_List">
+                id,
+                uid,
+                level_id,
+                level_name,
+                create_time,
+                create_user,
+                modify_time,
+                modify_user,
+                remark,
+                sport_json,
+                tournament_json,
+                order_type_json,
+                play_json,
+                order_stage_json,
+                merchant_code,
+                pre_order_count,
+                pre_win_rate,
+                pre_profit_rate,
+                total_order_count,
+                total_win_rate,
+                total_profit_rate,
+                tag_user_risk_control_status
+    </sql>
+
+    <insert id="addUserLevelRelation" useGeneratedKeys="true" keyColumn="id" keyProperty="id"
+            parameterType="com.panda.sport.merchant.common.po.bss.UserLevelRelationVO">
+        INSERT INTO t_user_level_relation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test='null != uid'>
+                uid,
+            </if>
+            <if test='null != levelId'>
+                level_id,
+            </if>
+            <if test='null != createTime'>
+                create_time,
+            </if>
+            <if test='null != createUser'>
+                create_user,
+            </if>
+            <if test='null != modifyTime'>
+                modify_time,
+            </if>
+            <if test='null != modifyUser'>
+                modify_user,
+            </if>
+            <if test='null != merchantCode'>
+                merchant_code,
+            </if>
+            <if test='null != preOrderCount'>
+                pre_order_count,
+            </if>
+            <if test='null != preWinRate'>
+                pre_win_rate,
+            </if>
+            <if test='null != preProfitRate'>
+                pre_profit_rate,
+            </if>
+            <if test='null != totalOrderCount'>
+                total_order_count,
+            </if>
+            <if test='null != totalWinRate'>
+                total_win_rate,
+            </if>
+            <if test='null != totalProfitRate'>
+                total_profit_rate,
+            </if>
+            <if test='null != tagUserRiskControlStatus'>
+                tag_user_risk_control_status
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test='null != uid'>
+                #{uid},
+            </if>
+            <if test='null != levelId'>
+                #{levelId},
+            </if>
+            <if test='null != createTime'>
+                #{createTime},
+            </if>
+            <if test='null != createUser'>
+                #{createUser},
+            </if>
+            <if test='null != modifyTime'>
+                #{modifyTime},
+            </if>
+            <if test='null != modifyUser'>
+                #{modifyUser},
+            </if>
+            <if test='null != merchantCode'>
+                #{merchantCode},
+            </if>
+            <if test='null != preOrderCount'>
+                #{preOrderCount},
+            </if>
+            <if test='null != preWinRate'>
+                #{preWinRate},
+            </if>
+            <if test='null != preProfitRate'>
+                #{preProfitRate},
+            </if>
+            <if test='null != totalOrderCount'>
+                #{totalOrderCount},
+            </if>
+            <if test='null != totalWinRate'>
+                #{totalWinRate},
+            </if>
+            <if test='null != totalProfitRate'>
+                #{totalProfitRate},
+            </if>
+            <if test='null != tagUserRiskControlStatus'>
+                #{tagUserRiskControlStatus}
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateUserLevelRelation" parameterType="com.panda.sport.merchant.common.po.bss.UserLevelRelationVO">
+        UPDATE t_user_level_relation
+        <set>
+            <if test='null != levelId'>level_id = #{levelId},</if>
+            <if test='null != modifyTime'>modify_time = #{modifyTime},</if>
+            <if test='null != modifyUser'>modify_user = #{modifyUser},</if>
+            <if test='null != merchantCode'>merchant_code = #{merchantCode},</if>
+            <if test='null != preOrderCount'>pre_order_count = #{preOrderCount},</if>
+            <if test='null != preWinRate'>pre_win_rate = #{preWinRate},</if>
+            <if test='null != preProfitRate'>pre_profit_rate = #{preProfitRate},</if>
+            <if test='null != totalOrderCount'>total_order_count = #{totalOrderCount},</if>
+            <if test='null != totalWinRate'>total_win_rate = #{totalWinRate},</if>
+            <if test='null != totalProfitRate'>total_profit_rate = #{totalProfitRate},</if>
+            <if test='null != tagUserRiskControlStatus'>tag_user_risk_control_status = #{tagUserRiskControlStatus}</if>
+        </set>
+        WHERE  uid = #{uid}
+    </update>
+
+    <select id="getUserLevelRelationByUid" resultType="com.panda.sport.merchant.common.po.bss.UserLevelRelationVO">
+        select <include refid="Base_Column_List"></include>
+        from t_user_level_relation where uid =#{uid}
+    </select>
+
+</mapper>
+

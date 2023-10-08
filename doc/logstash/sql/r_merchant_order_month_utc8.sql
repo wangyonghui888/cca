@@ -1,0 +1,43 @@
+select id                      as "id",
+       merchant_code           as "merchantCode",
+       `time`                  as "time",
+       merchant_name           as "merchantName",
+       merchant_level          as "merchantLevel",
+       add_user                as "addUser",
+       register_total_user_sum as "registerTotalUserSum",
+       bet_user_rate           as "betUserRate",
+       profit                  as "profit",
+       profit_rate             as "profitRate",
+       return_amount           as "returnAmount",
+       return_rate             as "returnRate",
+       bet_amount              as "betAmount",
+       valid_bet_amount        as "validBetAmount",
+       filed_bet_amount        as "failedBetAmount",
+       total_tickets           as "totalTickets",
+       valid_tickets           as "validTickets",
+       filed_tickets           as "filedTickets",
+       bet_users               as "betUser",
+       valid_bet_users         as "validBetUsers",
+       first_bet_user_sum      as "firstBetUserSum",
+       settle_user_rate        as "settileUserRate",
+       settle_profit           as "settleProfit",
+       settle_return           as "settleReturn",
+       settle_return_rate      as "settleReturnRate",
+       settle_bet_amount       as "settleBetAmount",
+       settle_order_num        as "settleOrderNum",
+       parent_code             as parentCode,
+       parent_name             as parentName,
+       settle_users               settleUsers,
+       agent_level                agentLevel,
+       bet_amount_settled         betAmountSettled,
+       ticket_settled             ticketSettled,
+       bet_settled_users          betSettledUsers,
+       order_valid_bet_money   as orderValidBetMoney,
+       settle_valid_bet_money  as settleValidBetMoney,
+       updated_time            AS updatedTime
+from tybss_report.r_merchant_order_month_utc8
+WHERE (updated_time >= :sql_last_value AND updated_time < UNIX_TIMESTAMP(now()))
+  and id is not null
+  and id != ''
+ORDER BY updated_time ASC
+LIMIT 100000;

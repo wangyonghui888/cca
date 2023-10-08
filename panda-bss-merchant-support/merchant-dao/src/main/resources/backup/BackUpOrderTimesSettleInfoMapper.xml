@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.backup.mapper.BackUpOrderTimesSettleInfoMapper">
+
+    <select id="statistic" resultType="java.util.Map">
+        SELECT
+        sum(negative_amount)/100 as minusAmountTotal ,
+        sum(case when negative_amount <![CDATA[ >= ]]> 0 then negative_amount else 0 end )/100 as noDamageAmountTotal ,
+        sum(case when negative_amount <![CDATA[ < ]]> 0 then negative_amount else 0 end )/100 as prepareAmountTotal
+        FROM `t_order_times_settle_info`
+        <where>
+            <include refid="page_where_if"/>
+        </where>
+    </select>
+
+    <sql id="page_where_if">
+        <if test="pageReqVO.timeType != null and  pageReqVO.timeType == 1">
+            and  last_change_time   <![CDATA[ >= ]]> #{pageReqVO.startTime}
+            and  last_change_time   <![CDATA[ <= ]]> #{pageReqVO.endTime}
+        </if>
+        <if test="pageReqVO.timeType != null and  pageReqVO.timeType == 2">
+            and last_change_time   <![CDATA[ >= ]]> #{pageReqVO.startTime}
+            and last_change_time   <![CDATA[ <= ]]> #{pageReqVO.endTime}
+        </if>
+        <if test="pageReqVO.timeType != null and  pageReqVO.timeType == 3">
+            and first_change_time   <![CDATA[ >= ]]> #{pageReqVO.startTime}
+            and first_change_time   <![CDATA[ <= ]]> #{pageReqVO.endTime}
+        </if>
+        <if test="pageReqVO.matchId != null">
+            and match_id =  #{pageReqVO.matchId}
+        </if>
+        <if test="pageReqVO.matchName != null">
+            and match_name like Concat('%',#{pageReqVO.matchName},'%')
+        </if>
+
+        <if test="pageReqVO.userName != null">
+            and username like Concat('%',#{pageReqVO.userName},'%')
+        </if>
+        <if test="pageReqVO.userId != null">
+            and uid =  #{pageReqVO.userId}
+        </if>
+        <if test="pageReqVO.merchantName != null">
+            and merchant_name like Concat('%',#{pageReqVO.merchantName},'%')
+        </if>
+        <if test="pageReqVO.orderNo != null">
+            and order_no  =  #{pageReqVO.orderNo}
+        </if>
+        <if test="pageReqVO.remark != null and  pageReqVO.remark != ''">
+            and remark  like Concat('%',#{pageReqVO.remark},'%')
+        </if>
+        <if test="pageReqVO.negativeAmountMin != null ">
+            and negative_amount <![CDATA[ >= ]]>  #{pageReqVO.negativeAmountMin}*100
+        </if>
+        <if test="pageReqVO.negativeAmountMax != null ">
+            and negative_amount <![CDATA[ <= ]]> #{pageReqVO.negativeAmountMax}*100
+        </if>
+        <if test="pageReqVO.amountMin != null ">
+            and amount <![CDATA[ >= ]]>  #{pageReqVO.amountMin}*100
+        </if>
+        <if test="pageReqVO.amountMax != null ">
+            and amount <![CDATA[ <= ]]>  #{pageReqVO.amountMax}*100
+        </if>
+
+    </sql>
+
+    <select id="pageList" resultType="com.panda.sport.merchant.common.po.bss.OrderTimesSettleInfoPO">
+        SELECT * FROM `t_order_times_settle_info`
+        <where>
+            <include refid="page_where_if"/>
+        </where>
+    </select>
+    <select id="selectTOrderTimesSettleInfoList"
+            resultType="com.panda.sport.merchant.common.po.bss.OrderTimesSettleInfoPO">
+        select *  from t_order_times_settle_info where create_time <![CDATA[ >= ]]> #{startTime} and create_time <![CDATA[ < ]]> #{endTime}
+    </select>
+
+</mapper>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.merchant.mapper.OrderSettleDetailMapper">
+
+    <resultMap id="BaseResultMap" type="com.panda.sport.merchant.common.po.merchant.OrderSettleDetailPO" >
+        <result column="id" property="id" />
+        <result column="order_no" property="orderNo" />
+        <result column="bet_no" property="betNo" />
+        <result column="order_status" property="orderStatus" />
+        <result column="market_id" property="marketId" />
+        <result column="play_options_id" property="playOptionsId" />
+        <result column="play_options" property="playOptions" />
+        <result column="play_id" property="playId" />
+        <result column="play_name" property="playName" />
+        <result column="match_id" property="matchId" />
+        <result column="match_info" property="matchInfo" />
+        <result column="match_name" property="matchName" />
+        <result column="sport_name" property="sportName" />
+        <result column="sport_id" property="sportId" />
+        <result column="create_time" property="createTime" />
+        <result column="market_match_result" property="marketMatchResult" />
+        <result column="tournament_id" property="tournamentId" />
+        <result column="settle_result" property="settleResult" />
+        <result column="settle_time" property="settleTime" />
+        <result column="insert_time" property="insertTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+                id,
+                order_no,
+                bet_no,
+                order_status,
+                market_id,
+                play_options_id,
+                play_options,
+                play_id,
+                play_name,
+                match_id,
+                match_info,
+                match_name,
+                sport_name,
+                sport_id,
+                create_time,
+                market_match_result,
+                tournament_id,
+                settle_result,
+                settle_time,
+                insert_time,
+                update_time
+    </sql>
+
+    <insert id="insertList" useGeneratedKeys="true" keyColumn="id" keyProperty="id" parameterType="list">
+        INSERT INTO t_order_settle_detail
+                (
+                order_no,
+                bet_no,
+                order_status,
+                market_id,
+                play_options_id,
+                play_options,
+                play_id,
+                play_name,
+                match_id,
+                match_info,
+                match_name,
+                sport_name,
+                sport_id,
+                create_time,
+                insert_time,
+                update_time)
+        values
+        <foreach collection="list" item="item" index="index"  separator=",">
+            (
+            #{item.orderNo},
+            #{item.betNo},
+            #{item.orderStatus},
+            #{item.marketId},
+            #{item.playOptionsId},
+            #{item.playOptions},
+            #{item.playId},
+            #{item.playName},
+            #{item.matchId},
+            #{item.matchInfo},
+            #{item.matchName},
+            #{item.sportName},
+            #{item.sportId},
+            #{item.createTime},
+            #{item.insertTime},
+            #{item.updateTime}
+            )
+        </foreach>
+        ON DUPLICATE KEY UPDATE order_no=values(order_no)
+    </insert>
+
+    <update id="update" parameterType="com.panda.sport.merchant.common.po.merchant.OrderSettleDetailPO">
+        UPDATE t_order_settle_detail
+        <set>
+            <if test ='null != orderStatus'>order_status = #{orderStatus},</if>
+            <if test ='null != marketMatchResult'>market_match_result = #{marketMatchResult},</if>
+            <if test ='null != tournamentId'>tournament_id = #{tournamentId},</if>
+            <if test ='null != settleResult'>settle_result = #{settleResult},</if>
+            <if test ='null != settleTime'>settle_time = #{settleTime},</if>
+            <if test ='null != updateTime'>update_time = #{updateTime}</if>
+        </set>
+        WHERE order_no=#{orderNo} and bet_no =#{betNo}
+    </update>
+
+</mapper>

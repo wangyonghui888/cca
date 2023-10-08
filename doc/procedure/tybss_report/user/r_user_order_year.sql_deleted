@@ -1,0 +1,64 @@
+/*存储过程*/
+
+DROP PROCEDURE IF EXISTS p_r_user_order_year;
+DELIMITER //
+CREATE PROCEDURE p_r_user_order_year()
+BEGIN
+
+/*声明日志信息*/
+DECLARE task_type INT(2) DEFAULT 34;
+DECLARE result_code CHAR(5) DEFAULT '0';
+DECLARE start_time VARCHAR(30) DEFAULT get_cur_ymdhms();
+DECLARE end_time VARCHAR(30);
+DECLARE result INT(2) DEFAULT 1;
+DECLARE exce_msg VARCHAR(512) DEFAULT '成功,p_r_user_order_year';
+DECLARE msg TEXT;
+
+/*异常处理*/
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN
+  GET DIAGNOSTICS CONDITION 1 result_code = RETURNED_SQLSTATE, msg = MESSAGE_TEXT;
+  SET end_time=get_cur_ymdhms();
+  SET exce_msg=CONCAT("错误码：",result_code," 错误信息：p_r_user_order_year,",msg);
+  SET result = 2;
+  CALL p_add_task_event_log(task_type,start_time,end_time,result,exce_msg);
+END;
+
+/*sql开始*/
+REPLACE INTO tybss_report.r_user_order_year
+SELECT Concat(t.user_id, t.YEAR) AS id
+     , t.user_id,min(t.user_name), MIN(t.merchant_code),MIN(t.merchant_name)
+     , t.YEAR, SUM(t.bet_num), SUM(t.bet_amount)
+     , SUM(t.profit)
+     , CASE SUM(t.bet_amount)
+           WHEN 0 THEN 0
+           ELSE SUM(t.profit) / SUM(t.bet_amount)
+    END, SUM(t.settle_order_num), SUM(t.settle_order_amount)
+     , SUM(t.settle_profit)
+     , CASE SUM(t.settle_order_amount)
+           WHEN 0 THEN 0
+           ELSE SUM(t.settle_profit) / SUM(t.settle_order_amount)
+    END, SUM(t.settle_return), SUM(t.live_order_num)
+     , SUM(t.live_order_amount), SUM(t.live_profit)
+     , CASE SUM(t.live_order_amount)
+           WHEN 0 THEN 0
+           ELSE SUM(t.live_profit) / SUM(t.live_order_amount)
+    END, SUM(t.live_return), SUM(t.active_days)
+     , UNIX_TIMESTAMP(CURRENT_TIMESTAMP(3)),
+      max(t.parent_code) as parent_code,
+    max(t.parent_name) as parent_name
+FROM (
+         SELECT *, substring(time, 1, 4) AS 'year'
+         FROM r_user_order_month
+     ) t
+GROUP BY t.user_id, t.YEAR;
+/*sql结束*/
+
+/*执行成功，添加日志*/
+SET end_time=get_cur_ymdhms();
+SET exce_msg=CONCAT(current_date," p_r_user_order_year success!");
+
+
+CALL p_add_task_event_log(task_type,start_time,end_time,result,exce_msg);
+
+END//
+DELIMITER ;

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.panda</groupId>
+        <artifactId>panda-merchant</artifactId>
+        <version>1.1-SNAPSHOT</version>
+    </parent>
+    <artifactId>panda-bss-merchant-support</artifactId>
+    <version>1.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <modules>
+        <module>merchant-common</module>
+        <module>merchant-dao</module>
+        <module>merchant-service</module>
+    </modules>
+    <distributionManagement>
+        <repository>
+            <id>panda</id>
+            <name>panda</name>
+            <url>http://idc-pub-nexus.sportxxxr1pub.com/repository/panda/</url>
+        </repository>
+        <snapshotRepository>
+            <id>panda-snapshots</id>
+            <name>panda-snapshots</name>
+            <url>http://idc-pub-nexus.sportxxxr1pub.com/repository/panda-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+</project>

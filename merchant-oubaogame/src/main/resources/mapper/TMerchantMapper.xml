@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oubao.mapper.TMerchantMapper">
+
+    <insert id="insertMerchant" >
+        INSERT INTO t_merchant (
+        `merchant_code`,
+        `merchant_key`,
+        `transfer_mode`
+        )
+        VALUES (
+        #{merchantCode},
+        #{merchantKey},
+        #{transferMode}
+        )
+    </insert>
+    
+    <insert id="updateMerchant" >
+        UPDATE t_merchant
+        <set>
+            <if test='null != merchantKey'>merchant_key = #{merchantKey},</if>
+
+            <if test='null != transferMode'>transfer_mode = #{transferMode}</if>
+        </set>
+        WHERE merchant_code = #{merchantCode}
+    </insert>
+    
+    <select id="getBssMerchant" resultType="com.oubao.po.MerchantPO">
+        SELECT m.callback_url                                                      callbackUrl,
+               m.balance_url                                                       balanceUrl,
+               m.agent_level                                                       agentLevel,
+               m.id,
+               m.`level`,
+               m.max_bet                                                           maxBet,
+               m.merchant_code                                                     merchantCode,
+               m.`key`                                                             merchantKey,
+               m.merchant_name                                                     merchantName,
+               m.parent_id                                                         parentId,
+               m.sport_list                                                        sportList,
+               m.`status`,
+               (case when m.currency is null then pm.currency else m.currency end) currency,
+               m.transfer_mode                                                     transferMode,
+               m.url,
+               m.commerce,
+               m.topic,
+               pm.topic                                                            parentTopic,
+               pm.merchant_code                                                    parentCode,
+               m.white_ip                                                          whiteIp,
+               m.pc_domain                                                         pcDomain,
+               m.h5_domain                                                         h5Domain,
+               m.app_domain                                                        appDomain,
+               m.open_vr_sport                                                     openVrSport,
+               m.open_esport                                                       openEsport,
+               m.open_video                                                        openVideo,
+               m.language_list                                                     languageList,
+               c.settle_switch_advance                                             settleSwitchAdvance,
+               c.settle_switch_basket                                              settleSwitchBasket,
+               c.cash_out_update                                                   cashOutUpdate,
+               c.user_prefix                                                       userPrefix,
+               c.merchant_tag                                                      merchantTag,
+               c.tag_market_level                                                  tagMarketLevel,
+               c.tag_market_level_pc                                               tagMarketLevelIdPc,
+               c.market_level_update                                               marketLevelUpdate,
+               c.filter_sport                                                      filterSport,
+               c.filter_league                                                     filterLeague,
+               c.video_domain                                                      videoDomain,
+               m.kana_code                                                         kanaCode,
+               m.serial_number                                                     serialNumber,
+               m.domain_group_code                                                 domainGroupCode
+        FROM tybss_merchant_common.t_merchant m
+                 LEFT JOIN tybss_merchant_common.t_merchant pm ON m.parent_id = pm.id
+                 left join tybss_merchant_common.t_merchant_config c on c.merchant_code = m.merchant_code
+        WHERE m.merchant_code = #{merchantCode}
+          AND m.`status` = 1
+    </select>
+
+    <select id="getMerchant" resultType="com.oubao.po.MerchantPO">
+        SELECT
+            m.callback_url callbackUrl,
+            m.balance_url balanceUrl,
+            m.agent_level agentLevel,
+            m.id,
+            m.`level`,
+            m.max_bet maxBet,
+            m.merchant_code merchantCode,
+            m.`key` merchantKey,
+            m.merchant_name merchantName,
+            m.parent_id parentId,
+            m.sport_list sportList,
+            m.`status`,
+            ( CASE WHEN m.currency IS NULL THEN pm.currency ELSE m.currency END ) currency,
+            m.transfer_mode transferMode,
+            m.url,
+            m.commerce,
+            m.topic,
+            pm.topic parentTopic,
+            pm.merchant_code parentCode,
+            m.white_ip whiteIp,
+            m.pc_domain pcDomain,
+            m.h5_domain h5Domain,
+            m.app_domain appDomain,
+            m.open_vr_sport openVrSport,
+            m.open_esport openEsport,
+            m.open_video openVideo,
+            m.language_list languageList,
+            c.settle_switch_advance settleSwitchAdvance,
+            c.settle_switch_basket settleSwitchBasket,
+            c.cash_out_update cashOutUpdate,
+            c.user_prefix userPrefix,
+            c.merchant_tag merchantTag,
+            c.tag_market_level tagMarketLevel,
+            c.tag_market_level_pc tagMarketLevelIdPc,
+            c.market_level_update marketLevelUpdate,
+            c.filter_sport filterSport,
+            c.filter_league filterLeague,
+            c.video_domain videoDomain,
+            m.kana_code kanaCode,
+            m.serial_number serialNumber,
+            m.domain_group_code domainGroupCode
+        FROM
+            tybss_merchant_common.t_merchant m
+            LEFT JOIN tybss_merchant_common.t_merchant pm ON m.parent_id = pm.id
+            LEFT JOIN tybss_merchant_common.t_merchant_config c ON c.merchant_code = m.merchant_code
+        WHERE
+            m.merchant_code = #{merchantCode}
+    </select>
+</mapper>

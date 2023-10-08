@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.match.mapper.MatchInfoCurMapper">
+    <select id="selectLeagues" resultType="com.panda.sport.merchant.common.dto.LeagueDto">
+        SELECT
+            tournament_id leagueId,
+            t3.zs leagueName,
+            t2.tournament_level
+        FROM
+            s_match_info_cur t1
+                INNER JOIN s_tournament t2 ON t1.tournament_id = t2.id
+                INNER JOIN s_language t3 ON t3.name_code = t2.name_code
+        WHERE
+            begin_time > unix_timestamp( now( ) ) * 1000
+          AND t1.sport_id = #{sportId}
+        GROUP BY
+            t1.tournament_id
+        ORDER BY
+            t2.tournament_level
+    </select>
+
+    <select id="searchById"  resultType="com.panda.sport.merchant.common.dto.SearchMatchDto">
+        SELECT
+            t1.id,
+            t2.id leagueId,
+            t2.name_code leagueNameCode,
+            t1.begin_time beginTime,
+            t1.home_name_code homeNameCode,
+            t1.away_name_code awayNameCode
+        FROM
+            s_match_info_cur t1
+                INNER JOIN s_tournament t2 ON t1.tournament_id = t2.id
+        WHERE
+            t1.sport_id = #{sportId}
+            AND t1.id = #{matchId}
+          <if test="leagueId != null">
+              AND t2.id = #{leagueId}
+          </if>
+    </select>
+
+    <select id="searchByKeyword"  resultType="com.panda.sport.merchant.common.dto.SearchMatchDto">
+        SELECT
+            t1.id,
+            t2.id leagueId,
+            t2.name_code leagueNameCode,
+            t1.begin_time beginTime,
+            t1.home_name_code homeNameCode,
+            t1.away_name_code awayNameCode
+        FROM
+            s_match_info_cur t1
+                INNER JOIN s_tournament t2 ON t1.tournament_id = t2.id
+                INNER JOIN t_search_cur t3 ON t1.id = t3.id
+        WHERE
+            t1.sport_id = #{sportId} AND t1.begin_time > unix_timestamp( now( ) ) * 1000
+            <if test="keyword != null and keyword != ''">
+                AND t3.s_language LIKE CONCAT('%',#{keyword},'%')
+            </if>
+            <if test="leagueId != null">
+                AND t2.id = #{leagueId}
+            </if>
+    </select>
+
+    <select id="selectNameByIds" resultType="com.panda.sport.merchant.common.po.bss.SLanguagePO">
+        SELECT
+        name_code, zs
+        FROM s_language  s
+        WHERE name_code IN
+        <foreach collection="nameCodes" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <update id="aniUpdate">
+        update t_animation3_url set animation3_url=#{animation3Url}
+    </update>
+
+    <select id="getAnimationDomain"  resultType="java.lang.String">
+        SELECT
+        t1.animation3_url
+        FROM
+        t_animation3_url t1
+    </select>
+</mapper>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.bss.mapper.SlotTicketDictMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.panda.sport.merchant.common.po.bss.SlotTicketDict">
+        <id column="id" property="id"/>
+        <result column="ticket_name" property="ticketName"/>
+        <result column="ticket_type" property="ticketType"/>
+        <result column="base_ticket_id" property="baseTicketId"/>
+        <result column="synthetic_rate" property="syntheticRate"/>
+        <result column="base_ticket_number" property="baseTicketNumber"/>
+        <result column="return_rate" property="returnRate"/>
+        <result column="return_ticket_id" property="returnTicketId"/>
+        <result column="synthetic_improve_rate" property="syntheticImproveRate"/>
+        <result column="synthetic_improve_number" property="syntheticImproveNumber"/>
+        <result column="state" property="state"/>
+        <result column="create_time" property="createTime"/>
+        <result column="last_update_time" property="lastUpdateTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        ticket_name,
+        ticket_type,
+        base_ticket_id,
+        synthetic_rate,
+        base_ticket_number,
+        return_rate,
+        return_ticket_id,
+        synthetic_improve_rate,
+        synthetic_improve_number,
+        state,
+        create_time,
+        last_update_time
+    </sql>
+</mapper>

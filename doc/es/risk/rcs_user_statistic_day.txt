@@ -1,0 +1,135 @@
+put http://lan-es75.sportxxxr1pub.com/rcs_user_statistic_day
+
+{
+  "mappings": {
+    "properties": {
+      "matchDate": {
+        "type": "long"
+      },
+      "raceOther": {
+        "type": "long"
+      },
+      "footballGoalLineMasterMakert": {
+        "type": "long"
+      },
+      "usertags": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "cancelOrderAmount": {
+        "type": "double"
+      },
+      "oddsHigh": {
+        "type": "long"
+      },
+      "profitBetNums": {
+        "type": "long"
+      },
+      "losses": {
+        "type": "double"
+      },
+      "profitPoint": {
+        "type": "double"
+      },
+      "refuseOrderNums": {
+        "type": "long"
+      },
+      "sid": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "betOrderNums": {
+        "type": "long"
+      },
+      "uid": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "bsketballAsianHandicap": {
+        "type": "long"
+      },
+      "footballAsianHandicapMasterMakert": {
+        "type": "long"
+      },
+      "raceFootball": {
+        "type": "long"
+      },
+      "merchantId": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "levelId": {
+        "type": "long"
+      },
+      "lossesPoint": {
+        "type": "double"
+      },
+      "raceMultipleBet": {
+        "type": "long"
+      },
+      "merchantCode": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "bsketballGoalLine": {
+        "type": "long"
+      },
+      "footballAsianHandicapSlaveMakert": {
+        "type": "long"
+      },
+      "betAmount": {
+        "type": "double"
+      },
+      "cancelOrderNums": {
+        "type": "long"
+      },
+      "raceBasketball": {
+        "type": "long"
+      },
+      "footballGoalLineSlaveMakert": {
+        "type": "long"
+      },
+      "oddsLow": {
+        "type": "long"
+      },
+      "refuseOrderAmount": {
+        "type": "double"
+      },
+      "username": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      }
+    }
+  }
+}
+

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.center.mapper.trader.GamesMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.panda.center.entity.Games">
+        <id column="id" property="id"/>
+        <result column="short_name" property="shortName"/>
+        <result column="en_name" property="enName"/>
+        <result column="cn_name" property="cnName"/>
+        <result column="status" property="status"/>
+        <result column="sort_code" property="sortCode"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_by_id" property="createById"/>
+        <result column="create_by_name" property="createByName"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_by_id" property="updateById"/>
+        <result column="update_by_name" property="updateByName"/>
+        <result column="visible" property="visible"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        short_name,
+        en_name,
+        cn_name,
+        status,
+        sort_code,
+        create_time,
+        create_by_id,
+        create_by_name,
+        update_time,
+        update_by_id,
+        update_by_name,
+        visible
+    </sql>
+</mapper>

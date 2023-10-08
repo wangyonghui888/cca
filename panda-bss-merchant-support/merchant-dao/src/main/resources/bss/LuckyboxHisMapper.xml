@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.bss.mapper.LuckyboxHisMapper">
+    <select id="queryLuckyBoxHistory" resultType="com.panda.sport.merchant.common.vo.activity.LuckyboxRecordsVO" parameterType="com.panda.sport.merchant.common.vo.activity.LuckyboxRecordsVO" >
+    SELECT
+    u.username, <!-- 用户名称 -->
+    u.uid, <!--用户ID-->
+    m.merchant_code as merchantId, <!-- 商户id-->
+    m.merchant_name,<!-- 商户名称-->
+    bx.box_type,<!--盲盒类型-->
+    bx.use_token,<!-- 消耗奖卷数量-->
+    (bx.award/100) as award, <!-- 单次奖金-->
+    '已领取' as status, <!-- 领取状态（固定） -->
+    ifnull((select dt.name from s_olympic_luckybox_dict dt where dt.id=bx.box_id),'现金') as awardStr,<!-- 奖品名称 -->
+    FROM_UNIXTIME(bx.create_time/1000,'%Y-%m-%d %H:%i:%s') as create_time  <!-- 领取时间 -->
+    FROM
+    s_olympic_luckybox_records bx
+    INNER JOIN t_user u ON u.uid = bx.uid
+    INNER JOIN t_merchant m ON m.merchant_code = u.merchant_code
+        where 1=1
+        <if test="parm.merchantName !=null">
+            and  m.merchant_name like CONCAT('%',#{parm.merchantName},'%')
+        </if>
+        <if test="parm.userName!=null and  parm.uid == null">
+            and  u.username  like CONCAT('%',#{parm.userName},'%')
+        </if>
+        <if test="parm.merchantId !=null  and parm.merchantId.indexOf(',') != -1">
+            and  m.merchant_code in
+            <foreach item="item" index="index" collection="parm.merchantId.split(',')" open="(" separator="," close=")">
+                '${item}'
+            </foreach>
+        </if>
+        <if test="parm.uid!=null">
+            and  u.uid  = #{parm.uid}
+        </if>
+        <if test="parm.status!=null and parm.status == 1">
+            and  bx.remark is null
+        </if>
+        <if test="parm.status!=null and parm.status == 2">
+            and  bx.remark is not null
+        </if>
+        <if test="parm.startTime!=null">
+            <![CDATA[ and  bx.create_time >= #{parm.startTime} ]]>
+        </if>
+        <if test="parm.endTime!=null">
+            <![CDATA[  and  bx.create_time < #{parm.endTime} ]]>
+        </if>
+
+        order  by bx.create_time desc
+    </select>
+</mapper>

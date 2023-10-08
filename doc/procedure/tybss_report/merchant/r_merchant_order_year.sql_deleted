@@ -1,0 +1,68 @@
+DROP PROCEDURE IF EXISTS p_r_merchant_order_year;
+
+DELIMITER //
+CREATE
+    DEFINER = `root`@`%` PROCEDURE `p_r_merchant_order_year`()
+BEGIN
+    DECLARE task_type INT(2) DEFAULT 16;
+    DECLARE result_code CHAR(5) DEFAULT '0';
+    DECLARE start_time VARCHAR(30) DEFAULT get_cur_ymdhms();
+    DECLARE end_time VARCHAR(30);
+    DECLARE result INT(2) DEFAULT 1;
+    DECLARE exce_msg VARCHAR(512) DEFAULT 'p_r_merchant_order_year成功';
+    DECLARE msg TEXT;
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN
+        GET DIAGNOSTICS CONDITION 1 result_code = RETURNED_SQLSTATE, msg = MESSAGE_TEXT;
+        SET end_time = get_cur_ymdhms();
+        SET exce_msg = CONCAT("错误码：", result_code, " 错误信息：p_r_merchant_order_year,", msg);
+        SET result = 2;
+        CALL p_add_task_event_log(task_type, start_time, end_time, result, exce_msg);
+    END;
+    REPLACE INTO r_merchant_order_year
+    SELECT Concat(t.merchant_code, t.YEAR)                                                                      AS id,
+           t.merchant_code,
+           t.YEAR,
+           ifnull(SUM(t.bet_user_sum) / IF(SUM(t.register_total_user_sum) = '0', NULL, SUM(t.register_total_user_sum)),
+                  0)                                                                                               bet_user_rate,
+           sum(t.profit),
+           max(t.register_total_user_sum),
+           ifnull(SUM(t.return_amount) / IF(SUM(t.bet_amount) = '0', NULL, SUM(t.bet_amount)),
+                  0)                                                                                               return_rate,
+           sum(t.return_amount)                                                                                    return_amount,
+           min(t.merchant_level),
+           sum(t.bet_amount),
+           sum(t.order_sum),
+           sum(t.first_bet_user_sum),
+           sum(t.bet_user_sum),
+           0,
+           sum(t.settle_profit),
+           sum(t.settle_return),
+           ifnull(SUM(t.settle_return) / IF(SUM(t.settle_bet_amount) = '0', NULL, SUM(t.settle_bet_amount)),
+                  0)                                                                                            AS settle_return_rate,
+           sum(t.settle_bet_amount),
+           sum(t.settle_order_num),
+           0,
+           sum(t.live_profit),
+           sum(t.live_return),
+           ifnull(SUM(t.live_return) / IF(SUM(t.live_bet_amount) = '0', NULL, SUM(t.live_bet_amount)),
+                  0)                                                                                            AS live_return_rate,
+           sum(t.live_bet_amount),
+           sum(t.live_order_num),
+           min(t.merchant_name),
+           sum(t.add_user),
+           UNIX_TIMESTAMP(CURRENT_TIMESTAMP(3)),
+           max(t.parent_code)                                                                                   as parent_code,
+           max(t.parent_name)                                                                                   as parent_name,
+           0,
+           0
+    FROM (SELECT *, substring(time, 1, 4) AS 'year' FROM r_merchant_order_month) t
+    GROUP BY t.merchant_code,
+             t.YEAR;
+
+    SET end_time = get_cur_ymdhms();
+
+    SET exce_msg = CONCAT(current_date, " p_r_merchant_order_year success!");
+
+    CALL p_add_task_event_log(task_type, start_time, end_time, result, exce_msg);
+END//
+DELIMITER ;

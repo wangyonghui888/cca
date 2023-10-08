@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.bss.mapper.TAccountMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.panda.sport.merchant.common.po.bss.AccountPO">
+        <result column="id" property="id"/>
+        <result column="disabled" property="disabled"/>
+        <result column="uid" property="uid"/>
+        <result column="amount" property="amount"/>
+        <result column="frozen_amount" property="frozenAmount"/>
+        <result column="remark" property="remark"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_user" property="modifyUser"/>
+        <result column="modify_time" property="modifyTime"/>
+    </resultMap>
+
+
+    <update id="batchUpdateAccount" parameterType="java.util.List">
+        update t_account
+        <set>
+            <trim prefix="amount = case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    when uid=#{item.uid}  then amount + #{item.amount}
+                    when uid=#{item.uid}  then amount
+                </foreach>
+            </trim>
+            <trim prefix="frozen_amount = case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    when uid=#{item.uid}  then frozen_amount + #{item.amount}
+                    when uid=#{item.uid}  then frozen_amount
+                </foreach>
+            </trim>
+        </set>
+        where uid in
+        <foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+            #{item.uid}
+        </foreach>
+    </update>
+    <select id="selectTAccountByUids" resultType="com.panda.sport.merchant.common.po.bss.AccountPO">
+        select * from t_account where uid in
+        <foreach item="uid" index="index" collection="uidList" open="(" separator="," close=")">
+            #{uid}
+        </foreach>
+    </select>
+    <insert id="insertAccount" parameterType="com.panda.sport.merchant.common.po.bss.AccountPO">
+        insert into t_account
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="disabled != null">
+                disabled,
+            </if>
+            <if test="uid != null">
+                uid,
+            </if>
+            <if test="amount != null">
+                amount,
+            </if>
+            <if test="frozenAmount != null">
+                frozen_amount,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="createUser != null">
+                create_user,
+            </if>
+            create_time,
+            <if test="modifyUser != null">
+                modify_user,
+            </if>
+            modify_time,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="disabled != null">
+                #{disabled,jdbcType=TINYINT},
+            </if>
+            <if test="uid != null">
+                #{uid,jdbcType=BIGINT},
+            </if>
+            <if test="amount != null">
+                #{amount,jdbcType=BIGINT},
+            </if>
+            <if test="frozenAmount != null">
+                #{frozenAmount,jdbcType=BIGINT},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null">
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            unix_timestamp(now()),
+            <if test="modifyUser != null">
+                #{modifyUser,jdbcType=VARCHAR},
+            </if>
+            unix_timestamp(now()),
+        </trim>
+    </insert>
+</mapper>

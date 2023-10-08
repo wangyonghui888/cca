@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 用户表(t_user) -->
+<mapper namespace="com.panda.sport.merchant.mapper.AdminMenuMapper">
+
+    <select id="getMenu" resultType="com.panda.sport.merchant.common.po.merchant.AdminMenu">
+         SELECT * FROM admin_menu ORDER BY id ASC;
+    </select>
+
+    <select id="getRoleAdmin" resultType="com.panda.sport.merchant.common.po.merchant.AdminRole">
+         SELECT * FROM admin_role WHERE merchant_code = #{merchantCode} AND is_admin = #{isAdmin};
+    </select>
+
+    <select id="getRoleMenu" resultType="com.panda.sport.merchant.common.po.merchant.AdminRolesMenus">
+         SELECT * FROM admin_roles_menus WHERE role_id = #{roleId};
+    </select>
+
+    <select id="getRolesPermissions" resultType="com.panda.sport.merchant.common.po.merchant.AdminRolesPermissions">
+         SELECT * FROM admin_roles_permissions WHERE role_id = #{roleId};
+    </select>
+
+    <insert id="insertBatchRolesMenus"  parameterType="List">
+        INSERT INTO admin_roles_menus
+        (
+        `role_id`,
+        `menu_id`
+        )
+        VALUES
+        <foreach collection="list" item="obj" separator=",">
+            (
+            #{obj.roleId},
+            #{obj.menuId}
+            )
+        </foreach>
+    </insert>
+
+    <insert id="insertBatchRolesPermissions"  parameterType="List">
+        INSERT INTO admin_roles_permissions
+        (
+        `role_id`,
+        `permission_id`
+        )
+        VALUES
+        <foreach collection="list" item="obj" separator=",">
+            (
+            #{obj.roleId},
+            #{obj.permissionId}
+            )
+        </foreach>
+    </insert>
+
+</mapper>

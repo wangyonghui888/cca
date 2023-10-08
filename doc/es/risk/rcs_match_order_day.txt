@@ -1,0 +1,225 @@
+put http://lan-es75.sportxxxr1pub.com/rcs_match_order_day
+
+{
+  "mappings": {
+    "properties": {
+      "liveNum": {
+        "type": "long"
+      },
+      "preTwoAverageNum": {
+        "type": "double"
+      },
+      "preOneUserAmount": {
+        "type": "double"
+      },
+      "liveUserAmount": {
+        "type": "double"
+      },
+      "matchInfo": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "preOneProportion": {
+        "type": "double"
+      },
+      "matchAmount": {
+        "type": "double"
+      },
+      "preOneActualAmount": {
+        "type": "double"
+      },
+      "modId": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "matchStatus": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "matchTheoryAmount": {
+        "type": "double"
+      },
+      "tournamentId": {
+        "type": "long"
+      },
+
+
+      "matchManageId":{
+        "type": "long"
+      },
+      "tournamentName":{
+        "type": "text",
+          "fields": {
+            "keyword": {
+              "ignore_above": 256,
+              "type": "keyword"
+            }
+         }
+      },
+      "preDataSourse": {
+        "type": "text",
+          "fields": {
+            "keyword": {
+              "ignore_above": 256,
+              "type": "keyword"
+            }
+         }
+      },
+      "liveDataSourse": {
+        "type": "text",
+          "fields": {
+            "keyword": {
+              "ignore_above": 256,
+              "type": "keyword"
+            }
+         }
+      },
+
+
+      "beginTime": {
+        "type": "long"
+      },
+      "preTwoTheoryAmount": {
+        "type": "double"
+      },
+      "matchProportion": {
+        "type": "double"
+      },
+      "preOneAmount": {
+        "type": "double"
+      },
+      "liveAmount": {
+        "type": "double"
+      },
+      "liveTheoryAmount": {
+        "type": "double"
+      },
+      "preOneAverageAmount": {
+        "type": "double"
+      },
+      "preTwoAverageAmount": {
+        "type": "double"
+      },
+      "liveActualAmount": {
+        "type": "double"
+      },
+      "matchNum": {
+        "type": "long"
+      },
+      "preTwoProfitAmount": {
+        "type": "double"
+      },
+      "preOneAverageNum": {
+        "type": "double"
+      },
+      "preAverageNum": {
+        "type": "double"
+      },
+      "liveProportion": {
+        "type": "double"
+      },
+      "preTwoNum": {
+        "type": "double"
+      },
+      "preUserAmount": {
+        "type": "double"
+      },
+      "preProportion": {
+        "type": "double"
+      },
+      "preProfitAmount": {
+        "type": "double"
+      },
+      "preOneTheoryAmount": {
+        "type": "double"
+      },
+      "userAmount": {
+        "type": "long"
+      },
+      "preTwoProportion": {
+        "type": "double"
+      },
+      "preTwoUserAmount": {
+        "type": "double"
+      },
+      "preOneNum": {
+        "type": "long"
+      },
+      "preTwoActualAmount": {
+        "type": "double"
+      },
+      "matchActualAmount": {
+        "type": "double"
+      },
+      "matchId": {
+        "type": "long"
+      },
+      "preOneProfitAmount": {
+        "type": "double"
+      },
+      "preTheoryAmount": {
+        "type": "double"
+      },
+      "matchName": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "matchProfitAmount": {
+        "type": "double"
+      },
+      "preActualAmount": {
+        "type": "double"
+      },
+      "preAverageAmount": {
+        "type": "double"
+      },
+      "profitRate": {
+        "type": "double"
+      },
+      "liveAverageNum": {
+        "type": "double"
+      },
+      "playAmount": {
+        "type": "long"
+      },
+      "preAmount": {
+        "type": "double"
+      },
+      "liveProfitAmount": {
+        "type": "double"
+      },
+      "sportId": {
+        "type": "long"
+      },
+      "preNum": {
+        "type": "long"
+      },
+      "liveAverageAmount": {
+        "type": "double"
+      },
+      "preTwoAmount": {
+        "type": "double"
+      }
+    }
+  }
+}

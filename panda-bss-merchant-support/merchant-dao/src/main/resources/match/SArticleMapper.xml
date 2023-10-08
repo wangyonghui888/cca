@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.match.mapper.SArticleMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.panda.sport.merchant.common.po.bss.SArticle">
+        <id column="id" property="id"/>
+        <result column="article_id" property="articleId"/>
+        <result column="article_tittle" property="articleTittle"/>
+        <result column="img_url" property="imgUrl"/>
+        <result column="online_time" property="onlineTime"/>
+        <result column="content" property="content"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+        <result column="article_status" property="articleStatus"/>
+        <result column="link_id" property="linkId"/>
+        <result column="data_source_code" property="dataSourceCode"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        article_id,
+        article_tittle,
+        img_url,
+        online_time,
+        content,
+        create_time,
+        modify_time,
+        article_status,
+        link_id,
+        data_source_code
+    </sql>
+</mapper>

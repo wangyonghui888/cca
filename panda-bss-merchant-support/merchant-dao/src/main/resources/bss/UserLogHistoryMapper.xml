@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.bss.mapper.UserLogHistoryMapper">
+  <resultMap id="BaseResultMap" type="com.panda.sport.merchant.common.po.merchant.UserLogHistoryPO">
+    <id column="id" jdbcType="BIGINT" property="id"/>
+    <result column="uid" jdbcType="BIGINT" property="uid"/>
+    <result column="username" jdbcType="VARCHAR" property="username"/>
+    <result column="ip_address" jdbcType="VARCHAR" property="ipAddress"/>
+    <result column="login_time" jdbcType="BIGINT" property="loginTime"/>
+    <result column="log_detail" jdbcType="VARCHAR" property="logDetail"/>
+    <result column="login_num" jdbcType="VARCHAR" property="loginNum"/>
+    <result column="order_num" jdbcType="VARCHAR" property="orderNum"/>
+    <result column="log_type" jdbcType="INTEGER" property="logType"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, uid, username, ip_address, login_time, log_detail, log_type
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List"/>
+    from t_log_history
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAllByPage" parameterType="com.panda.sport.merchant.common.po.merchant.UserLogHistoryPO"
+          resultMap="BaseResultMap">
+    SELECT t.uid,
+           t.username,
+           t.ip_address,
+           (SELECT count(1) FROM t_order o WHERE o.uid = t.uid) AS orderNum,
+           count(1)                                             as login_num,
+           max(t.login_time)                                    as login_time
+    FROM t_log_history t
+    WHERE login_time > unix_timestamp(date_sub(now(), INTERVAL 7 DAY)) * 1000
+    GROUP BY t.uid, t.username, t.ip_address
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete
+    from t_log_history
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.panda.sport.merchant.common.po.merchant.UserLogHistoryPO">
+    insert into t_log_history (id, uid, username,
+                               ip_address, login_time, log_detail,
+                               log_type)
+    values (#{id,jdbcType=BIGINT}, #{uid,jdbcType=BIGINT}, #{username,jdbcType=VARCHAR},
+            #{ipAddress,jdbcType=VARCHAR}, #{loginTime,jdbcType=BIGINT}, #{logDetail,jdbcType=VARCHAR},
+            #{logType,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.panda.sport.merchant.common.po.merchant.UserLogHistoryPO">
+    insert into t_log_history
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="uid != null">
+        uid,
+      </if>
+      <if test="username != null">
+        username,
+      </if>
+      <if test="ipAddress != null">
+        ip_address,
+      </if>
+      <if test="loginTime != null">
+        login_time,
+      </if>
+      <if test="logDetail != null">
+        log_detail,
+      </if>
+      <if test="logType != null">
+        log_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="uid != null">
+        #{uid,jdbcType=BIGINT},
+      </if>
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="ipAddress != null">
+        #{ipAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="loginTime != null">
+        #{loginTime,jdbcType=BIGINT},
+      </if>
+      <if test="logDetail != null">
+        #{logDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="logType != null">
+        #{logType,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.panda.sport.merchant.common.po.merchant.UserLogHistoryPO">
+    update t_log_history
+    <set>
+      <if test="uid != null">
+        uid = #{uid,jdbcType=BIGINT},
+      </if>
+      <if test="username != null">
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="ipAddress != null">
+        ip_address = #{ipAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="loginTime != null">
+        login_time = #{loginTime,jdbcType=BIGINT},
+      </if>
+      <if test="logDetail != null">
+        log_detail = #{logDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="logType != null">
+        log_type = #{logType,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.panda.sport.merchant.common.po.merchant.UserLogHistoryPO">
+    update t_log_history
+    set uid        = #{uid,jdbcType=BIGINT},
+        username   = #{username,jdbcType=VARCHAR},
+        ip_address = #{ipAddress,jdbcType=VARCHAR},
+        login_time = #{loginTime,jdbcType=BIGINT},
+        log_detail = #{logDetail,jdbcType=VARCHAR},
+        log_type   = #{logType,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="queryUserList" parameterType="int">
+    select u.uid, u.username userName, u.merchant_code merchantCode
+    from t_user u
+    where u.modify_time <![CDATA[ >= ]]> unix_timestamp(date_add(now(), INTERVAL -#{day} DAY)) * 1000
+      and u.modify_time <![CDATA[ <= ]]> unix_timestamp(date_add(now(), INTERVAL #{day} DAY)) * 1000
+  </select>
+
+  <select id="queryRecentUserList" parameterType="int"
+          resultType="com.panda.sport.merchant.common.po.merchant.UserLogHistoryPO">
+    select u.uid, u.username, u.merchant_code merchantCode,u.currency_code currencyCode
+    from t_user u
+    where u.modify_time <![CDATA[ >= ]]> unix_timestamp(date_add(now(), INTERVAL -#{day} DAY)) * 1000
+      and u.modify_time <![CDATA[ <= ]]> unix_timestamp(date_add(now(), INTERVAL (1 - #{day}) DAY)) * 1000
+  </select>
+
+  <select id="queryLoginedUserList" resultType="Long">
+    select u.uid
+    from t_user u
+    where u.modify_time >= unix_timestamp(date_add(now(), INTERVAL -12 hour)) * 1000
+  </select>
+</mapper>

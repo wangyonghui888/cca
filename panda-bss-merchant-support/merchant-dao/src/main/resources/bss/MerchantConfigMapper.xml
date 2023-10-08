@@ -1,0 +1,578 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.sport.bss.mapper.MerchantConfigMapper">
+
+    <resultMap id="BaseResultMap" type="com.panda.sport.merchant.common.po.bss.MerchantConfig">
+        <result column="id" property="id"/>
+        <result column="merchant_code" property="merchantCode"/>
+        <result column="merchant_name" property="merchantName"/>
+        <result column="profes_tag" property="profesTag"/>
+        <result column="nocice_tag" property="nociceTag"/>
+        <result column="standard_tag" property="standardTag"/>
+        <result column="title" property="title"/>
+        <result column="dark_logo_url" property="darkLogoUrl"/>
+        <result column="white_logo_url" property="whiteLogoUrl"/>
+        <result column="pc_logo_url" property="pcLogoUrl"/>
+        <result column="compat_logo_url" property="compatLogoUrl"/>
+        <result column="video_logo_url" property="videoLogoUrl"/>
+        <result column="logo_enable" property="logoEnable"/>
+        <result column="inline_width" property="inlineWidth"/>
+        <result column="pc_video_background" property="pcVideoBackground"/>
+        <result column="h5_default" property="h5Default"/>
+        <result column="market_default" property="marketDefault"/>
+        <result column="user_prefix" property="userPrefix"/>
+        <result column="app_default" property="appDefault"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_user" property="createUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="load_logo_url" property="loadLogoUrl"/>
+        <result column="league_logo_url" property="leagueLogoUrl"/>
+        <result column="banner_url" property="bannerUrl"/>
+        <result column="settle_switch_advance" property="settleSwitchAdvance"/>
+        <result column="settle_switch_basket" property="settleSwitchBasket"/>
+        <result column="merchant_tag" property="merchantTag"/>
+        <result column="filter_sport" property="filterSport"/>
+        <result column="filter_league" property="filterLeague"/>
+        <result column="min_series_num" property="minSeriesNum"/>
+        <result column="max_series_num" property="maxSeriesNum"/>
+        <result column="user_profix_digits" property="userProfixDigits"/>
+        <result column="is_app" property="isApp"/>
+        <result column="tag_odds_grouping_dynamic_risk_control_status"
+                property="tagOddsGroupingDynamicRiskControlStatus"/>
+        <result column="book_market_switch" property="coilSwitch"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+                id,
+                merchant_code,
+                profes_tag,
+                nocice_tag,
+                standard_tag,
+                title,
+                dark_logo_url,
+                white_logo_url,
+                pc_logo_url,
+                compat_logo_url,
+                video_logo_url,
+                logo_enable,
+                inline_width,
+                pc_video_background,
+                h5_default,
+                app_default,
+                market_default,
+                user_prefix,
+                create_time,
+                create_user,
+                update_time,
+                update_user,
+                load_logo_url,
+                league_logo_url,
+                banner_url,
+                settle_switch_advance,
+                settle_switch_basket,
+                merchant_tag,
+                filter_sport,
+                filter_league,
+                min_series_num,
+                max_series_num,
+                tag_odds_grouping_dynamic_risk_control_status,
+                book_bet,
+                video_switch,
+                user_profix_digits,
+                book_market_switch
+    </sql>
+
+    <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id"
+            parameterType="com.panda.sport.merchant.common.po.bss.MerchantConfig">
+        INSERT INTO t_merchant_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test='null != merchantCode'>
+                merchant_code,
+            </if>
+            <if test='null != profesTag'>
+                profes_tag,
+            </if>
+            <if test='null != nociceTag'>
+                nocice_tag,
+            </if>
+            <if test='null != standardTag'>
+                standard_tag,
+            </if>
+            <if test='null != title'>
+                title,
+            </if>
+            <if test='null != darkLogoUrl'>
+                dark_logo_url,
+            </if>
+            <if test='null != whiteLogoUrl'>
+                white_logo_url,
+            </if>
+            <if test='null != pcLogoUrl'>
+                pc_logo_url,
+            </if>
+            <if test='null != compatLogoUrl'>
+                compat_logo_url,
+            </if>
+            <if test='null != videoLogoUrl'>
+                video_logo_url,
+            </if>
+            <if test='null != logoEnable'>
+                logo_enable,
+            </if>
+            <if test='null != inlineWidth'>
+                inline_width,
+            </if>
+            <if test='null != pcVideoBackground'>
+                pc_video_background,
+            </if>
+            <if test='null != h5Default'>
+                h5_default,
+            </if>
+            <if test='null != marketDefault'>
+                market_default,
+            </if>
+            <if test='null != userPrefix'>
+                user_prefix,
+            </if>
+            <if test='null != appDefault'>
+                app_default,
+            </if>
+            <if test='null != createTime'>
+                create_time,
+            </if>
+            <if test='null != createUser'>
+                create_user,
+            </if>
+            <if test='null != updateTime'>
+                update_time,
+            </if>
+            <if test='null != updateUser'>
+                update_user,
+            </if>
+            <if test='null != loadLogoUrl'>
+                load_logo_url,
+            </if>
+            <if test='null != leagueLogoUrl'>
+                league_logo_url,
+            </if>
+            <if test='null != bannerUrl'>
+                banner_url,
+            </if>
+            <if test='null != defaultLanguage'>
+                default_language,
+            </if>
+            <if test='null != tagMarketStatus'>
+                tag_market_status,
+            </if>
+            <if test='null != tagMarketLevel'>
+                tag_market_level,
+            </if>
+            <if test='null != merchantTag'>
+                merchant_tag,
+            </if>
+            <if test='null != filterSport'>
+                filter_sport,
+            </if>
+            <if test='null != filterLeague'>
+                filter_league,
+            </if>
+            <if test='null != videoDomain'>
+                video_domain,
+            </if>
+            <if test='null != minSeriesNum'>
+                min_series_num,
+            </if>
+            <if test='null != maxSeriesNum'>
+                max_series_num,
+            </if>
+            <if test='null != tagOddsGroupingDynamicRiskControlStatus'>
+                tag_odds_grouping_dynamic_risk_control_status,
+            </if>
+            <if test='null != bookBet'>
+                book_bet,
+            </if>
+            <if test='null != videoSwitch'>
+                video_switch,
+            </if>
+            <if test='null != threeDayAmount'>
+                three_day_amount,
+            </if>
+            <if test='null != sevenDayAmount'>
+                seven_day_amount,
+            </if>
+            <if test='null != settleSwitchAdvance'>
+                settle_switch_advance
+            </if>
+            <if test='null != settleSwitchBasket'>
+                settle_switch_basket
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test='null != merchantCode'>
+                #{merchantCode},
+            </if>
+            <if test='null != profesTag'>
+                #{profesTag},
+            </if>
+            <if test='null != nociceTag'>
+                #{nociceTag},
+            </if>
+            <if test='null != standardTag'>
+                #{standardTag},
+            </if>
+            <if test='null != title'>
+                #{title},
+            </if>
+            <if test='null != darkLogoUrl'>
+                #{darkLogoUrl},
+            </if>
+            <if test='null != whiteLogoUrl'>
+                #{whiteLogoUrl},
+            </if>
+            <if test='null != pcLogoUrl'>
+                #{pcLogoUrl},
+            </if>
+            <if test='null != compatLogoUrl'>
+                #{compatLogoUrl},
+            </if>
+            <if test='null != videoLogoUrl'>
+                #{videoLogoUrl},
+            </if>
+            <if test='null != logoEnable'>
+                #{logoEnable},
+            </if>
+            <if test='null != inlineWidth'>
+                #{inlineWidth},
+            </if>
+            <if test='null != pcVideoBackground'>
+                #{pcVideoBackground},
+            </if>
+            <if test='null != h5Default'>
+                #{h5Default},
+            </if>
+            <if test='null != appDefault'>
+                #{appDefault},
+            </if>
+            <if test='null != marketDefault'>
+                #{marketDefault},
+            </if>
+            <if test='null != userPrefix'>
+                #{userPrefix},
+            </if>
+            <if test='null != createTime'>
+                #{createTime},
+            </if>
+            <if test='null != createUser'>
+                #{createUser},
+            </if>
+            <if test='null != updateTime'>
+                #{updateTime},
+            </if>
+            <if test='null != updateUser'>
+                #{updateUser},
+            </if>
+            <if test='null != loadLogoUrl'>
+                #{loadLogoUrl},
+            </if>
+            <if test='null != leagueLogoUrl'>
+                #{leagueLogoUrl},
+            </if>
+            <if test='null != bannerUrl'>
+                #{bannerUrl},
+            </if>
+            <if test='null != defaultLanguage'>
+                #{defaultLanguage},
+            </if>
+            <if test='null != tagMarketStatus'>
+                #{tagMarketStatus},
+            </if>
+            <if test='null != tagMarketLevel'>
+                #{tagMarketLevel},
+            </if>
+            <if test='null != merchantTag'>
+                #{merchantTag},
+            </if>
+            <if test='null != filterSport'>
+                #{filterSport},
+            </if>
+            <if test='null != filterLeague'>
+                #{filterLeague},
+            </if>
+            <if test='null != videoDomain'>
+                #{videoDomain},
+            </if>
+            <if test='null != minSeriesNum'>
+                #{minSeriesNum},
+            </if>
+            <if test='null != maxSeriesNum'>
+                #{maxSeriesNum},
+            </if>
+            <if test='null != tagOddsGroupingDynamicRiskControlStatus'>
+                #{tagOddsGroupingDynamicRiskControlStatus},
+            </if>
+            <if test='null != bookBet'>
+                #{bookBet},
+            </if>
+            <if test='null != videoSwitch'>
+                #{videoSwitch},
+            </if>
+            <if test='null != threeDayAmount'>
+                #{threeDayAmount},
+            </if>
+            <if test='null != sevenDayAmount'>
+                #{sevenDayAmount},
+            </if>
+            <if test='null != settleSwitchAdvance'>
+                #{settleSwitchAdvance}
+            </if>
+        </trim>
+    </insert>
+
+    <delete id="delete">
+        DELETE
+        FROM t_merchant_config
+        WHERE id = #{id}
+    </delete>
+
+    <update id="update" parameterType="com.panda.sport.merchant.common.po.bss.MerchantConfig">
+        UPDATE t_merchant_config
+        <set>
+            <if test='null != merchantCode'>merchant_code = #{merchantCode},</if>
+            <if test='null != profesTag'>profes_tag = #{profesTag},</if>
+            <if test='null != nociceTag'>nocice_tag = #{nociceTag},</if>
+            <if test='null != standardTag'>standard_tag = #{standardTag},</if>
+            <if test='null != title'>title = #{title},</if>
+            <if test='null != darkLogoUrl'>dark_logo_url = #{darkLogoUrl},</if>
+            <if test='null != whiteLogoUrl'>white_logo_url = #{whiteLogoUrl},</if>
+            <if test='null != pcLogoUrl'>pc_logo_url = #{pcLogoUrl},</if>
+            <if test='null != compatLogoUrl'>compat_logo_url = #{compatLogoUrl},</if>
+            <if test='null != videoLogoUrl'>video_logo_url = #{videoLogoUrl},</if>
+            <if test='null != logoEnable'>logo_enable = #{logoEnable},</if>
+            <if test='null != inlineWidth'>inline_width = #{inlineWidth},</if>
+            <if test='null != pcVideoBackground'>pc_video_background = #{pcVideoBackground},</if>
+            <if test='null != h5Default'>h5_default = #{h5Default},</if>
+            <if test='null != appDefault'>app_default = #{appDefault},</if>
+            <if test='null != marketDefault'>market_default = #{marketDefault},</if>
+            <if test='null != userPrefix'>user_prefix = #{userPrefix},</if>
+            <if test='null != createTime'>create_time = #{createTime},</if>
+            <if test='null != createUser'>create_user = #{createUser},</if>
+            <if test='null != updateTime'>update_time = #{updateTime},</if>
+            <if test='null != updateUser'>update_user = #{updateUser},</if>
+            <if test='null != loadLogoUrl'>load_logo_url = #{loadLogoUrl},</if>
+            <if test='null != leagueLogoUrl'>league_logo_url = #{leagueLogoUrl},</if>
+            <if test='null != bannerUrl'>banner_url = #{bannerUrl},</if>
+            <if test='null != settleSwitchAdvance'>settle_switch_advance = #{settleSwitchAdvance},</if>
+            <if test='null != settleSwitchBasket'>settle_switch_basket = #{settleSwitchBasket},</if>
+            <if test='null != defaultLanguage'>default_language = #{defaultLanguage},</if>
+            <if test='null != tagMarketStatus'>tag_market_status = #{tagMarketStatus},</if>
+            <if test='null != filterSport'>filter_sport = #{filterSport},</if>
+            <if test='null != filterLeague'>filter_league = #{filterLeague},</if>
+            <if test='null != minSeriesNum'>min_series_num = #{minSeriesNum},</if>
+            <if test='null != maxSeriesNum'>max_series_num = #{maxSeriesNum},</if>
+            <if test='null != bookBet'>book_bet = #{bookBet},</if>
+            <if test='null != tagOddsGroupingDynamicRiskControlStatus'>tag_odds_grouping_dynamic_risk_control_status = #{tagOddsGroupingDynamicRiskControlStatus},</if>
+            <if test='null != videoSwitch'>video_switch = #{videoSwitch},</if>
+            <if test='null != userProfixDigits'>user_profix_digits = #{userProfixDigits},</if>
+            <if test='null != coilSwitch'>book_market_switch = #{coilSwitch}</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateMerchantConfig" parameterType="com.panda.sport.merchant.common.po.bss.MerchantConfig">
+           UPDATE t_merchant_config
+        <set>
+            <if test='null != isApp'>is_app = #{isApp},</if>
+            <if test='null != isRisk'>is_risk = #{isRisk},</if>
+            <if test='null != defaultLanguage'>default_language = #{defaultLanguage},</if>
+            <if test='null != tagMarketStatus'>tag_market_status = #{tagMarketStatus},</if>
+            <if test='null != tagMarketLevel'>tag_market_level = #{tagMarketLevel},</if>
+            <if test='null != marketLevelIdPc'>tag_market_level_pc = #{marketLevelIdPc},</if>
+            <if test='null != tagMarketLevel'>market_level_update = UNIX_TIMESTAMP(CURRENT_TIMESTAMP(3)) * 1000,</if>
+            <if test='null != userPrefix'>user_prefix=#{userPrefix},</if>
+            <if test='null != videoDomain'>video_domain=#{videoDomain},</if>
+            <if test='null != minSeriesNum'>min_series_num = #{minSeriesNum},</if>
+            <if test='null != maxSeriesNum'>max_series_num = #{maxSeriesNum},</if>
+            <if test='null != tagOddsGroupingDynamicRiskControlStatus'>tag_odds_grouping_dynamic_risk_control_status = #{tagOddsGroupingDynamicRiskControlStatus}</if>
+        </set>
+        WHERE merchant_code = #{merchantCode}
+    </update>
+
+    <update id="updateIsAppMerchantConfig" parameterType="com.panda.sport.merchant.common.po.bss.MerchantConfig">
+           UPDATE t_merchant_config set is_app = #{isApp}
+            WHERE merchant_code = #{merchantCode}
+    </update>
+
+
+    <select id="load" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM t_merchant_config
+        WHERE id = #{id}
+    </select>
+
+    <select id="queryByMerchantCode" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM t_merchant_config
+        WHERE merchant_code = #{merchantCode}
+    </select>
+
+    <select id="pageList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM t_merchant_config
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="pageListCount" resultType="java.lang.Integer">
+        SELECT count(1)
+        FROM t_merchant_config
+    </select>
+
+    <select id="getCreditMerchant" resultType="java.lang.String">
+        SELECT merchant_code
+        FROM (SELECT DISTINCT merchant_code
+              from t_merchant
+              WHERE id IN (SELECT parent_id
+                           FROM t_merchant
+                           WHERE merchant_code IN (SELECT merchant_code
+                                                   FROM t_merchant_config
+                                                   WHERE merchant_tag = 1)
+              )
+              UNION ALL
+              SELECT merchant_code
+              FROM t_merchant_config
+              WHERE merchant_tag = 1
+             ) AS credit
+        WHERE merchant_code = #{merchantCode}
+    </select>
+
+    <select id="queryConfigList" resultType="com.panda.sport.merchant.common.po.bss.MerchantConfig">
+        select *
+        from t_merchant_config m
+        where m.merchant_code in (select merchant_code from t_merchant where agent_level in (0, 2) and status = 1)
+    </select>
+
+    <select id="queryMerchantRiskList" resultType="com.panda.sport.merchant.common.po.bss.MerchantConfig">
+        select *
+        from t_merchant_config m
+        where m.is_risk = 1
+    </select>
+
+    <select id="queryCodeConfigList" resultType="com.panda.sport.merchant.common.po.bss.MerchantCodeConfig">
+        select *
+        from t_merchant_code_config m
+        order by m.id asc
+    </select>
+
+    <select id="queryCodeConfigById" resultType="com.panda.sport.merchant.common.po.bss.MerchantCodeConfig">
+        select *
+        from t_merchant_code_config m
+        WHERE m.id = #{id}
+    </select>
+
+    <select id="queryCodeConfigLogList" resultType="com.panda.sport.merchant.common.po.bss.MerchantCodeConfigLog">
+        select *
+        from t_merchant_code_log m
+        where m.merchant_code = #{merchantCode}
+        order by m.create_time desc
+    </select>
+
+    <update id="updateCodeConfig" parameterType="com.panda.sport.merchant.common.po.bss.MerchantCodeConfig">
+        UPDATE t_merchant_code_config
+        set start_value = #{startValue},
+            end_value   = #{endValue},
+            remark      = #{remark}
+        WHERE id = #{id}
+    </update>
+
+    <insert id="insertMerchantCodeConfigLog" useGeneratedKeys="true" keyColumn="id" keyProperty="id"
+            parameterType="com.panda.sport.merchant.common.po.bss.MerchantCodeConfigLog">
+        INSERT INTO t_merchant_code_log
+        (merchant_code,
+         code,
+         month,
+         create_time)
+        values (#{merchantCode},
+                #{code},
+                #{month}, #{createTime})
+    </insert>
+
+    <select id="getSystemConfig" resultType="String">
+        select config_value
+        from t_system_config
+        where config_key = #{key}
+    </select>
+
+    <update id="updateDefaultVideoDomain" parameterType = "com.panda.sport.merchant.common.po.bss.MerchantConfig">
+        UPDATE t_merchant_config SET
+            video_domain = #{defaultVideoDomain},
+            update_time = #{updateTime}
+        WHERE merchant_code not in
+        <foreach item='merchantCode' index='index' collection='merchantCodeList' open='(' separator=',' close=')'>
+            #{merchantCode}
+        </foreach>
+    </update>
+
+    <select id="queryDefaultVideoDomain" resultType="String">
+        SELECT DISTINCT
+            ( min(t.video_domain) )
+        FROM
+            t_merchant_config t
+            LEFT JOIN t_merchant mt ON t.merchant_code = mt.merchant_code
+        WHERE
+            mt.agent_level IN ( 0, 2 )
+            AND mt.`status` = 1
+            and t.merchant_code not in
+        <foreach item='merchantCode' index='index' collection='merchantCodeList' open='(' separator=',' close=')'>
+            #{merchantCode}
+        </foreach>
+    </select>
+
+    <select id="queryMerchantInfo" resultType="com.panda.sport.merchant.common.po.bss.MerchantPO">
+        SELECT
+            t.id AS id,
+            t.merchant_code AS merchantCode,
+            t.agent_level AS agentLevel
+        FROM
+            t_merchant t
+        WHERE
+            t.merchant_code IN
+        <foreach item='merchantCode' index='index' collection='merchantCodeList' open='(' separator=',' close=')'>
+            #{merchantCode}
+        </foreach>
+    </select>
+
+    <select id="selectChildrenMerchant" resultType="com.panda.sport.merchant.common.po.bss.MerchantPO">
+        SELECT
+            t.id AS id,
+            t.merchant_code AS merchantCode,
+            t.agent_level AS agentLevel
+        FROM
+            t_merchant t
+        WHERE
+            t.parent_id = #{merchantId}
+            AND t.agent_level = 2
+    </select>
+
+    <update id="updateConfigFilter" parameterType = "com.panda.sport.merchant.common.po.bss.MerchantConfig">
+        UPDATE t_merchant_config
+        SET merchant_code = #{merchantCode},
+
+        filter_sport = #{filterSport},
+        filter_league = #{filterLeague},
+        WHERE
+            id = #{id}
+    </update>
+
+    <select id="selectMerchantByCode" resultType="com.panda.sport.merchant.common.po.bss.MerchantConfig">
+        SELECT
+            mc.is_risk AS isRisk,
+            mc.merchant_code AS merchantCode,
+            me.merchant_name AS merchantName
+        FROM
+            t_merchant_config mc
+            LEFT JOIN t_merchant me ON mc.merchant_code = me.merchant_code
+        WHERE
+            mc.merchant_code = #{merchantCode}
+    </select>
+</mapper>

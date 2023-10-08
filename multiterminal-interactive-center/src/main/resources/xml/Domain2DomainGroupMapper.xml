@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panda.multiterminalinteractivecenter.mapper.Domain2DomainGroupMapper">
+
+
+    <sql id="Base_Column_List">
+            tdgr.id,
+            tdgr.domain_id domainId,
+            tdgr.domain_group_id domainGroupId,
+            tdgr.tab tab,
+            tdgr.create_time createTime,
+            tdgr.update_time updateTime,
+            tdgr.last_updated lastUpdated
+    </sql>
+
+    <select id="selectByDomainId"  resultType="com.panda.multiterminalinteractivecenter.entity.Domain2DomainGroup">
+        SELECT <include refid="Base_Column_List" />
+        FROM t_domain_group_relation tdgr
+        WHERE tdgr.domain_id = #{domainId}
+        <if test="null != tab and '' != tab">
+            AND tdgr.tab = #{tab}
+        </if>
+    </select>
+
+    <select id="countByGroupId" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM t_domain_group_relation tdgr
+        WHERE tdgr.domain_group_id = #{domainGroupId}
+        <if test="null != tab and '' != tab">
+            AND tdgr.tab = #{tab}
+        </if>
+    </select>
+
+    <select id="getDomainIdsByDomainGroupId" resultType="java.lang.Long">
+        SELECT tdgr.domain_id
+        FROM t_domain_group_relation tdgr
+        WHERE tdgr.domain_group_id = #{domainGroupId}
+        <if test="null != tab and '' != tab">
+            AND tdgr.tab = #{tab}
+        </if>
+    </select>
+    <select id="selectIdsByDomainIdAndDomainType" resultType="java.lang.Long">
+        SELECT tdgr.id
+        FROM t_domain_group_relation tdgr
+        LEFT JOIN
+        <if test="null != tab and 'ty' == tab">
+            t_domain_ty
+        </if>
+        <if test="null != tab and 'ty' != tab">
+            t_domain
+        </if>
+        td ON tdgr.domain_id = td.id
+        WHERE tdgr.domain_group_id = #{domainGroupId}
+        <if test="null != domainType and '' != domainType">
+            AND td.domain_type = #{domainType}
+        </if>
+        <if test="null != tab and '' != tab">
+            AND tdgr.tab = #{tab}
+        </if>
+    </select>
+
+    <update id="replaceByDomainId">
+        UPDATE
+            t_domain_group_relation tdgr
+        SET
+            tdgr.domain_id = #{domainId}
+        WHERE
+            tdgr.domain_id = #{oldDomainId}
+        <if test="null != tab and '' != tab">
+            AND tdgr.tab = #{tab}
+        </if>
+    </update>
+
+    <insert id="insertList" useGeneratedKeys="true" keyColumn="id" keyProperty="id" parameterType="list">
+        INSERT INTO t_domain_group_relation
+        (
+        id,
+        domain_id,
+        domain_group_id,
+        tab,
+        create_time,
+        update_time,
+        last_updated)
+        values
+        <foreach collection="list" item="item" index="index"  separator=",">
+            (
+            #{item.id},
+            #{item.domainId},
+            #{item.domainGroupId},
+            #{item.tab},
+            #{item.createTime},
+            #{item.updateTime},
+            #{item.lastUpdated}
+            )
+        </foreach>
+    </insert>
+
+
+</mapper>

@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.panda.multiterminalinteractivecenter.mapper.CpDjMerchantGroupMapper">
+    <resultMap id="BaseResultMap" type="com.panda.multiterminalinteractivecenter.entity.TMerchantGroup">
+        <result column="id" property="id"/>
+        <result column="group_name" property="groupName"/>
+        <result column="group_type" property="groupType"/>
+        <result column="group_code" property="groupCode"/>
+        <result column="status" property="status"/>
+        <result column="time_type" property="timeType"/>
+        <result column="times" property="times"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="alarm_num" property="alarmNum"/>
+        <result column="program_id" property="programId"/>
+
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        ,
+                group_name,
+                group_type,
+                group_code,
+                times,
+                time_type,
+                update_time,
+                status,
+                alarm_num
+    </sql>
+
+    <select id="selectMerchantGroup" resultType="com.panda.multiterminalinteractivecenter.po.MerchantGroupPO">
+        SELECT
+        tmg.id,
+        tmg.group_name,
+        tmg.group_type,
+        tmg.group_code,
+        tmg.times,
+        tmg.time_type,
+        tmg.update_time,
+        tmg.status,
+        tmg.alarm_num,
+        tmg.program_id,
+        tdp.program_name
+        FROM
+        t_merchant_group tmg
+        LEFT JOIN t_domain_program tdp ON tmg.program_id = tdp.id and tdp.tab = #{tab}
+        <where>
+            <if test="status!=null">
+                AND tmg.status = #{status}
+            </if>
+            <if test="groupCode!=null">
+                AND tmg.group_code = #{groupCode}
+            </if>
+            <if test="tab!=null">
+                AND tmg.tab = #{tab}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectMerchantGroupById" resultType="com.panda.multiterminalinteractivecenter.po.MerchantGroupPO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from t_merchant_group where id = #{id} and tab = #{tab}
+    </select>
+
+
+    <update id="updateMerchantGroup" parameterType="com.panda.multiterminalinteractivecenter.po.MerchantGroupPO">
+        UPDATE t_merchant_group
+        <set>
+            <if test='null != status'>`status` = #{status},</if>
+            <if test='null != groupName'>group_name = #{groupName},</if>
+            <if test='null != groupCode'>group_code = #{groupCode},</if>
+            <if test='null != times'>times = #{times},</if>
+            <if test='null != timeType'>time_type = #{timeType},</if>
+            <if test='null != updateTime'>update_time = #{updateTime},</if>
+            <if test='null != alarmNum'>
+                alarm_num = #{alarmNum},
+            </if>
+            <if test='null != programId'>
+                program_id = #{programId},
+            </if>
+        </set>
+        where id =#{id} and tab = #{tab}
+    </update>
+
+
+    <delete id="deleteMerchantGroup" parameterType="com.panda.multiterminalinteractivecenter.po.MerchantGroupPO">
+        delete
+        FROM t_merchant_group
+        where id = #{id}
+        and tab = #{tab}
+    </delete>
+
+    <select id="findProgram" resultType="com.panda.multiterminalinteractivecenter.vo.DomainProgramVO">
+        SELECT
+        max(tdg.id) id,
+        (SELECT program_name FROM t_domain_program WHERE id = max(tdg.id)) programName
+        FROM t_domain_program tdg
+        where tdg.status = 1 and tdg.del_tag = 1
+            <if test="groupType != '' and groupType != null">
+                and tdg.group_type = #{groupType}
+            </if>
+            <if test="null != tab and '' != tab">
+                and tdg.tab = #{tab}
+            </if>
+    </select>
+
+
+    <update id="update" parameterType="com.panda.multiterminalinteractivecenter.entity.TMerchantGroup">
+        UPDATE t_merchant_group
+        <set>
+            <if test="null != groupName and '' != groupName">group_name = #{groupName},</if>
+            <if test="null != groupType and '' != groupType">group_type = #{groupType},</if>
+            <if test="null != groupCode and '' != groupCode">group_code = #{groupCode},</if>
+            <if test="null != status and '' != status">status = #{status},</if>
+            <if test="null != timeType and '' != timeType">time_type = #{timeType},</if>
+            <if test="null != times and '' != times">times = #{times},</if>
+            <if test="null != updateTime and '' != updateTime">update_time = #{updateTime},</if>
+            <if test="null != alarmNum and '' != alarmNum">alarm_num = #{alarmNum}</if>
+            <if test='null != programId'> program_id = #{programId},</if>
+        </set>
+        WHERE id = #{id}
+        and tab = #{tab}
+    </update>
+
+    <select id="loadIdByGroupName" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM t_merchant_group
+        WHERE group_name = #{groupName} and group_code = #{groupCode}
+    </select>
+    <select id="getDomainIdsByTab" resultType="com.panda.multiterminalinteractivecenter.dto.DomainResDTO4DJ">
+        SELECT
+            tmg.id merchantGroupId,
+            tmgi.id merchantId,
+            tmgi.merchant_name merchantAccount,
+            CASE WHEN tdg.exclusive_type = 2 THEN 2
+            WHEN tdg.belong_area is null THEN 0
+            WHEN tdg.belong_area = 0 THEN 0
+            WHEN tdg.exclusive_type = 1 THEN 1
+            END AS `domainGroupType`,
+            tdg.belong_area areaId,
+            mda.`name` areaName,
+            mda.`code` areaCode,
+            td.domain_type domainType,
+            GROUP_CONCAT( DISTINCT ( td.domain_name ) SEPARATOR '|' ) domains
+        FROM
+            t_merchant_group tmg
+                LEFT JOIN t_merchant_group_info tmgi ON tmg.id = tmgi.merchant_group_id
+                LEFT JOIN t_domain_program tdp ON tmg.program_id = tdp.id
+                LEFT JOIN t_domain_program_relation tdpr ON tdp.id = tdpr.program_id
+                LEFT JOIN t_domain_group tdg ON tdpr.domain_group_id = tdg.id
+                LEFT JOIN t_domain_group_relation tdgr ON tdg.id = tdgr.domain_group_id
+                LEFT JOIN m_domain_area mda ON tdg.belong_area = mda.id
+                LEFT JOIN (SELECT * FROM t_domain WHERE status = 1 AND enable = 1) td ON tdgr.domain_id = td.id
+        WHERE
+            tmg.tab = #{tab}
+          AND tdp.id IS NOT NULL
+          AND tdg.id IS NOT NULL
+          AND td.id IS NOT NULL
+          AND tmg.status = 1
+        <if test="account != null and '' !=  account">
+            AND tmg.group_name LIKE CONCAT('%',#{account},'%')
+        </if>
+        GROUP BY
+            tdg.id,
+            td.domain_type
+    </select>
+
+    <select id="getDomainDetails4AccountId"
+            resultType="com.panda.multiterminalinteractivecenter.dto.DomainResDTO">
+        SELECT
+            GROUP_CONCAT( CASE WHEN td.domain_type = 1 THEN td.domain_name END SEPARATOR '|' ) AS h5Domain,
+            GROUP_CONCAT( CASE WHEN td.domain_type = 2 THEN td.domain_name END SEPARATOR '|' ) AS pcDomain,
+            GROUP_CONCAT( CASE WHEN td.domain_type = 3 THEN td.domain_name END SEPARATOR '|' ) AS apiDomain,
+            GROUP_CONCAT( CASE WHEN td.domain_type = 4 THEN td.domain_name END SEPARATOR '|' ) AS ossDomain,
+            GROUP_CONCAT( CASE WHEN td.domain_type = 5 THEN td.domain_name END SEPARATOR '|' ) AS otherDomain
+        FROM
+            t_merchant_group tmg
+                LEFT JOIN t_merchant_group_info tmgi ON tmg.id = tmgi.merchant_group_id
+                LEFT JOIN t_domain_program tdp ON tmg.program_id = tdp.id
+                LEFT JOIN t_domain_program_relation tdpr ON tdp.id = tdpr.program_id
+                LEFT JOIN t_domain_group tdg ON tdpr.domain_group_id = tdg.id
+                LEFT JOIN t_domain_group_relation tdgr ON tdg.id = tdgr.domain_group_id
+                LEFT JOIN m_domain_area mda ON tdg.belong_area = mda.id
+                LEFT JOIN (SELECT * FROM t_domain WHERE status = 1 AND enable = 1) td ON tdgr.domain_id = td.id
+        WHERE
+            tmg.tab = #{tab}
+          AND tmgi.merchant_name = #{merchantAccount}
+          <if test="null != ipArea and '' != ipArea and 1 == type">
+              AND mda.`name` LIKE #{ipArea}
+          </if>
+          <if test="null != areaCode and '' != areaCode and 1 == type">
+              AND mda.`code` LIKE #{areaCode}
+          </if>
+          <if test="null != type and 0 == type">
+              AND tdg.del_tag = 1
+          </if>
+          <if test="null != type and 0 != type">
+              AND tdg.exclusive_type = #{type}
+          </if>
+          AND tdp.id IS NOT NULL
+          AND tdg.id IS NOT NULL
+          AND td.id IS NOT NULL
+        GROUP BY tdg.id
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id"
+            parameterType="com.panda.multiterminalinteractivecenter.entity.TMerchantGroup">
+        INSERT INTO t_merchant_group
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="null != groupName and '' != groupName">
+                group_name,
+            </if>
+            <if test="null != groupType and '' != groupType">
+                group_type,
+            </if>
+            <if test="null != groupCode and '' != groupCode">
+                group_code,
+            </if>
+            <if test="null != status and '' != status">
+                status,
+            </if>
+            <if test="null != timeType and '' != timeType">
+                time_type,
+            </if>
+            <if test="null != times and '' != times">
+                times,
+            </if>
+            <if test="null != updateTime and '' != updateTime">
+                update_time,
+            </if>
+            <if test="null != alarmNum and '' != alarmNum">
+                alarm_num,
+            </if>
+            <if test="null != programId and '' != programId">
+                program_id,
+            </if>
+            <if test="null != tab and '' != tab">
+                tab
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="null != groupName and '' != groupName">
+                #{groupName},
+            </if>
+            <if test="null != groupType and '' != groupType">
+                #{groupType},
+            </if>
+            <if test="null != groupCode and '' != groupCode">
+                #{groupCode},
+            </if>
+            <if test="null != status and '' != status">
+                #{status},
+            </if>
+            <if test="null != timeType and '' != timeType">
+                #{timeType},
+            </if>
+            <if test="null != times and '' != times">
+                #{times},
+            </if>
+            <if test="null != updateTime and '' != updateTime">
+                #{updateTime},
+            </if>
+            <if test="null != alarmNum and '' != alarmNum">
+                #{alarmNum},
+            </if>
+            <if test="null != programId and '' != programId">
+                #{programId},
+            </if>
+            <if test="null != tab and '' != tab">
+                #{tab}
+            </if>
+        </trim>
+    </insert>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM t_merchant_group
+        where
+        group_code = #{groupCode}
+    </select>
+    <select id="getCountByProgramId" resultType="java.lang.Integer">
+        SELECT COUNT(0) FROM t_merchant_group WHERE program_id = #{merchantGroupPO.programId} AND id != #{merchantGroupPO.id}
+    </select>
+
+</mapper>

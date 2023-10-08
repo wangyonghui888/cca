@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 用户表(t_user) -->
+<mapper namespace="com.panda.sport.match.mapper.CurrencyRateMapper">
+
+  <resultMap id="BaseCurrentRateMap" type="com.panda.sport.merchant.common.po.bss.CurrencyRatePO">
+
+    <result column="country_zh"  property="countryZh" />
+    <result column="country_cn"  property="countryCn" />
+    <result column="currency_code"  property="currencyCode" />
+  </resultMap>
+
+  <select id="queryCurrencyRateList"  resultMap="BaseCurrentRateMap">
+      SELECT
+          country_zh,
+          country_cn,
+          currency_code
+      FROM
+          t_currency_rate
+      ORDER BY currency_code ASC
+  </select>
+
+</mapper>

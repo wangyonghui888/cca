@@ -1,0 +1,2892 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 用户表(t_user) -->
+<mapper namespace="com.panda.sport.bss.mapper.MerchantMapper">
+    <!-- 结果映射 -->
+    <resultMap id="tMerchantMap" type="com.panda.sport.merchant.common.po.bss.MerchantPO">
+        <result column="id" property="id"/>
+        <result column="merchant_code" property="merchantCode"/>
+        <result column="merchant_name" property="merchantName"/>
+        <result column="merchant_key" property="merchantKey"/>
+        <result column="level" property="level"/>
+        <result column="level_name" property="levelName"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="sport_list" property="sportList"/>
+        <result column="max_bet" property="maxBet"/>
+        <result column="url" property="url"/>
+        <result column="transfer_mode" property="transferMode"/>
+        <result column="status" property="status"/>
+        <result column="callback_url" property="callbackUrl"/>
+        <result column="topic" property="topic"/>
+        <result column="agent_level" property="agentLevel"/>
+        <result column="country" property="country"/>
+        <result column="province" property="province"/>
+        <result column="email" property="email"/>
+        <result column="file_path" property="filePath"/>
+        <result column="file_name" property="fileName"/>
+        <result column="address" property="address"/>
+        <result column="currency" property="currency"/>
+        <result column="commerce" property="commerce"/>
+        <result column="rate" property="rate"/>
+        <result column="contact" property="contact"/>
+        <result column="phone" property="phone"/>
+        <result column="start_time" property="startTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="merchant_admin" property="merchantAdmin"/>
+        <result column="admin_password" property="adminPassword"/>
+        <result column="logo" property="logo"/>
+        <result column="computing_standard" property="computingStandard"/>
+        <result column="technique_amount" property="techniqueAmount"/>
+        <result column="payment_cycle" property="paymentCycle"/>
+        <result column="vip_amount" property="vipAmount"/>
+        <result column="vip_payment_cycle" property="vipPaymentCycle"/>
+        <result column="terrace_rate" property="terraceRate"/>
+        <result column="technique_payment_cycle" property="techniquePaymentCycle"/>
+        <result column="range_amount_begin" property="rangeAmountBegin"/>
+        <result column="range_amount_end" property="rangeAmountEnd"/>
+        <result column="updated_by" property="updatedBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="start_time" property="startTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="child_connect_mode" property="childConnectMode"/>
+        <result column="balance_url" property="balanceUrl"/>
+        <result column="white_ip" property="whiteIp"/>
+        <result column="language_list" property="languageList"/>
+        <result column="merchantTag" property="merchantTag"/>
+        <result column="kana_code" property="kanaCode"/>
+        <result column="kana_code_time" property="kanaCodeTime"/>
+        <result column="app_domain" property="appDomain"/>
+        <result column="is_test" property="isTest"/>
+        <result column="is_external" property="isExternal"/>
+        <result column="is_open_bill" property="isOpenBill"/>
+        <result column="merchant_group_id" property="merchantGroupId"/>
+        <result column="domain_group_code" property="domainGroupCode"/>
+    </resultMap>
+
+    <!-- 表所有字段 -->
+    <sql id="allColumns">
+        t.id,
+                t.merchant_code,
+                t.merchant_name,
+                t.level,
+                t.parent_id,
+                t.sport_list,
+                t.max_bet,
+                t.url,
+                t.transfer_mode,
+                t.status,
+                t.callback_url,
+                t.contact,
+                t.topic,
+                t.agent_level,
+                t.email,
+                t.commerce,
+                t.province,
+                t.country,
+                t.file_path,
+                t.file_name,
+                t.address,
+                t.currency,
+                t.email,
+                t.rate,
+                t.phone,
+                t.merchant_admin,
+                t.admin_password,
+                t.computing_standard,
+                t.technique_amount,
+                t.payment_cycle,
+                t.vip_amount,
+                t.vip_payment_cycle,
+                t.terrace_rate,
+                t.technique_payment_cycle,
+                t.range_amount_begin,
+                t.range_amount_end,
+                t.logo,
+                t.created_by,
+                t.updated_by,
+                t.update_time,
+                t.create_time,
+                t.child_connect_mode,
+                t.balance_url,
+                t.white_ip,
+                t.app_domain,
+               t.language_list,
+               t.is_test,
+               t.is_external
+    </sql>
+
+    <insert id="insertMerchant" useGeneratedKeys="true" keyColumn="id" keyProperty="id"
+            parameterType="com.panda.sport.merchant.common.po.bss.MerchantPO">
+        INSERT INTO t_merchant
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test='null != id'>
+                id,
+            </if>
+            <if test='null != merchantCode'>
+                merchant_code,
+            </if>
+            <if test='null != merchantName'>
+                merchant_name,
+            </if>
+            <if test='null != level'>
+                `level`,
+            </if>
+            <if test='null != parentId'>
+                parent_id,
+            </if>
+            <if test='null != sportList'>
+                sport_list,
+            </if>
+            <if test='null != maxBet'>
+                max_bet,
+            </if>
+            <if test='null != url'>
+                url,
+            </if>
+            <if test='null != transferMode'>
+                transfer_mode,
+            </if>
+            <if test='null != status'>
+                status,
+            </if>
+            <if test='null != commerce'>
+                commerce,
+            </if>
+            <if test='null != callbackUrl'>
+                callback_url,
+            </if>
+            <if test='null != topic'>
+                topic,
+            </if>
+            <if test='null != agentLevel'>
+                agent_level,
+            </if>
+            <if test='null != email'>
+                email,
+            </if>
+            <if test='null != address'>
+                address,
+            </if>
+            <if test='null != country'>
+                country,
+            </if>
+            <if test='null != filePath'>
+                file_path,
+            </if>
+            <if test='null != fileName'>
+                file_name,
+            </if>
+            <if test='null != province'>
+                province,
+            </if>
+            <if test='null != currency'>
+                currency,
+            </if>
+            <if test='null != rate'>
+                rate,
+            </if>
+            <if test='null != contact'>
+                contact,
+            </if>
+            <if test='null != phone'>
+                phone,
+            </if>
+            <if test='null != merchantAdmin'>
+                merchant_admin,
+            </if>
+            <if test='null != adminPassword'>
+                admin_password,
+            </if>
+            <if test='null != logo'>
+                logo,
+            </if>
+
+            <if test='null != computingStandard'>
+                computing_standard,
+            </if>
+            <if test='null != paymentCycle'>
+                payment_cycle,
+            </if>
+            <if test='null != techniqueAmount'>
+                technique_amount,
+            </if>
+            <if test='null != vipAmount'>
+                vip_amount,
+            </if>
+            <if test='null != vipPaymentCycle'>
+                vip_payment_cycle,
+            </if>
+            <if test='null != terraceRate'>
+                terrace_rate,
+            </if>
+            <if test='null != techniquePaymentCycle'>
+                technique_payment_cycle,
+            </if>
+            <if test='null != rangeAmountBegin'>
+                range_amount_begin,
+            </if>
+            <if test='null != rangeAmountEnd'>
+                range_amount_end,
+            </if>
+            <if test='null != createdBy'>
+                created_by,
+            </if>
+            <if test='null != updatedBy'>
+                updated_by,
+            </if>
+            <if test='null != directSale'>
+                direct_sale,
+            </if>
+            <if test='null != childConnectMode'>
+                child_connect_mode,
+            </if>
+            <if test='null != childMaxAmount'>
+                child_max_amount,
+            </if>
+            <if test='null != balanceUrl'>
+                balance_url,
+            </if>
+            <if test='null != whiteIp'>
+                white_ip,
+            </if>
+            <if test='null != pcDomain'>
+                pc_domain,
+            </if>
+            <if test='null != h5Domain'>
+                h5_domain,
+            </if>
+            <if test='null != appDomain'>
+                app_domain,
+            </if>
+            <if test='null != openVrSport'>
+                open_vr_sport,
+            </if>
+            <if test='null != openEsport'>
+                open_esport,
+            </if>
+            <if test='null != languageList'>
+                language_list,
+            </if>
+            <if test='null != domainGroupCode'>
+                domain_group_code,
+            </if>
+            <if test='null != openVideo'>
+                open_video,
+            </if>
+            <if test='null != merchantGroupId'>
+                merchant_group_id,
+            </if>
+            update_time,
+            create_time,
+            start_time,
+            end_time,
+            `key`
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test='null != id'>
+                #{id},
+            </if>
+            <if test='null != merchantCode'>
+                #{merchantCode},
+            </if>
+            <if test='null != merchantName'>
+                #{merchantName},
+            </if>
+            <if test='null != level'>
+                #{level},
+            </if>
+            <if test='null != parentId'>
+                #{parentId},
+            </if>
+            <if test='null != sportList'>
+                #{sportList},
+            </if>
+            <if test='null != maxBet'>
+                #{maxBet},
+            </if>
+            <if test='null != url'>
+                #{url},
+            </if>
+            <if test='null != transferMode'>
+                #{transferMode},
+            </if>
+            <if test='null != status'>
+                #{status},
+            </if>
+            <if test='null != commerce'>
+                #{commerce},
+            </if>
+            <if test='null != callbackUrl'>
+                #{callbackUrl},
+            </if>
+            <if test='null != topic'>
+                #{topic},
+            </if>
+            <if test='null != agentLevel'>
+                #{agentLevel},
+            </if>
+            <if test='null != email'>
+                #{email},
+            </if>
+            <if test='null != address'>
+                #{address},
+            </if>
+            <if test='null != country'>
+                #{country},
+            </if>
+            <if test='null != filePath'>
+                #{filePath},
+            </if>
+            <if test='null != fileName'>
+                #{fileName},
+            </if>
+            <if test='null != province'>
+                #{province},
+            </if>
+            <if test='null != currency'>
+                #{currency},
+            </if>
+            <if test='null != rate'>
+                #{rate},
+            </if>
+            <if test='null != contact'>
+                #{contact},
+            </if>
+            <if test='null != phone'>
+                #{phone},
+            </if>
+            <if test='null != merchantAdmin'>
+                #{merchantAdmin},
+            </if>
+            <if test='null != adminPassword'>
+                #{adminPassword},
+            </if>
+            <if test='null != logo'>
+                #{logo},
+            </if>
+            <if test='null != computingStandard'>
+                #{computingStandard},
+            </if>
+            <if test='null != paymentCycle'>
+                #{paymentCycle},
+            </if>
+            <if test='null != techniqueAmount'>
+                #{techniqueAmount},
+            </if>
+            <if test='null != vipAmount'>
+                #{vipAmount},
+            </if>
+            <if test='null != vipPaymentCycle'>
+                #{vipPaymentCycle},
+            </if>
+            <if test='null != terraceRate'>
+                #{terraceRate},
+            </if>
+            <if test='null != techniquePaymentCycle'>
+                #{techniquePaymentCycle},
+            </if>
+            <if test='null != rangeAmountBegin'>
+                #{rangeAmountBegin},
+            </if>
+            <if test='null != rangeAmountEnd'>
+                #{rangeAmountEnd},
+            </if>
+            <if test='null != createdBy'>
+                #{createdBy},
+            </if>
+            <if test='null != updatedBy'>
+                #{updatedBy},
+            </if>
+            <if test='null != directSale'>
+                #{directSale},
+            </if>
+            <if test='null != childConnectMode'>
+                #{childConnectMode},
+            </if>
+            <if test='null != childMaxAmount'>
+                #{childMaxAmount},
+            </if>
+            <if test='null != balanceUrl'>
+                #{balanceUrl},
+            </if>
+            <if test='null != whiteIp'>
+                #{whiteIp},
+            </if>
+            <if test='null != pcDomain'>
+                #{pcDomain},
+            </if>
+            <if test='null != h5Domain'>
+                #{h5Domain},
+            </if>
+            <if test='null != appDomain'>
+                #{appDomain},
+            </if>
+            <if test='null != openVrSport'>
+                #{openVrSport},
+            </if>
+            <if test='null != openEsport'>
+                #{openEsport},
+            </if>
+            <if test='null != languageList'>
+                #{languageList},
+            </if>
+            <if test='null != domainGroupCode'>
+                #{domainGroupCode},
+            </if>
+            <if test='null != openVideo'>
+                #{openVideo},
+            </if>
+            <if test='null != merchantGroupId'>
+                #{merchantGroupId},
+            </if>
+            #{updateTime},
+            #{createTime},
+            #{startTime},
+            #{endTime},
+            #{merchantKey}
+        </trim>
+    </insert>
+
+    <update id="updateMerchant" parameterType="com.panda.sport.merchant.common.po.bss.MerchantPO">
+        UPDATE t_merchant
+        <set>
+            <if test='null != level'>`level` = #{level},</if>
+            <if test='null != parentId'>parent_id = #{parentId},</if>
+            <if test='null != sportList'>sport_list = #{sportList},</if>
+            <if test='null != maxBet'>max_bet = #{maxBet},</if>
+            <if test='null != url'>url = #{url},</if>
+            <if test='null != transferMode'>transfer_mode = #{transferMode},</if>
+            <if test='null != status'>status = #{status},</if>
+            <if test='null != callbackUrl'>callback_url = #{callbackUrl},</if>
+            <if test='null != topic'>topic = #{topic},</if>
+            <!--            <if test='null != agentLevel'>agent_level = #{agentLevel},</if>-->
+            <if test='null != email'>email = #{email},</if>
+            <if test='null != commerce'>commerce = #{commerce},</if>
+            <if test='null != address'>address = #{address},</if>
+            <if test='null != merchantName'>merchant_name = #{merchantName},</if>
+            <if test='null != filePath'>file_path = #{filePath},</if>
+            <if test='null != fileName'>file_name = #{fileName},</if>
+            <if test='null != country'>country = #{country},</if>
+            <if test='null != province'>province = #{province},</if>
+            <if test='null != currency'>currency = #{currency},</if>
+            rate = #{rate},
+            <if test='null != contact'>contact = #{contact},</if>
+            <if test='null != phone'>phone = #{phone},</if>
+            <if test='null != merchantAdmin'>merchant_admin = #{merchantAdmin},</if>
+            <if test='null != adminPassword'>admin_password = #{adminPassword},</if>
+            <if test='null != logo'>logo = #{logo},</if>
+            <if test='null != computingStandard'>computing_standard = #{computingStandard},</if>
+            <if test='null != techniqueAmount'>technique_amount = #{techniqueAmount},</if>
+            <if test='null != paymentCycle'>payment_cycle = #{paymentCycle},</if>
+            <if test='null != vipAmount'>vip_amount = #{vipAmount},</if>
+            <if test='null != vipPaymentCycle'>vip_payment_cycle = #{vipPaymentCycle},</if>
+            <if test='null != terraceRate'>terrace_rate = #{terraceRate},</if>
+            <if test='null != techniquePaymentCycle'>technique_payment_cycle = #{techniquePaymentCycle},</if>
+            <if test='null != rangeAmountBegin'>range_amount_begin = #{rangeAmountBegin},</if>
+            <if test='null != rangeAmountEnd'>range_amount_end = #{rangeAmountEnd},</if>
+            <if test='null != createdBy'>created_by = #{createdBy},</if>
+            <if test='null != updatedBy'>updated_by = #{updatedBy},</if>
+            <if test='null != startTime'>start_time = #{startTime},</if>
+            <if test='null != endTime'>end_time = #{endTime},</if>
+            <if test='null != directSale'>direct_sale = #{directSale},</if>
+            <if test='null != childConnectMode'>child_connect_mode = #{childConnectMode},</if>
+            <if test='null != childMaxAmount'>child_max_amount = #{childMaxAmount},</if>
+            <if test='null != balanceUrl'>balance_url = #{balanceUrl},</if>
+            <if test='null != whiteIp'>white_ip = #{whiteIp},</if>
+            <if test='null != pcDomain'>pc_domain = #{pcDomain},</if>
+            <if test='null != h5Domain'>h5_domain = #{h5Domain},</if>
+            <if test='null != appDomain'>app_domain = #{appDomain},</if>
+            <if test='null != openVrSport'>
+                open_vr_sport = #{openVrSport},
+            </if>
+            <if test='null != openEsport'>
+                open_esport = #{openEsport},
+            </if>
+            <if test='null != openVideo'>
+                open_video = #{openVideo},
+            </if>
+            <if test='null != languageList'>
+                language_list= #{languageList},
+            </if>
+            <if test='null != isTest'>
+                is_test= #{isTest},
+            </if>
+            <if test='null != isExternal'>
+                is_external= #{isExternal},
+            </if>
+            update_time = now()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="countByParam" resultType="int">
+        select count(id) from t_merchant where 1=1
+        <if test='null != merchantCode'>and merchant_code = #{merchantCode}</if>
+        <if test='null != merchantName'>and merchant_name = #{merchantName}</if>
+        <if test='null != merchantAdmin'>and merchant_admin = #{merchantAdmin}</if>
+    </select>
+
+    <select id="selectById" resultType="com.panda.sport.merchant.common.po.bss.MerchantPO">
+        SELECT t.id,
+               t.merchant_code                merchantCode,
+               t.merchant_name                merchantName,
+               t.`level`,
+               t.parent_id                    parentId,
+               t.sport_list                   sportList,
+               t.max_bet                      maxBet,
+               t.url,
+               t.transfer_mode                transferMode,
+               t.status,
+               t.callback_url                 callbackUrl,
+               t.contact,
+               t.topic,
+               t.agent_level                  agentLevel,
+               t.email,
+               t.commerce,
+               t.province,
+               t.country,
+               t.file_path                    filePath,
+               t.file_name                    fileName,
+               t.address,
+               t.currency,
+               t.email,
+               t.rate,
+               t.phone,
+               t.merchant_admin               merchantAdmin,
+               t.admin_password               adminPassword,
+               t.logo,
+               t.computing_standard           computingStandard,
+               t.technique_amount             techniqueAmount,
+               t.payment_cycle                paymentCycle,
+               t.vip_amount                   vipAmount,
+               t.vip_payment_cycle            vipPaymentCycle,
+               t.terrace_rate                 terraceRate,
+               t.technique_payment_cycle      techniquePaymentCycle,
+               t.range_amount_begin           rangeAmountBegin,
+               t.range_amount_end             rangeAmountEnd,
+               t.created_by                   createdBy,
+               t.updated_by                   updatedBy,
+               t.update_time                  updateTime,
+               t.create_time                  createTime,
+               t.KEY                          merchantKey,
+               t.start_time                   startTime,
+               t.end_time                     endTime,
+               l.level_name                   levelName,
+               (SELECT Count(0)
+                FROM t_merchant t1
+                WHERE t1.parent_id = t.id) AS childAmount,
+               t2.merchant_name            AS parentName,
+               t2.merchant_code            AS parentCode,
+               t.direct_sale                  directSale,
+               t.child_connect_mode           childConnectMode,
+               t.child_max_amount             childMaxAmount,
+               t.balance_url                  balanceUrl,
+               t.white_ip                     whiteIp,
+               t.pc_domain                    pcDomain,
+               t.h5_domain                    h5Domain,
+               t.app_domain                   appDomain,
+               t.open_esport                  openEsport,
+               t.open_vr_sport                openVrSport,
+               t.open_video                   openVideo,
+               t.language_list                languageList,
+               t.is_test,
+               t.is_external                  isExternal,
+               t.domain_group_code            domainGroupCode,
+               c.settle_switch_advance        settleSwitchAdvance,
+               c.settle_switch_basket         settleSwitchBasket,
+               c.user_prefix                  userPrefix,
+               c.merchant_tag                 merchantTag,
+               c.default_language             defaultLanguage,
+               c.video_domain                 videoDomain,
+               c.is_app                       isApp,
+               t.is_open_bill  isOpenBill
+        FROM t_merchant t
+                 Left join t_merchant_config c on c.merchant_code = t.merchant_code
+                 LEFT JOIN t_merchant_level l
+                           ON l.level = t.level
+                 LEFT JOIN t_merchant t2
+                           ON t2.id = t.parent_id
+        WHERE t.id = #{id}
+    </select>
+
+    <select id="getMerchantByMerchantCode" resultMap="tMerchantMap">
+        SELECT<include refid="allColumns"/>, t.key as merchant_key, t.start_time, t.end_time, l.level_name,
+        (select merchant_tag from t_merchant_config where merchant_code = t.merchant_code)
+        merchantTag
+        FROM t_merchant t
+        left join t_merchant_level l on l.`level` = t.`level`
+        WHERE t.merchant_code = #{merchantCode}
+    </select>
+
+    <select id="findMerchantInfo" resultType="com.panda.sport.merchant.common.vo.MerchantInfoVo">
+        SELECT
+            merchant_code as merchantCode,
+            merchant_name as merchantName
+        FROM t_merchant t where
+        t.merchant_code in
+        <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+
+    </select>
+
+    <select id="getParentMerchantByMerchantCode" resultType="java.lang.String">
+        SELECT t.merchant_code
+        FROM t_merchant t
+        WHERE t.id = (select tm.parent_id from t_merchant tm where tm.merchant_code = #{merchantCode})
+    </select>
+
+    <select id="listParentCodeByMerchantCode" resultType="java.util.HashMap">
+        select a.merchant_code child_code,b.merchant_code parent_code
+        from t_merchant a LEFT JOIN t_merchant b on a.parent_id=b.id
+        where a.agent_level=2 and a.merchant_code in
+        <foreach collection="allChildMerchantCode" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="selectMerChantList" resultType="com.panda.sport.merchant.common.vo.user.MerchantComboVO">
+        SELECT
+        t.merchant_code merchantCode,
+        t.merchant_name merchantName
+        FROM t_merchant t
+        WHERE 1=1
+         <if test='null != merchantCode'>
+           and t.parent_id = #{merchantCode}
+        </if>
+    </select>
+
+    <select id="selectList" resultType="com.panda.sport.merchant.common.po.bss.MerchantPO">
+        SELECT t.id,
+        t.merchant_code merchantCode,
+        t.merchant_name merchantName,
+        t.`level`,
+        t.parent_id parentId,
+        t.sport_list sportList,
+        t.max_bet maxBet,
+        t.url,
+        t.transfer_mode transferMode,
+        t.`status`,
+        t.callback_url callbackUrl,
+        t.contact,
+        t.topic,
+        t.agent_level agentLevel,
+        t.email,
+        t.commerce,
+        t.province,
+        t.country,
+        t.file_path filePath,
+        t.file_name fileName,
+        t.address,
+        t.currency,
+        t.sport_list currencyCode,
+        t.email,
+        t.rate,
+        t.phone,
+        t.merchant_admin merchantAdmin,
+        t.admin_password adminPassword,
+        t.created_by createdBy,
+        t.updated_by updatedBy,
+        t.update_time updateTime,
+        t.create_time createTime,
+        t.`key` merchantKey,
+        t.start_time startTime,
+        t.end_time endTime,
+        l.level_name levelName,
+        (SELECT Count(0)
+        FROM t_merchant t1
+        WHERE t1.parent_id = t.id) childAmount,
+        t2.merchant_name parentName,
+        t.direct_sale directSale,
+        t.child_connect_mode childConnectMode,
+        t.child_max_amount childMaxAmount,
+        t.balance_url balanceUrl,
+        t.white_ip whiteIp,
+        t.pc_domain pcDomain,
+        t.h5_domain h5Domain,
+        t.app_domain appDomain,
+        t.is_test isTest,
+        t.is_external isExternal,
+        t.open_vr_sport openVrSport,
+        t.open_esport openEsport,
+        t.open_video openVideo,
+        t.language_list languageList,
+        ifnull(tmc.settle_switch_advance, 0) settleSwitchAdvance,
+        ifnull(tmc.settle_switch_basket, 0) settleSwitchBasket,
+        tmc.user_prefix userPrefix,
+        tmc.default_language defaultLanguage,
+        tmc.merchant_tag merchantTag,
+        tmc.video_domain videoDomain,
+        tmc.book_bet bookBet,
+        tmc.is_app isApp,
+        tmc.video_switch videoSwitch,
+        tmc.merchant_event merchantEvent,
+        t.is_open_bill isOpenBill,
+        t.kana_code kanaCode,
+        t.serial_number  serialNumber,
+        t.kana_code_time kanaCodeTime,
+        <!--t.remark  remark,-->
+        t.address  remark,
+        concat(ifnull(t2.serial_number,''),t2.kana_code)  parentKanaCode,
+        t.backend_switch backendSwitch,
+        tmc.chat_room_switch chatRoomSwitch,
+        tk.second_merchant_key secondMerchantKey
+        FROM t_merchant t
+        LEFT JOIN t_merchant_config tmc
+        ON tmc.merchant_code = t.merchant_code
+        LEFT JOIN t_merchant_level l
+        ON l.`level` = t.`level`
+        LEFT JOIN t_merchant t2
+        ON t2.id = t.parent_id
+        left join t_merchant_key tk
+        on t.merchant_code = tk.merchant_code
+        <where>
+            <if test='null != merchantName'>
+                and t.merchant_name like CONCAT('%',#{merchantName},'%')
+            </if>
+            <if test='null != merchantCode'>
+                and t.merchant_code = #{merchantCode}
+            </if>
+            <if test='null != transferMode'>
+                and t.transfer_mode = #{transferMode}
+            </if>
+            <if test='null != status'>
+                and t.status = #{status}
+            </if>
+            <if test='null != agentLevel'>
+                and t.agent_level = #{agentLevel}
+            </if>
+            <if test='null != parentName'>
+                and t2.merchant_name like CONCAT('%',#{parentName},'%')
+            </if>
+            <if test='null != parentCode'>
+                and t2.merchant_code = #{parentCode}
+            </if>
+            <if test='null != merchantTag'>
+                and tmc.merchant_tag = #{merchantTag}
+            </if>
+            <if test='null != isApp'>
+                and tmc.is_app = #{isApp}
+            </if>
+            <if test='null != isTest'>
+                and t.is_test = #{isTest}
+            </if>
+            <if test='null != backendSwitch'>
+                and t.backend_switch = #{backendSwitch}
+            </if>
+            <if test='null != merchantGroupId'>
+                and t.merchant_group_id = #{merchantGroupId}
+            </if>
+            <if test='null != domainGroupCode'>
+                and t.domain_group_code = #{domainGroupCode}
+            </if>
+            <if test="null != merchantCodes">
+                and t.merchant_code in
+                <foreach collection="merchantCodes" item="item" index="index" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectRiskList" resultType="com.panda.sport.merchant.common.po.bss.MerchantPO">
+        SELECT t.id,
+        t.merchant_code merchantCode,
+        t.merchant_name merchantName,
+        t.`level`,
+        t.parent_id parentId,
+        t.sport_list sportList,
+        t.max_bet maxBet,
+        t.transfer_mode transferMode,
+        t.`status`,
+        t.topic,
+        t.agent_level agentLevel,
+        t.commerce,
+        t.province,
+        t.country,
+        t.address,
+        t.currency,
+        t.rate,
+        t.merchant_admin merchantAdmin,
+        t.created_by createdBy,
+        t.updated_by updatedBy,
+        t.update_time updateTime,
+        t.create_time createTime,
+        t.start_time startTime,
+        t.end_time endTime,
+        (SELECT Count(0)
+        FROM t_merchant t1
+        WHERE t1.parent_id = t.id) childAmount,
+        t.direct_sale directSale,
+        t.child_connect_mode childConnectMode,
+        t.child_max_amount childMaxAmount,
+        t.is_test isTest,
+        t.is_external isExternal,
+        t.open_vr_sport openVrSport,
+        t.open_esport openEsport,
+        t.open_video openVideo,
+        t.language_list languageList,
+        ifnull(tmc.settle_switch_advance, 0) settleSwitchAdvance,
+        ifnull(tmc.settle_switch_basket, 0) settleSwitchBasket,
+        tmc.user_prefix userPrefix,
+        tmc.default_language defaultLanguage,
+        tmc.merchant_tag merchantTag,
+        tmc.is_app isApp,
+        tmc.book_bet bookBet,
+        tmc.is_risk isRisk
+        FROM t_merchant t
+        LEFT JOIN t_merchant_config tmc
+        ON tmc.merchant_code = t.merchant_code
+        <where>
+            <if test='null != parentId'>
+                and t.parent_id = #{parentId}
+            </if>
+            <if test='null != status'>
+                and t.status = #{status}
+            </if>
+            <if test='null != agentLevel'>
+                and t.agent_level = #{agentLevel}
+            </if>
+        </where>
+        order by tmc.is_risk desc, t.merchant_code asc
+    </select>
+
+    <select id="selectListByAgent" resultType="com.panda.sport.merchant.common.po.bss.MerchantPO">
+        SELECT t.id,
+        t.merchant_code merchantCode,
+        t.merchant_name merchantName,
+        t.`level`,
+        t.parent_id parentId,
+        t.sport_list sportList,
+        t.max_bet maxBet,
+        t.url,
+        t.transfer_mode transferMode,
+        t.`status`,
+        t.callback_url callbackUrl,
+        t.contact,
+        t.topic,
+        t.agent_level agentLevel,
+        t.email,
+        t.commerce,
+        t.province,
+        t.country,
+        t.file_path filePath,
+        t.file_name fileName,
+        t.address,
+        t.currency,
+        t.rate,
+        t.phone,
+        t.merchant_admin merchantAdmin,
+        t.admin_password adminPassword,
+        t.created_by createdBy,
+        t.updated_by updatedBy,
+        t.update_time updateTime,
+        t.create_time createTime,
+        t.start_time startTime,
+        t.end_time endTime,
+        l.level_name levelName,
+        (SELECT Count(0)
+        FROM t_merchant t1
+        WHERE t1.parent_id = t.id
+        <if test='null != status'>
+            and t.status = #{status}
+        </if>) childAmount
+        FROM t_merchant t
+        LEFT JOIN t_merchant_level l
+        ON l.`level` = t.`level`
+        <where>
+            <if test='null != merchantName'>
+                and t.merchant_name like CONCAT('%',#{merchantName},'%')
+            </if>
+            <if test='null != agentLevel'>
+                and t.agent_level = #{agentLevel}
+            </if>
+            <if test='null != agentLevelList'>
+                and t.agent_level in
+                <foreach collection="agentLevelList" item="item" index="index" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test='null != status'>
+                and t.status = #{status}
+            </if>
+            <if test=" parentId != '' and null != parentId">
+                and t.parent_id = #{parentId}
+            </if>
+            <if test="parentId == '' or null == parentId">
+                and t.parent_id is null
+            </if>
+        </where>
+    </select>
+
+    <select id="queryMerchantList" resultMap="tMerchantMap" parameterType="map">
+        SELECT<include refid="allColumns"/>,t.key as merchant_key,t.start_time,t.end_time,l.level_name,
+        (select merchant_tag from t_merchant_config where merchant_code = t.merchant_code)
+        merchantTag
+        FROM t_merchant t
+        left join t_merchant_level l on l.`level` = t.`level`
+        <where>
+            <if test='null != merchantName'>
+                and t.merchant_name like CONCAT('%',#{merchantName},'%')
+            </if>
+            <if test='null != status'>
+                and t.status = #{status}
+            </if>
+            <if test='null != merchantGroupId'>
+                and t.merchant_group_id = #{merchantGroupId}
+            </if>
+
+            <if test='null != groupCode'>
+                and t.domain_group_code = #{groupCode}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryMerchantListByGroup" resultMap="tMerchantMap" parameterType="map">
+        SELECT t.id,
+        t.merchant_code,
+        t.merchant_name,
+        t.level,
+        t.parent_id,
+        t.transfer_mode,
+        t.status,
+        t.agent_level,
+        t.created_by,
+        t.updated_by,
+        t.update_time,
+        t.create_time,
+        t.app_domain,
+        t.h5_domain,
+        t.pc_domain,
+        t.start_time,
+        t.end_time,
+        t.merchant_group_id,
+        t.domain_group_code
+        FROM t_merchant t
+        <where>
+            1 = 1
+            <if test='null != merchantName'>
+                and t.merchant_name like CONCAT('%',#{merchantName},'%')
+            </if>
+            <if test='null != status'>
+                and t.status = #{status}
+            </if>
+            <if test='null != merchantGroupId'>
+                and t.merchant_group_id = #{merchantGroupId}
+            </if>
+            <if test='null != domainGroupCode'>
+                and t.domain_group_code = #{domainGroupCode}
+            </if>
+        </where>
+    </select>
+
+    <select id="getMerchantKey" resultType="string">
+        select `key`
+        from t_merchant
+        where merchant_code = #{merchantCode}
+          and `status` = 1
+    </select>
+
+    <select id="getMerchantAllList" resultType="com.panda.sport.merchant.common.po.bss.MerchantPO">
+        SELECT *
+        FROM t_merchant;
+    </select>
+
+    <select id="getMerchant" resultType="com.panda.sport.merchant.common.po.bss.MerchantPO">
+        SELECT m.callback_url                                                      callbackUrl,
+               m.balance_url                                                       balanceUrl,
+               m.agent_level                                                       agentLevel,
+               m.id,
+               m.`level`,
+               m.max_bet                                                           maxBet,
+               m.merchant_code                                                     merchantCode,
+               (case when tk.`status` = 1 then m.`key` else "" end)                merchantKey,
+               m.merchant_name                                                     merchantName,
+               m.parent_id                                                         parentId,
+               m.sport_list                                                        sportList,
+               m.`status`,
+               (case when m.currency is null then pm.currency else m.currency end) currency,
+               m.transfer_mode                                                     transferMode,
+               m.url,
+               m.commerce,
+               m.topic,
+               pm.topic                                                            parentTopic,
+               pm.merchant_code                                                    parentCode,
+               m.white_ip                                                          whiteIp,
+               m.pc_domain                                                         pcDomain,
+               m.h5_domain                                                         h5Domain,
+               m.app_domain                                                        appDomain,
+               m.open_vr_sport                                                     openVrSport,
+               m.open_esport                                                       openEsport,
+               m.open_video                                                        openVideo,
+               m.is_external                                                       isExternal,
+               m.language_list                                                     languageList,
+               c.settle_switch_advance                                             settleSwitchAdvance,
+               c.settle_switch_basket                                              settleSwitchBasket,
+               c.cash_out_update                                                   cashOutUpdate,
+               c.user_prefix                                                       userPrefix,
+               c.merchant_tag                                                      merchantTag,
+               c.tag_market_level                                                  tagMarketLevel,
+               c.tag_market_level_pc                                               tagMarketLevelIdPc,
+               c.market_level_update                                               marketLevelUpdate,
+               c.filter_sport                                                      filterSport,
+               c.filter_league                                                     filterLeague,
+               c.video_domain                                                      videoDomain,
+               c.book_bet                                                          bookBet,
+               c.book_market_switch                                                coilSwitch,
+               m.kana_code                                                         kanaCode,
+               m.serial_number                                                     serialNumber,
+               m.merchant_group_id                                                 merchantGroupId,
+               m.domain_group_code                                                 domainGroupCode,
+               c.min_series_num                                                    minSeriesNum,
+               c.max_series_num                                                    maxSeriesNum,
+               c.tag_odds_grouping_dynamic_risk_control_status                     dynamicMarketLevelStatus,
+               c.chat_room_switch                                                  chatRoomSwitch,
+               c.chat_min_bet_amount                                               chatMinBetAmount,
+               c.is_default                                                        isDefault,
+               c.three_day_amount                                                  threeDayAmount,
+               c.seven_day_amount                                                  sevenDayAmount,
+               tk.`status`														   keyStatus,
+               (case when tk.second_status = 1 then tk.second_merchant_key else "" end) secondMerchantKey,
+               tk.second_history_key											   secondHistoryKey,
+               tk.second_status													   secondStatus,
+               tk.enable_time													   enableTime,
+               tk.second_enable_time											   secondEnableTime
+        FROM t_merchant m
+                 LEFT JOIN t_merchant pm ON m.parent_id = pm.id
+                 left join t_merchant_config c on c.merchant_code = m.merchant_code
+                 left join t_merchant_key tk on m.merchant_code = tk.merchant_code
+        WHERE m.merchant_code = #{merchantCode}
+          AND m.`status` = 1
+    </select>
+
+    <select id="getMerchantAPI" resultType="com.panda.sport.merchant.common.po.bss.MerchantPO">
+        SELECT m.callback_url                                                      callbackUrl,
+               m.balance_url                                                       balanceUrl,
+               m.agent_level                                                       agentLevel,
+               m.id,
+               m.`level`,
+               m.max_bet                                                           maxBet,
+               m.merchant_code                                                     merchantCode,
+               (case when tk.`status` = 1 then m.`key` else "" end)                merchantKey,
+               m.merchant_name                                                     merchantName,
+               m.parent_id                                                         parentId,
+               m.sport_list                                                        sportList,
+               m.`status`,
+               (case when m.currency is null then pm.currency else m.currency end) currency,
+               m.transfer_mode                                                     transferMode,
+               m.url,
+               m.commerce,
+               m.topic,
+               pm.topic                                                            parentTopic,
+               pm.merchant_code                                                    parentCode,
+               m.white_ip                                                          whiteIp,
+               m.pc_domain                                                         pcDomain,
+               m.h5_domain                                                         h5Domain,
+               m.app_domain                                                        appDomain,
+               m.open_vr_sport                                                     openVrSport,
+               m.open_esport                                                       openEsport,
+               m.open_video                                                        openVideo,
+               m.is_external                                                       isExternal,
+               m.language_list                                                     languageList,
+               c.settle_switch_advance                                             settleSwitchAdvance,
+               c.settle_switch_basket                                              settleSwitchBasket,
+               c.cash_out_update                                                   cashOutUpdate,
+               c.user_prefix                                                       userPrefix,
+               c.merchant_tag                                                      merchantTag,
+               c.tag_market_level                                                  tagMarketLevel,
+               c.tag_market_level_pc                                               tagMarketLevelIdPc,
+               c.market_level_update                                               marketLevelUpdate,
+               c.filter_sport                                                      filterSport,
+               c.filter_league                                                     filterLeague,
+               c.video_domain                                                      videoDomain,
+               c.book_bet                                                          bookBet,
+               c.book_market_switch                                                coilSwitch,
+               m.kana_code                                                         kanaCode,
+               m.serial_number                                                     serialNumber,
+               m.merchant_group_id                                                 merchantGroupId,
+               m.domain_group_code                                                 domainGroupCode,
+               c.min_series_num                                                    minSeriesNum,
+               c.max_series_num                                                    maxSeriesNum,
+               c.tag_odds_grouping_dynamic_risk_control_status                     dynamicMarketLevelStatus,
+               c.chat_room_switch                                                  chatRoomSwitch,
+               c.chat_min_bet_amount                                               chatMinBetAmount,
+               c.is_default                                                        isDefault,
+               c.three_day_amount                                                  threeDayAmount,
+               c.merchant_event                                                    merchantEvent,
+               c.seven_day_amount                                                  sevenDayAmount,
+               m.is_test                                                           isTest,
+               tk.`status`														   keyStatus,
+               (case when tk.second_status = 1 then tk.second_merchant_key else "" end) secondMerchantKey,
+               tk.second_history_key											   secondHistoryKey,
+               tk.second_status													   secondStatus,
+               tk.enable_time													   enableTime,
+               tk.second_enable_time											   secondEnableTime
+        FROM t_merchant m
+                 LEFT JOIN t_merchant pm ON m.parent_id = pm.id
+                 left join t_merchant_config c on c.merchant_code = m.merchant_code
+                 left join t_merchant_key tk on m.merchant_code = tk.merchant_code
+        WHERE m.merchant_code = #{merchantCode}
+          AND m.`status` = 1
+    </select>
+
+    <select id="getMerchantNotStatus" resultType="com.panda.sport.merchant.common.po.bss.MerchantPO">
+        SELECT m.callback_url                                                      callbackUrl,
+               m.balance_url                                                       balanceUrl,
+               m.agent_level                                                       agentLevel,
+               m.id,
+               m.`level`,
+               m.max_bet                                                           maxBet,
+               m.merchant_code                                                     merchantCode,
+               (case when tk.`status` = 1 then m.`key` else "" end)                merchantKey,
+               m.merchant_name                                                     merchantName,
+               m.parent_id                                                         parentId,
+               m.sport_list                                                        sportList,
+               m.`status`,
+               (case when m.currency is null then pm.currency else m.currency end) currency,
+               m.transfer_mode                                                     transferMode,
+               m.url,
+               m.commerce,
+               m.topic,
+               pm.topic                                                            parentTopic,
+               pm.merchant_code                                                    parentCode,
+               m.white_ip                                                          whiteIp,
+               m.pc_domain                                                         pcDomain,
+               m.h5_domain                                                         h5Domain,
+               m.app_domain                                                        appDomain,
+               m.open_vr_sport                                                     openVrSport,
+               m.language_list                                                     languageList,
+               c.tag_odds_grouping_dynamic_risk_control_status                     dynamicMarketLevelStatus,
+               c.chat_room_switch                                                  chatRoomSwitch,
+               c.chat_min_bet_amount                                               chatMinBetAmount,
+               c.is_default                                                        isDefault,
+               c.three_day_amount                                                  threeDayAmount,
+               c.seven_day_amount                                                  sevenDayAmount,
+               c.settle_switch_advance                                             settleSwitchAdvance,
+               c.settle_switch_basket                                              settleSwitchBasket,
+               c.user_prefix                                                       userPrefix,
+               c.merchant_tag                                                      merchantTag,
+               c.tag_market_level                                                  tagMarketLevel,
+               m.kana_code                                                         kanaCode,
+               m.serial_number                                                     serialNumber,
+               tk.`status`														   keyStatus,
+               (case when tk.second_status = 1 then tk.second_merchant_key else "" end) secondMerchantKey,
+               tk.second_history_key											   secondHistoryKey,
+               tk.second_status													   secondStatus,
+               tk.enable_time													   enableTime,
+               tk.second_enable_time											   secondEnableTime
+        FROM t_merchant m
+                 LEFT JOIN t_merchant pm ON m.parent_id = pm.id
+                 left join t_merchant_config c on c.merchant_code = m.merchant_code
+                 left join t_merchant_key tk on m.merchant_code = tk.merchant_code
+        WHERE m.merchant_code = #{merchantCode}
+    </select>
+    <select id="getMerchantByKanaCode" resultType="com.panda.sport.merchant.common.po.bss.MerchantPO">
+        SELECT m.callback_url                                                      callbackUrl,
+               m.balance_url                                                       balanceUrl,
+               m.agent_level                                                       agentLevel,
+               m.id,
+               m.`level`,
+               m.max_bet                                                           maxBet,
+               m.merchant_code                                                     merchantCode,
+               m.`key`                                                             merchantKey,
+               m.merchant_name                                                     merchantName,
+               m.parent_id                                                         parentId,
+               m.sport_list                                                        sportList,
+               m.`status`,
+               (case when m.currency is null then pm.currency else m.currency end) currency,
+               m.transfer_mode                                                     transferMode,
+               m.url,
+               m.commerce,
+               m.topic,
+               pm.topic                                                            parentTopic,
+               pm.merchant_code                                                    parentCode,
+               m.white_ip                                                          whiteIp,
+               m.pc_domain                                                         pcDomain,
+               m.h5_domain                                                         h5Domain,
+               m.app_domain                                                        appDomain,
+               m.open_vr_sport                                                     openVrSport,
+               m.language_list                                                     languageList,
+               c.settle_switch_advance                                             settleSwitchAdvance,
+               c.settle_switch_basket                                              settleSwitchBasket,
+               c.user_prefix                                                       userPrefix,
+               c.merchant_tag                                                      merchantTag,
+               c.tag_market_level                                                  tagMarketLevel,
+               c.book_bet                                                          bookBet,
+               m.kana_code                                                         kanaCode,
+               m.serial_number                                                     serialNumber
+        FROM t_merchant m
+                 LEFT JOIN t_merchant pm ON m.parent_id = pm.id
+                 left join t_merchant_config c on c.merchant_code = m.merchant_code
+        WHERE m.merchant_code = #{merchantCode}
+           or m.kana_code = #{merchantCode}
+    </select>
+
+    <select id="getMerchantInfo" resultType="com.panda.sport.merchant.common.po.bss.MerchantPO">
+        SELECT m.callback_url  callbackUrl,
+               m.balance_url   balanceUrl,
+               m.id,
+               m.level,
+               m.max_bet       maxBet,
+               m.merchant_code merchantCode,
+               m.merchant_name merchantName,
+               m.parent_id     parentId,
+               m.sport_list    sportList,
+               m.status,
+               m.transfer_mode transferMode,
+               m.url,
+               m.commerce,
+               m.topic,
+               m.agent_level   agentLevel,
+               m.open_vr_sport openVrSport,
+               m.key           merchantKey,
+               m.language_list languageList,
+               m.backend_switch backendSwitch
+        FROM t_merchant m
+        WHERE m.merchant_code = #{merchantCode}
+    </select>
+
+    <select id="queryKeyList" resultType="com.panda.sport.merchant.common.po.bss.TMerchantKey"
+            parameterType="com.panda.sport.merchant.common.vo.merchant.MerchantVO">
+        SELECT
+        m.id,
+        m.id merchantId,
+        m.`key`,
+        m.start_time startTime,
+        m.end_time endTime,
+        m.`status`,
+        m.merchant_code merchantCode,
+        m.created_by createdBy,
+        m.create_time createTime,
+        m.updated_by updatedBy,
+        m.update_time updateTime,
+        m.merchant_name merchantName,
+        m.agent_level agentLevel,
+        m.child_connect_mode childConnectMode,
+        m.direct_sale directSale,
+        tk.second_merchant_key,
+        tk.second_history_key,
+        tk.`status` keyStatus,
+        tk.second_status,
+        tk.enable_time,
+        tk.second_enable_time
+        <if test='null != parentId'>
+            ,(select merchant_name from t_merchant where id=#{parentId}) parentName
+        </if>
+        FROM
+        t_merchant m
+        left join t_merchant_key tk on m.merchant_code = tk.merchant_code
+        <where>
+            <if test='null != status'>
+                m.`status` = #{status}
+            </if>
+            <if test='null != merchantCode'>
+                AND m.merchant_code = #{merchantCode}
+            </if>
+            <if test='null != merchantName'>
+                AND m.merchant_name like CONCAT('%',#{merchantName},'%')
+            </if>
+            <if test='null != parentId'>
+                AND m.parent_id= #{parentId}
+            </if>
+            <if test='null != agentLevel'>
+                AND m.agent_level =#{agentLevel}
+            </if>
+        </where>
+        ORDER BY
+        m.end_time DESC
+    </select>
+
+
+    <select id="queryMerchantKeyList" resultType="com.panda.sport.merchant.common.po.bss.MerchantPO">
+        SELECT
+        id,
+        start_time,
+        end_time,
+        merchant_code,
+        merchant_name,
+        created_by,
+        create_time,
+        updated_by,
+        update_time,
+        history_key,
+        status
+        FROM
+        t_merchant
+        <where>
+            <if test='type == "will"'>
+                end_time  <![CDATA[ > ]]> #{startTime}
+                AND end_time  <![CDATA[ <= ]]> #{endTime}
+            </if>
+            <if test='type == "eq"'>
+                end_time = #{endTime}
+            </if>
+            <if test='type == "lt"'>
+                end_time  <![CDATA[ < ]]> #{endTime}
+            </if>
+        </where>
+    </select>
+
+    <select id="getAdminList" resultType="com.panda.sport.merchant.common.vo.merchant.MerchantAdminVO">
+        select id, user_name as name
+        from t_merchant_admin
+    </select>
+
+    <select id="selectMonthList" resultType="com.panda.sport.merchant.common.po.bss.MerchantPO">
+        SELECT t.id,
+        t.merchant_code merchantCode,
+        t.merchant_name merchantName,
+        t.`level`,
+        t.agent_level agentLevel,
+        t.commerce,
+        t.merchant_admin merchantAdmin,
+        t.create_time createTime,
+        t.`key` merchantKey,
+        (SELECT Count(0)
+        FROM t_merchant t1
+        WHERE t1.parent_id = t.id) AS childAmount,
+        t.child_max_amount childMaxAmount,
+        t.start_time startTime,
+        t.end_time endTime,
+        t2.merchant_name AS parentName,
+        t.parent_id parentId,
+        t.status,
+        l.level_name levelName
+        FROM t_merchant t
+        LEFT JOIN t_merchant_level l
+        ON l.`level` = t.`level`
+        LEFT JOIN t_merchant t2
+        ON t2.id = t.parent_id
+        where t.agent_level = #{agentLevel}
+        <if test='null != parentId'>
+            and t.parent_id=#{parentId}
+        </if>
+        and t.create_time > #{createTime}
+        order by t.create_time desc
+        limit 0,10
+
+    </select>
+    <select id="queryAgentCount" resultType="map">
+        SELECT t.agent_level as agentLevel, count(t.id) as count
+        FROM t_merchant t
+        where t.STATUS = 1
+        group by t.agent_level
+    </select>
+
+    <select id="getKeyInMerchantCode" resultType="com.panda.sport.merchant.common.po.bss.TMerchantKey">
+        SELECT
+        t.id,t.key,
+        t.start_time,
+        t.end_time,
+        t.status,
+        t.merchant_code,
+        t.created_by,
+        t.create_time,
+        t.updated_by,
+        t.update_time,
+        t.merchant_name,
+        tk.status keyStatus,
+        tk.second_merchant_key,
+        tk.second_status secondStatus
+        FROM t_merchant t
+        left join t_merchant_key tk
+        on t.merchant_code = tk.merchant_code
+        WHERE t.merchant_code IN
+        <foreach collection="merchantCode" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="getMerchantInMerchantId" resultType="com.panda.sport.merchant.common.po.bss.MerchantPO">
+        SELECT
+        <include refid="allColumns"/>
+        from t_merchant t
+        WHERE id IN
+        <foreach collection="merchantId" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="queryMerchantListByParam" resultType="map" parameterType="map">
+        SELECT t.merchant_code "merchantCode",t.merchant_name "merchantName",t.agent_level "agentLevel"
+        from t_merchant t
+        <where>
+            <if test="merchantCode != null">
+                AND t.merchant_code = #{merchantCode}
+            </if>
+            <if test="merchantCodeList != null">
+                AND t.merchant_code in
+                <foreach item='code' index='index' collection='merchantCodeList' open='(' separator=','
+                         close=')'>
+                    #{code}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="queryMerchantTree" resultMap="tMerchantMap">
+        SELECT
+        <include refid="allColumns"/>
+        from t_merchant t
+        where t.status = 1
+        ORDER BY t.create_time
+    </select>
+
+    <select id="queryMerchantTreeByMerchantCode" resultMap="tMerchantMap">
+        SELECT <include refid="allColumns"/>
+        from t_merchant t
+        where t.status = 1
+          and merchant_code = #{merchantCode}
+        union
+        select <include refid="allColumns"/>
+        from t_merchant t
+        where t.status = 1
+          and t.id = (select parent_id from t_merchant where merchant_code = #{merchantCode})
+    </select>
+
+    <resultMap id="MerchantTree" type="com.panda.sport.merchant.common.vo.MerchantTree">
+        <id column="id" property="id"/>
+        <result column="merchant_name" property="merchantName"/>
+        <result column="merchant_code" property="merchantCode"/>
+        <result column="agent_level" property="agentLevel"/>
+        <result column="parent_id" property="parentId"/>
+        <collection column="id" property="trees"
+                    ofType="com.panda.sport.merchant.common.vo.MerchantTree"
+                    select="getMerchantListTree"/>
+    </resultMap>
+
+    <select id="getParentMerchant" resultMap="MerchantTree">
+        select id,
+               merchant_code,
+               merchant_name,
+               agent_level,
+               parent_id
+        from t_merchant
+        where parent_id is null
+        ORDER BY create_time asc
+    </select>
+
+    <select id="getMerchantListTree" resultMap="MerchantTree">
+        SELECT id,
+               merchant_code,
+               merchant_name,
+               agent_level,
+               parent_id
+        from t_merchant t
+        where t.status = 1
+          and t.parent_id = #{id}
+        ORDER BY t.create_time asc
+    </select>
+
+    <select id="queryFTPUrlList" resultType="java.util.Map">
+        SELECT merchant_code merchantCode, ftp_user ftpUser, ftp_password ftpPassword
+        from t_merchant t
+        where t.status = 1
+        ORDER BY t.create_time
+    </select>
+
+    <select id="queryMerchantIdByMerchantCode" resultType="java.lang.String">
+        select tm.id
+        from t_merchant tm
+        <where>
+            <if test="merchantName != null">
+                and tm.merchant_name = #{merchantName}
+            </if>
+            <if test="merchantCode != null">
+                and tm.merchant_code = #{merchantCode}
+            </if>
+            <if test="merchantCodeList != null and merchantCodeList.size() > 0">
+                and tm.merchant_code in
+                <foreach item='code' index='index' collection='merchantCodeList'
+                         open='(' separator=',' close=')'>
+                    #{code}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <update id="batchUpdateMerchantParentId"
+            parameterType="com.panda.sport.merchant.common.vo.merchant.MerchantAgentVO">
+        update t_merchant m set m.parent_id=#{merchantAgentId},m.update_time=#{updateTime},m.updated_by=#{updateUser}
+        where m.id in
+        <foreach collection="merchantIds" open="(" separator="," close=")" item="merchantId">
+            #{merchantId}
+        </foreach>
+    </update>
+
+    <select id="getMerchantByTag" resultMap="MerchantTree">
+        SELECT
+        t.id,
+        t.merchant_code,
+        t.merchant_name,
+        t.agent_level,
+        t.parent_id
+        FROM t_merchant t
+        LEFT JOIN t_merchant_config c ON t.merchant_code = c.merchant_code
+        WHERE t.status = 1 AND c.merchant_tag = #{tag}
+        <if test="merchantName != null and '' != merchantName">
+            AND t.merchant_name LIKE concat('%',#{merchantName},'%')
+        </if>
+        ORDER BY t.create_time asc
+    </select>
+
+    <select id="getMerchantByIds" resultMap="MerchantTree">
+        SELECT
+        t.id,
+        t.merchant_code,
+        t.merchant_name,
+        t.agent_level,
+        t.parent_id
+        FROM `t_merchant` t
+        where t.id in
+        <foreach item='code' index='index' collection='ids' open='(' separator=',' close=')'>
+            #{code}
+        </foreach>
+    </select>
+
+    <select id="merchantDomainList" resultType="com.panda.sport.merchant.common.po.bss.MerchantPO">
+        SELECT
+        t.id,
+        t.merchant_code,
+        t.merchant_name,
+        t.pc_domain ,
+        t.h5_domain ,
+        t.app_domain
+        FROM `t_merchant` t
+        LEFT JOIN t_merchant_config c ON t.merchant_code = c.merchant_code
+        where c.merchant_tag = #{merchantTag}
+        <if test="containsStr!=null and containsStr!=''">
+            <if test="containsType!=null and containsType==1">
+                and (t.pc_domain LIKE concat('%.',#{containsStr}) or t.h5_domain LIKE concat('%.',#{containsStr}) )
+            </if>
+            <if test="containsType!=null and containsType!=1">
+                and ( t.pc_domain not LIKE concat('%.',#{containsStr}) and t.pc_domain not LIKE
+                concat('%.',#{containsStr},'/')
+                and t.h5_domain not LIKE concat('%.',#{containsStr}) and t.h5_domain not LIKE
+                concat('%.',#{containsStr},'/')
+                )
+            </if>
+        </if>
+
+        <if test="parentCode!=null ">
+            and t.parent_id in (select m.id from t_merchant m where m.merchant_code=#{parentCode})
+        </if>
+
+    </select>
+
+    <select id="merchantAppDomainList" resultType="com.panda.sport.merchant.common.po.bss.MerchantPO">
+        SELECT
+        t.id,
+        t.merchant_code,
+        t.merchant_name,
+        t.pc_domain ,
+        t.h5_domain ,
+        t.app_domain
+        FROM `t_merchant` t
+        LEFT JOIN t_merchant_config c ON t.merchant_code = c.merchant_code
+        where c.merchant_tag = #{merchantTag}
+        <if test="containsStr!=null and containsStr!=''">
+            <if test="containsType!=null and containsType==1">
+                and (t.app_domain LIKE concat('%',#{containsStr},'%') )
+            </if>
+            <if test="containsType!=null and containsType!=1">
+                and ( t.app_domain not LIKE concat('%',#{containsStr},'%') )
+            </if>
+        </if>
+        <if test="parentCode!=null ">
+            and t.parent_id in (select m.id from t_merchant m where m.merchant_code=#{parentCode})
+        </if>
+        <if test="merchantCode!=null ">
+            and t.merchant_code =#{merchantCode}
+        </if>
+    </select>
+
+    <update id="updateDomainList">
+        UPDATE t_merchant
+        <set>
+            <if test="containsType!=null and containsType==1 ">
+                <if test='null != newDomainStr'>
+                    `pc_domain` = replace (`pc_domain`,#{containsStr},#{newDomainStr})
+                    ,`h5_domain` = replace (`h5_domain`,#{containsStr},#{newDomainStr})
+                </if>
+            </if>
+            <if test="containsType!=null and containsType!=1 ">
+                <if test="null != newDomainStr and domainType =='pc'">
+                    `pc_domain` = replace (`pc_domain`,SUBSTRING_INDEX(pc_domain,'.',-2),#{newDomainStr})
+                </if>
+                <if test="null != newDomainStr and domainType =='h5'">
+                    `h5_domain` = replace (`h5_domain`,SUBSTRING_INDEX(h5_domain,'.',-2),#{newDomainStr})
+                </if>
+            </if>
+            <if test="containsType==null">
+                `pc_domain` = replace (`pc_domain`,SUBSTRING_INDEX(pc_domain,'.',-2),#{newDomainStr})
+                , `h5_domain` = replace (`h5_domain`,SUBSTRING_INDEX(h5_domain,'.',-2),#{newDomainStr})
+            </if>
+        </set>
+        WHERE 1=1
+        <if test="merchantCode!=null ">
+            and merchant_code =#{merchantCode}
+        </if>
+        <if test="parentCode!=null ">
+            and parent_id in (select f.id from(select m.id from t_merchant m where m.merchant_code=#{parentCode}) f)
+        </if>
+        <if test="merchantCode==null ">
+            and merchant_code in (select merchant_code from t_merchant_config where merchant_tag =#{merchantTag})
+        </if>
+        <if test="containsType!=null and containsType==1 ">
+            and (pc_domain LIKE concat('%.',#{containsStr}) or h5_domain LIKE concat('%.',#{containsStr}))
+        </if>
+        <if test="containsType!=null and containsType!=1  ">
+            <if test=" domainType =='pc'">
+                and (pc_domain not LIKE concat('%.',#{containsStr}) and pc_domain not LIKE concat('%.',#{containsStr}
+                ,'/') )
+            </if>
+            <if test=" domainType =='h5'">
+                and ( h5_domain not LIKE concat('%.',#{containsStr}) and h5_domain not LIKE concat('%.',#{containsStr}
+                ,'/'))
+            </if>
+        </if>
+    </update>
+
+    <update id="updateKanaCode">
+        UPDATE t_merchant
+        set kana_code      = #{kanaCode},
+            kana_code_time = #{kanaCodeTime}
+        WHERE merchant_code = #{merchantCode}
+    </update>
+
+    <update id="updateKanaCodeByParentId">
+        UPDATE t_merchant
+        set kana_code      = #{kanaCode},
+            kana_code_time = #{kanaCodeTime}
+        WHERE parent_id = #{parentId}
+    </update>
+
+    <select id="getMerhcantCodeList" resultType="String">
+        select merchant_code merchantCode
+        from t_merchant
+        WHERE parent_id = #{parentId}
+    </select>
+
+
+    <update id="updateSerialNumber">
+        UPDATE t_merchant
+        set serial_number = #{serialNumber}
+        WHERE merchant_code = #{merchantCode}
+    </update>
+
+    <select id="checkKanaCode" resultType="java.lang.Integer">
+        select count(1)
+        from t_merchant
+        where kana_code = #{kanaCode}
+          and merchant_code != #{merchantCode}
+    </select>
+
+    <select id="checkSerialNumber" resultType="java.lang.Integer">
+        select count(1)
+        from t_merchant
+        where serial_number = #{serialNumber}
+          <if test="parentId!=null">
+          and parent_id = #{parentId}
+          </if>
+    </select>
+
+
+    <update id="updateAppDomainList">
+        UPDATE t_merchant
+        <set>
+            <if test="containsType!=null and containsType==1 ">
+                <if test='null != newDomainStr'>
+                    `app_domain` = replace (`app_domain`,#{containsStr},#{newDomainStr})
+                </if>
+            </if>
+            <if test="containsType!=null and containsType!=1 ">
+                `app_domain` = replace (`app_domain`,#{containsStr},#{newDomainStr})
+            </if>
+            <if test="containsType==null">
+                `app_domain` = replace (`app_domain`,`app_domain`,#{newDomainStr})
+            </if>
+        </set>
+        WHERE 1=1
+        <if test="merchantCode!=null ">
+            and merchant_code =#{merchantCode}
+        </if>
+        <if test="merchantCode==null ">
+            and merchant_code in (select merchant_code from t_merchant_config where merchant_tag =#{merchantTag})
+        </if>
+        <if test="parentCode!=null ">
+            and parent_id in (select f.id from(select m.id from t_merchant m where m.merchant_code=#{parentCode}) f)
+        </if>
+        <if test="containsType!=null and containsType==1 ">
+            and (app_domain LIKE concat('%',#{containsStr},'%') )
+        </if>
+        <if test="containsType!=null and containsType!=1  ">
+            and ( app_domain not LIKE concat('%',#{containsStr},'%'))
+        </if>
+    </update>
+
+    <select id="getAllApiDomain" resultType="String">
+        select distinct app_domain from t_merchant where app_domain is not null
+        <if test="merchantCode!=null ">
+            and merchant_code =#{merchantCode}
+        </if>
+    </select>
+
+    <select id="getCheckApiDomain" resultType="com.panda.sport.merchant.common.vo.CheckApiDomainVo">
+        select distinct t.app_domain AS appDomain
+        from t_merchant t
+        where t.app_domain is not null
+          and t.status = 1
+    </select>
+
+    <update id="updateMerchantGroupId">
+        update t_merchant m set m.merchant_group_id=#{merchantGroupId} where m.domain_group_code =#{domainGroupCode} and m.merchant_code in
+        <foreach collection="merchantCodeList" open="(" separator="," close=")" item="merchantId">
+            #{merchantId}
+        </foreach>
+    </update>
+
+    <update id="updateDomainGroupCode">
+        update t_merchant m set m.domain_group_code=#{groupCode} where m.merchant_code in
+        <foreach collection="merchantCodeList" open="(" separator="," close=")" item="merchantCode">
+            #{merchantCode}
+        </foreach>
+    </update>
+
+    <update id="updateMerchantAdminById">
+        UPDATE t_merchant t
+        SET t.merchant_admin = #{merchantPO.merchantAdmin}
+        WHERE t.id = #{merchantPO.id}
+    </update>
+
+    <update id="updateNewDomain">
+        update t_merchant  set
+        <if test="domainType != null and  domainType ==1 ">
+            h5_domain=#{newDomain}
+        </if>
+        <if test="domainType != null and  domainType ==2 ">
+            pc_domain=#{newDomain}
+        </if>
+        <if test="domainType != null and  domainType ==3 ">
+            app_domain=#{newDomain}
+        </if>
+            <where>
+                 <if test="domainType != null and  domainType ==1 ">
+                    h5_domain=#{oldDomain}
+                 </if>
+                <if test="domainType != null and  domainType ==2 ">
+                    pc_domain=#{oldDomain}
+                </if>
+                <if test="domainType != null and  domainType ==3 ">
+                    app_domain=#{oldDomain}
+                </if>
+            </where>
+    </update>
+
+    <update id="updateNewVideoDomain">
+        update t_merchant_config  set
+        video_domain = #{newDomain}
+        WHERE video_domain = #{oldDomain}
+    </update>
+
+    <update id="replaceH5">
+        UPDATE t_merchant SET h5_domain = #{target} WHERE h5_domain = #{source}
+    </update>
+    <update id="replacePC">
+        UPDATE t_merchant SET pc_domain = #{target} WHERE pc_domain = #{source}
+    </update>
+    <update id="replaceAPP">
+        UPDATE t_merchant SET app_domain = #{target} WHERE app_domain = #{source}
+    </update>
+
+    <select id="getGroupMerchantList" resultType="map">
+        select merchant_code merchantCode, domain_group_code groupCode
+        from t_merchant
+        where status = 1
+          and agent_level in (0, 2)
+    </select>
+
+    <select id="getDifferentGroupMerchantList" resultType="String">
+        select min(merchant_code) merchantCode
+        from t_merchant
+        where status = 1
+          and agent_level in (0, 2)
+        group by domain_group_code
+    </select>
+
+    <insert id="insertAccountChange" parameterType="com.panda.sport.merchant.common.vo.AccountChangeHistoryFindVO">
+        insert into t_account_change_history
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                id
+            <if test="uid != null">
+                ,uid
+            </if>
+            <if test="currentBalance != null">
+                ,current_balance
+            </if>
+            <if test="changeAmount != null">
+                ,change_amount
+            </if>
+            <if test="changeType != null">
+                ,change_type
+            </if>
+            <if test="bizType != null">
+                ,biz_type
+            </if>
+            <if test="remark != null">
+                ,remark
+            </if>
+            <if test="createUser != null">
+                ,create_user
+            </if>
+            ,create_time
+            <if test="modifyUser != null">
+                ,modify_user
+            </if>
+            ,modify_time
+            <if test="orderNo != null">
+                ,order_no
+            </if>
+            <if test="beforeTransfer != null">
+                ,before_transfer
+            </if>
+            <if test="afterTransfer != null">
+                ,after_transfer
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                #{id}
+            <if test="uid != null">
+                ,#{uid,jdbcType=BIGINT}
+            </if>
+            <if test="currentBalance != null">
+                ,#{currentBalance}
+            </if>
+            <if test="changeAmount != null">
+                ,#{changeAmount}
+            </if>
+            <if test="changeType != null">
+                ,#{changeType}
+            </if>
+            <if test="bizType != null">
+                ,#{bizType}
+            </if>
+            <if test="remark != null">
+                ,#{remark}
+            </if>
+            <if test="createUser != null">
+            ,#{createUser}
+            </if>
+            ,#{createTime}
+            <if test="modifyUser != null">
+            ,#{modifyUser}
+            </if>
+             ,#{modifyTime}
+            <if test="orderNo != null">
+                ,#{orderNo}
+            </if>
+            <if test="beforeTransfer != null">
+                ,#{beforeTransfer}
+            </if>
+            <if test="afterTransfer != null">
+                ,#{afterTransfer}
+            </if>
+        </trim>
+    </insert>
+
+    <select id="selectMerchantDomainList" resultType="com.panda.sport.merchant.common.po.bss.MerchantDomainPO">
+        SELECT
+            tm.id AS merchantId,
+            tm.merchant_code AS merchantCode,
+            tm.merchant_name AS merchantName,
+            tm.merchant_group_id AS merchantGroupId,
+            tp.program_name AS programName,
+            td.domain_group_name AS domainGroupName,
+            tg.group_name AS groupName,
+            tg.program_id AS programId,
+            ta.domain_type AS domainType,
+            ta.domain_name AS domainName,
+            ( SELECT ma.NAME FROM merchant.m_domain_area ma WHERE ma.id = td.belong_area ) AS areaName
+        FROM
+            t_merchant tm
+            JOIN merchant.t_merchant_group_ty tg ON tm.merchant_group_id = tg.id
+            LEFT JOIN merchant.t_domain_program tp ON tg.program_id = tp.id
+            LEFT JOIN merchant.t_domain_program_relation tr ON tp.id = tr.program_id
+            LEFT JOIN merchant.t_domain_group td ON tr.domain_group_id = td.id
+            LEFT JOIN merchant.t_domain_group_relation dr ON td.id = dr.domain_group_id
+            LEFT JOIN merchant.t_domain_ty ta ON dr.domain_id = ta.id
+        <where>
+            <if test="null != merchantIds">
+                and tm.id in
+                <foreach collection="merchantIds" item="item" index="index" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            AND tg.`status` = 1
+            AND tp.`status` = 1
+            AND td.`status` = 1
+            AND ta.`status` = 1
+            AND ta.`enable` = 1
+        </where>
+    </select>
+    <select id="listByDomainName" resultType="com.panda.sport.merchant.common.po.bss.MerchantPO">
+        select *  from t_merchant
+        <where>
+            <if test="domainType != null and  domainType ==1 ">
+                h5_domain=#{domainName}
+            </if>
+            <if test="domainType != null and  domainType ==2 ">
+                pc_domain=#{domainName}
+            </if>
+            <if test="domainType != null and  domainType ==3 ">
+                app_domain=#{domainName}
+            </if>
+        </where>
+    </select>
+
+
+    <update id="updateMerchantDomainByMerchantCode">
+        update t_merchant set
+        <if test="domainType != null and  domainType == 1 ">
+            h5_domain=#{newDomain}
+        </if>
+        <if test="domainType != null and  domainType == 2 ">
+            pc_domain=#{newDomain}
+        </if>
+        <if test="domainType != null and  domainType == 3 ">
+            app_domain=#{newDomain}
+        </if>
+        where merchant_code = #{merchantCode}
+        <if test="domainType != null and  domainType == 1 ">
+           AND h5_domain=#{oldDomain}
+        </if>
+        <if test="domainType != null and  domainType == 2 ">
+            AND pc_domain=#{oldDomain}
+        </if>
+        <if test="domainType != null and  domainType == 3 ">
+            AND app_domain=#{oldDomain}
+        </if>
+    </update>
+
+    <select id="queryChildrenMerchant" resultType="com.panda.sport.merchant.common.po.bss.MerchantPO">
+        SELECT
+            m.callback_url callbackUrl,
+            m.balance_url balanceUrl,
+            m.id,
+            m.LEVEL,
+            m.max_bet maxBet,
+            m.merchant_code merchantCode,
+            m.merchant_name merchantName,
+            m.parent_id parentId,
+            m.sport_list sportList,
+            m.STATUS,
+            m.transfer_mode transferMode,
+            m.url,
+            m.commerce,
+            m.topic,
+            m.agent_level agentLevel,
+            m.open_vr_sport openVrSport,
+            m.KEY merchantKey,
+            m.language_list languageList,
+            m.backend_switch backendSwitch
+        FROM
+            t_merchant m
+            Left join t_merchant_config c on c.merchant_code = m.merchant_code
+        WHERE
+            m.parent_id = #{parentId}
+	        AND m.agent_level = 2
+    </select>
+
+    <update id="updateChildrenMerchantStatus">
+        update t_merchant t set t.update_time = now(), t.status = #{status} where t.merchant_code in
+        <foreach collection="merchantCodeList" item="item" index="index" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </update>
+    <update id="updateChildrenMerchantBackendStatus">
+        update t_merchant t set t.update_time = now(), t.backend_switch = #{status} where t.merchant_code in
+        <foreach collection="merchantCodeList" item="item" index="index" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </update>
+
+
+
+    <update id="updateApiDomainByMerchantCodes">
+        update t_merchant
+        set app_domain =#{newDomain}
+        where merchant_code in
+        <foreach collection="merchantCodes" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+
+    <update id="updateMerchantDomainByMerchantCodes">
+        update t_merchant set
+        <if test="domainType != null and  domainType == 1 ">
+            h5_domain=#{newDomain}
+        </if>
+        <if test="domainType != null and  domainType == 2 ">
+            pc_domain=#{newDomain}
+        </if>
+        <if test="domainType != null and  domainType == 3 ">
+            app_domain=#{newDomain}
+        </if>
+        where 1=1
+        <if test="merchantCodeList != null and  merchantCodeList.size() > 0 ">
+            and merchant_code in
+            <foreach item='code' index='index' collection='merchantCodeList' open='(' separator=' , '
+                     close=')'>
+                #{code}
+            </foreach>
+        </if>
+
+        <if test="noMerchantCodeList != null and  noMerchantCodeList.size() > 0 ">
+            and merchant_code not in
+            <foreach item='code' index='index' collection='noMerchantCodeList' open='(' separator=' , '
+                     close=')'>
+                #{code}
+            </foreach>
+        </if>
+
+        <if test="oldDomain != null and  oldDomain != '' ">
+            <if test="domainType != null and  domainType == 1 ">
+                AND h5_domain=#{oldDomain}
+            </if>
+            <if test="domainType != null and  domainType == 2 ">
+                AND pc_domain=#{oldDomain}
+            </if>
+            <if test="domainType != null and  domainType == 3 ">
+                AND app_domain=#{oldDomain}
+            </if>
+        </if>
+    </update>
+
+    <update id="updateMerchantVideoDomainByMerchantCodes">
+        update t_merchant_config set
+        video_domain = #{newDomain}
+        where 1=1
+        <if test="merchantCodeList != null and  merchantCodeList.size() > 0 ">
+            and merchant_code in
+            <foreach item='code' index='index' collection='merchantCodeList' open='(' separator=' , '
+                     close=')'>
+                #{code}
+            </foreach>
+        </if>
+        <if test="noMerchantCodeList != null and  noMerchantCodeList.size() > 0 ">
+            and merchant_code not in
+            <foreach item='code' index='index' collection='noMerchantCodeList' open='(' separator=' , '
+                     close=')'>
+                #{code}
+            </foreach>
+        </if>
+        <if test="oldDomain != null and  oldDomain != '' ">
+            and video_domain = #{oldDomain}
+        </if>
+    </update>
+
+
+    <select id="getOldH5PcDomain" resultType="String">
+        select DISTINCT pc_domain from t_merchant WHERE pc_domain is not NULL and pc_domain !=  ''  and agent_level in(0,2)
+        UNION ALL
+        select DISTINCT h5_domain from t_merchant WHERE h5_domain is not NULL and h5_domain != ''  and agent_level in(0,2)
+
+    </select>
+
+    <select id="checkMerchantDomainExistByDomainType" resultType="java.lang.Integer" >
+        select count(*)  from t_merchant
+        <where>
+            <if test="domainType != null and  domainType ==1 ">
+                h5_domain=#{domainName}
+            </if>
+            <if test="domainType != null and  domainType ==2 ">
+                pc_domain=#{domainName}
+            </if>
+            <if test="domainType != null and  domainType ==3 ">
+                app_domain=#{domainName}
+            </if>
+        </where>
+    </select>
+
+    <delete id="clearOrderData">
+       DELETE FROM `t_order`
+        WHERE uid in(SELECT uid FROM `t_user` WHERE username like 'auto%' AND merchant_code = #{merchantCode} LIMIT #{indexNum},#{num});
+    </delete>
+
+    <delete id="clearOrderDetailData">
+       DELETE FROM ` t_order_detail`
+        WHERE uid in(SELECT uid FROM `t_user` WHERE username like 'auto%' AND merchant_code = #{merchantCode} LIMIT #{indexNum},#{num});
+    </delete>
+
+    <delete id="clearSettleData">
+       DELETE FROM `t_settle`
+        WHERE uid in(SELECT uid FROM `t_user` WHERE username like 'auto%' AND merchant_code = #{merchantCode} LIMIT #{indexNum},#{num});
+    </delete>
+
+    <delete id="clearAccountChangeHistoryData">
+       DELETE FROM `t_account_change_history`
+        WHERE uid in(SELECT uid FROM `t_user` WHERE username like 'auto%' AND merchant_code = #{merchantCode} LIMIT #{indexNum},#{num});
+    </delete>
+
+    <update id="updateMerchantStatus">
+        update t_merchant
+        set update_time=now(),
+            status = #{status}
+           <if test="null != remark and '' != remark">
+            ,address = #{remark}
+           </if>
+        where merchant_code=#{merchantCode}
+    </update>
+    <update id="updateMerchantBackendStatus">
+        update t_merchant
+        set update_time=now(),
+            backend_switch = #{status}
+        where merchant_code=#{merchantCode}
+    </update>
+    <select id="queryMerchantCountByGroup" resultType="int">
+        SELECT COUNT(0) from t_merchant t
+        <where>
+            1 = 1
+            <if test='null != merchantName'>
+                and t.merchant_name like CONCAT('%',#{merchantName},'%')
+            </if>
+            <if test='null != status'>
+                and t.status = #{status}
+            </if>
+            <if test='null != merchantGroupId'>
+                and t.merchant_group_id = #{merchantGroupId}
+            </if>
+            <if test='null != domainGroupCode'>
+                and t.domain_group_code = #{domainGroupCode}
+            </if>
+        </where>
+    </select>
+    <select id="getMerchantByApiDomains" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT DISTINCT
+            tm.id,
+            tm.merchant_code AS `code`,
+            tm.merchant_name AS `name`,
+            tmg.group_name AS `groupName`
+        FROM
+            t_merchant tm
+                LEFT JOIN t_merchant_group tmg ON tm.merchant_group_id = tmg.id
+        WHERE
+            app_domain in
+            <foreach item='option' index='index' collection='domainList' open='(' separator=','
+                     close=')'>
+                #{option}
+            </foreach>
+          AND tmg.group_type != #{merchantGroupType}
+        GROUP BY
+            tm.merchant_code
+    </select>
+    <select id="getMerchantByDomains" resultMap="tMerchantMap">
+        SELECT<include refid="allColumns"/>,t.merchant_group_id AS merchantGroupId
+        FROM t_merchant t
+        WHERE t.app_domain = #{domain}
+    </select>
+
+    <select id="selectMerchantCountByCode" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+        m.parent_id merchantId,
+        count( m.id ) count
+        FROM
+        t_merchant m
+        WHERE
+        1 = 1
+        <if test="list != null and list.size() > 0">
+            AND m.parent_id in
+            <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        AND m.backend_switch = 1
+        GROUP BY
+        m.parent_id;
+    </select>
+
+    <select id="queryMerchantCurrency" resultType="com.panda.sport.merchant.common.po.bss.MerchantPO">
+        SELECT DISTINCT
+            merchant_code AS merchantCode,
+            currency_code AS currencyCode
+            FROM
+            t_user t
+            WHERE
+            t.merchant_code IN ( SELECT merchant_code FROM t_merchant mt WHERE mt.agent_level = 0 )
+            AND t.modify_time > unix_timestamp( DATE_ADD( str_to_date( DATE_FORMAT( NOW( ), '%Y-%m-%d' ), '%Y-%m-%d %H:%i:%s' ), INTERVAL - 1 DAY ) ) * 1000
+            AND t.modify_time <![CDATA[ <= ]]> unix_timestamp(
+            DATE_ADD( DATE_ADD( str_to_date( DATE_FORMAT( NOW( ), '%Y-%m-%d' ), '%Y-%m-%d %H:%i:%s' ), INTERVAL 1 DAY ), INTERVAL - 1 SECOND )
+            ) * 1000
+    </select>
+
+    <update id="updateMerchantCurrency">
+        UPDATE t_merchant
+        SET sport_list = #{currencyCode}
+        WHERE
+            merchant_code = #{merchantCode}
+    </update>
+
+    <select id="querySecondMerchantCurrency" resultType="com.panda.sport.merchant.common.po.bss.MerchantPO">
+        SELECT DISTINCT
+        merchant_code AS merchantCode,
+        currency_code AS currencyCode
+        FROM
+        t_user t
+        WHERE
+        t.merchant_code IN ( SELECT t.merchant_code FROM t_merchant t WHERE t.parent_id = #{id} )
+        AND t.modify_time > unix_timestamp( DATE_ADD( str_to_date( DATE_FORMAT( NOW( ), '%Y-%m-%d' ), '%Y-%m-%d %H:%i:%s' ), INTERVAL - 1 DAY ) ) * 1000
+        AND t.modify_time <![CDATA[ <= ]]> unix_timestamp(
+        DATE_ADD( DATE_ADD( str_to_date( DATE_FORMAT( NOW( ), '%Y-%m-%d' ), '%Y-%m-%d %H:%i:%s' ), INTERVAL 1 DAY ), INTERVAL - 1 SECOND )
+        ) * 1000
+    </select>
+
+    <select id="queryMerchantDomain" resultType="com.panda.sport.merchant.common.po.bss.FrontendMerchantDomain" parameterType="com.panda.sport.merchant.common.po.bss.FrontendMerchantDomain">
+        SELECT
+            t.id as id,
+            t.merchant_group_id as merchantGroupId,
+            t.domain_type as domainType,
+            t.domain_name as domainName,
+            t.enable as enable,
+            t.enable_time as enableTime,
+            t.delete_tag as deleteTag,
+            t.create_time as createTime,
+            t.create_user as createUser,
+            t.update_time as updateTime,
+            t.update_user as updateUser
+        FROM
+            t_frontend_domain t
+        <where>
+            1 = 1
+            <if test='null != domainType'>
+                and t.domain_type = #{domainType}
+            </if>
+            <if test='null != enable'>
+                and t.enable = #{enable}
+            </if>
+            <if test='null != domainName'>
+                and t.domain_name = #{domainName}
+            </if>
+            <if test='null != merchantGroupId'>
+                and t.merchant_group_id = #{merchantGroupId}
+            </if>
+            <if test='null != beginTime'>
+                and t.enable_time <![CDATA[ >= ]]> #{beginTime}
+            </if>
+            <if test='null != endTime'>
+                and t.enable_time <![CDATA[ <= ]]> #{endTime}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryMerchantDomainByKey" resultType="com.panda.sport.merchant.common.po.bss.MerchantDomainPO">
+        SELECT
+            t.config_key AS groupName,
+            t.config_value AS domainName
+        FROM
+            tybss_merchant_common.t_system_config t
+        WHERE
+            t.config_key LIKE CONCAT('%',#{key},'%')
+    </select>
+
+    <update id="changeMerchantDomain" parameterType="com.panda.sport.merchant.common.dto.DomainChangeDTO">
+        UPDATE t_frontend_domain
+        SET domain_name = #{newDomain},
+        enable = 1,
+        enable_time = now()
+        WHERE
+            merchant_group_id = #{groupId}
+            AND domain_name = #{oldDomain}
+    </update>
+
+    <update id="updateMerchantDomain">
+        UPDATE t_merchant
+        <set>
+            <if test="newMerchantDomain !=null and '' != newMerchantDomain and domainType != null and ''!= domainType and domainType == 'H5'">
+                h5_domain = #{newMerchantDomain},
+            </if>
+            <if test="newMerchantDomain !=null and '' != newMerchantDomain and domainType != null and ''!= domainType and domainType == 'PC'">
+                pc_domain = #{newMerchantDomain},
+            </if>
+            update_time = now()
+        </set>
+        <where>
+            <if test="oldMerchantDomain !=null and '' != oldMerchantDomain and domainType != null and ''!= domainType and domainType == 'H5'">
+                AND h5_domain = #{oldMerchantDomain}
+            </if>
+            <if test="oldMerchantDomain !=null and '' != oldMerchantDomain and domainType != null and ''!= domainType and domainType == 'PC'">
+                AND pc_domain = #{oldMerchantDomain}
+            </if>
+            <if test="null != merchantCodeList and merchantCodeList.size()>0">
+                or merchant_code in
+                <foreach collection="merchantCodeList" item="item" index="index" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </update>
+
+    <insert id="createFrontendMerchantGroup" useGeneratedKeys="true" keyColumn="id" keyProperty="id" parameterType="com.panda.sport.merchant.common.po.bss.FrontendMerchantGroup">
+        INSERT INTO t_frontend_merchant_group
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test='null != groupName'>
+                group_name,
+            </if>
+            <if test='null != groupType'>
+                group_type,
+            </if>
+            <if test='null != status'>
+                status,
+            </if>
+            <if test='null != timeType'>
+                time_type,
+            </if>
+            <if test='null != times'>
+                times,
+            </if>
+            <if test='null != alarmNum'>
+                alarm_num,
+            </if>
+            <if test='null != createTime'>
+                create_time,
+            </if>
+            <if test='null != createUser'>
+                create_user,
+            </if>
+            <if test='null != updateTime'>
+                update_time,
+            </if>
+            <if test='null != updateUser'>
+                update_user
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test='null != groupName'>
+                #{groupName},
+            </if>
+            <if test='null != groupType'>
+                #{groupType},
+            </if>
+            <if test='null != status'>
+                #{status},
+            </if>
+            <if test='null != timeType'>
+                #{timeType},
+            </if>
+            <if test='null != times'>
+                #{times},
+            </if>
+            <if test='null != alarmNum'>
+                #{alarmNum},
+            </if>
+            <if test='null != createTime'>
+                #{createTime},
+            </if>
+            <if test='null != createUser'>
+                #{createUser},
+            </if>
+            <if test='null != updateTime'>
+                #{updateTime},
+            </if>
+            <if test='null != updateUser'>
+                #{updateUser}
+            </if>
+        </trim>
+    </insert>
+
+    <insert id="updateFrontendMerchantGroup" parameterType="com.panda.sport.merchant.common.po.bss.FrontendMerchantGroup">
+        UPDATE t_frontend_merchant_group
+        <set>
+            <if test='null != groupName'>group_name = #{groupName},</if>
+            <if test='null != groupType'>group_type = #{groupType},</if>
+            <if test='null != status'>status = #{status},</if>
+            <if test='null != timeType'>time_type = #{timeType},</if>
+            <if test='null != times'>times = #{times},</if>
+            <if test='null != alarmNum'>alarm_num = #{alarmNum},</if>
+            <if test='null != updateTime'>update_time = #{updateTime},</if>
+            <if test='null != updateUser'>update_user = #{updateUser}</if>
+        </set>
+        WHERE id = #{id}
+    </insert>
+
+    <select id="selectFrontendMerchantGroup" resultType="java.lang.Integer" parameterType="com.panda.sport.merchant.common.po.bss.FrontendMerchantGroup">
+        SELECT
+            count(*)
+        FROM
+            t_frontend_merchant_group fm
+            LEFT JOIN t_frontend_merchant_relation fr ON fm.id = fr.frontend_merchant_group_id
+            LEFT JOIN t_merchant tm ON fr.merchant_code = tm.merchant_code
+        WHERE
+            fm.group_name LIKE CONCAT('%',#{groupName},'%')
+    </select>
+
+    <insert id="batchSaveFrontendMerchantRelation" parameterType="java.util.List">
+        insert into t_frontend_merchant_relation
+        (
+        frontend_merchant_group_id
+        ,merchant_code
+        ,create_time
+        ,create_user
+        ,update_time
+        ,update_user
+        )
+        values
+        <foreach collection="relationList" item="item" index="index" separator=",">
+            (
+            #{item.frontendMerchantGroupId}
+            ,#{item.merchantCode}
+            ,#{item.createTime}
+            ,#{item.createUser}
+            ,#{item.updateTime}
+            ,#{item.updateUser}
+            )
+        </foreach>
+    </insert>
+
+    <delete id="delFrontendMerchantRelation">
+        DELETE
+        FROM
+            t_frontend_merchant_relation t
+        WHERE
+            t.frontend_merchant_group_id = #{merchantGroupId}
+    </delete>
+
+    <insert id="createFrontendDomain" useGeneratedKeys="true" keyColumn="id" keyProperty="id" parameterType="com.panda.sport.merchant.common.po.bss.FrontendMerchantDomain">
+        INSERT INTO t_frontend_domain
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test='null != merchantGroupId'>
+                merchant_group_id,
+            </if>
+            <if test='null != domainType'>
+                domain_type,
+            </if>
+            <if test='null != domainName'>
+                domain_name,
+            </if>
+            <if test='null != enable'>
+                enable,
+            </if>
+            <if test='null != enableTime'>
+                enable_time,
+            </if>
+            <if test='null != deleteTag'>
+                delete_tag,
+            </if>
+            <if test='null != createTime'>
+                create_time,
+            </if>
+            <if test='null != createUser'>
+                create_user,
+            </if>
+            <if test='null != updateTime'>
+                update_time,
+            </if>
+            <if test='null != updateUser'>
+                update_user
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test='null != merchantGroupId'>
+                #{merchantGroupId},
+            </if>
+            <if test='null != domainType'>
+                #{domainType},
+            </if>
+            <if test='null != domainName'>
+                #{domainName},
+            </if>
+            <if test='null != enable'>
+                #{enable},
+            </if>
+            <if test='null != enableTime'>
+                #{enableTime},
+            </if>
+            <if test='null != deleteTag'>
+                #{deleteTag},
+            </if>
+            <if test='null != createTime'>
+                #{createTime},
+            </if>
+            <if test='null != createUser'>
+                #{createUser},
+            </if>
+            <if test='null != updateTime'>
+                #{updateTime},
+            </if>
+            <if test='null != updateUser'>
+                #{updateUser}
+            </if>
+        </trim>
+    </insert>
+
+    <select id="selectFrontendDomain" resultType="java.lang.Integer" parameterType="com.panda.sport.merchant.common.po.bss.FrontendMerchantDomain">
+        SELECT
+            count(*)
+        FROM
+            t_frontend_domain t
+        WHERE
+            t.domain_name = #{domainName}
+            AND t.domain_type = #{domainType}
+    </select>
+
+    <update id="delFrontendDomain" parameterType="com.panda.sport.merchant.common.po.bss.FrontendMerchantDomain">
+        UPDATE t_frontend_domain
+        SET delete_tag = 1,
+        <if test="null != updateTime">
+            update_time = #{updateTime},
+        </if>
+        <if test="null != updateUser and '' != updateUser">
+            update_user = #{updateUser}
+        </if>
+        <where>
+            <if test="id !=null">
+                AND id = #{id}
+            </if>
+            <if test="ids != null and ids.size() > 0">
+                AND id in
+                <foreach collection="ids" item="item" index="index" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </update>
+
+    <select id="queryFrontendMerchantGroup" resultType="com.panda.sport.merchant.common.po.bss.FrontendMerchantGroupDomainPO"
+            parameterType="com.panda.sport.merchant.common.po.bss.FrontendMerchantGroupDomainPO">
+        SELECT
+            tg.id AS groupId,
+            tg.group_name AS groupName,
+            td.domain_name AS domainName,
+            td.domain_type AS domainType,
+            tm.merchant_name AS merchantName,
+            tm.merchant_code AS merchantCode,
+            tg.times AS times,
+            tg.time_type AS timeType,
+            tg.alarm_num AS alarmNum,
+            tg.status AS status
+        FROM
+            t_frontend_merchant_group tg
+            LEFT JOIN t_frontend_domain td ON tg.id = td.merchant_group_id
+            LEFT JOIN t_frontend_merchant_relation tr ON td.merchant_group_id = tr.frontend_merchant_group_id
+            LEFT JOIN t_merchant tm ON tr.merchant_code = tm.merchant_code
+        <where>
+            <if test="groupId !=null">
+                AND tg.id = #{groupId}
+            </if>
+            <if test="merchantCode !=null">
+                AND tr.merchant_code = #{merchantCode}
+            </if>
+            <if test="domainType !=null">
+                AND td.domain_type = #{domainType}
+            </if>
+            <if test="null != domainName and '' != domainName">
+                AND td.domain_name = #{domainName}
+            </if>
+        </where>
+        GROUP BY
+            tg.group_name,
+            td.domain_type,
+            tr.id;
+    </select>
+
+    <select id="selectMerchantGroupById" parameterType="com.panda.sport.merchant.common.po.bss.FrontendMerchantGroup" resultType="com.panda.sport.merchant.common.po.bss.FrontendMerchantGroup">
+        SELECT
+            t.id AS id,
+            t.group_name AS groupName,
+            t.group_type AS groupType,
+            t.status AS status,
+            t.time_type AS timeType,
+            t.times AS times,
+            t.alarm_num AS alarmNum
+        FROM
+            t_frontend_merchant_group t 
+        WHERE
+            t.id = #{id}
+    </select>
+
+    <update id="updateMerchantEvent">
+        UPDATE t_merchant_config
+        set merchant_event      = #{enevtJson}
+        WHERE merchant_code = #{merchantCode}
+    </update>
+
+    <update id="updateChildrenIpAndDomain">
+        update t_merchant m
+        <set>
+            <if test="mvo.whiteIp != null">
+                m.white_ip=#{mvo.whiteIp},
+            </if>
+            <if test="mvo.h5Domain != null">
+                m.h5_domain = #{mvo.h5Domain},
+            </if>
+            <if test="mvo.pcDomain != null">
+                m.pc_domain = #{mvo.pcDomain}
+            </if>
+        </set>
+            where m.parent_id = #{mvo.id}
+    </update>
+
+
+    <select id="selectMerchantEventByCode" parameterType="java.lang.String" resultType="String">
+        SELECT
+            merchant_event
+        FROM
+            t_merchant_config
+        WHERE
+            merchant_code = #{merchantCode}
+    </select>
+    <select id="getMerchantByName" resultType="java.lang.String">
+        select merchant_code
+        from t_merchant
+        where merchant_name LIKE Concat('%',#{merchantName},'%')
+    </select>
+
+    <select id="queryMerchant" resultType="java.lang.Integer">
+        SELECT count(1) FROM t_merchant
+        where pc_domain in
+        <foreach collection="domainList" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+        OR h5_domain in
+        <foreach collection="domainList" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="queryMerchantVideoDomain" resultType="java.lang.Integer">
+        SELECT count(1) FROM t_merchant_config
+        where video_domain in
+        <foreach collection="domainList" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="queryMerchantSimpleListByParams"
+            resultType="com.panda.sport.merchant.common.vo.merchant.MerchantSimpleVO">
+        SELECT
+            id,
+            merchant_code merchantCode,
+            parent_id parentCode,
+            merchant_name merchantName,
+            agent_level agentLevel,
+            `level`,
+            create_time
+        FROM
+            t_merchant
+        WHERE
+            merchant_code
+        <if test="merchantCodes != null and merchantCodes.size()>0">
+            AND merchant_code IN
+            <foreach collection="merchantCodes" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="merchantName != null and merchantName !='' ">
+            merchant_name LIKE concat('%',#{merchantName},'%')
+        </if>
+            LIMIT #{pageIndex},#{pageSize};
+    </select>
+
+    <select id="queryMerchantKey" resultType="com.panda.sport.merchant.common.po.bss.MerchantPO">
+        SELECT
+        t.merchant_name AS merchantName,
+        t.merchant_code AS merchantCode,
+        t.key AS merchantKey
+        FROM
+        t_merchant t
+        <where>
+            <if test="codeList != null and codeList.size()>0">
+                and merchant_code IN
+                <foreach collection="codeList" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectAllMerchantKey" resultType="com.panda.sport.merchant.common.vo.merchant.MerchantKeyVO">
+        SELECT
+            t.merchant_code,
+            t.`key` as merchantKey,
+            t.history_key,
+            t.created_by,
+            unix_timestamp(t.create_time) * 1000,
+            t.updated_by,
+            unix_timestamp(t.update_time) * 1000
+        FROM
+            t_merchant t
+    </select>
+
+    <insert id="addMerchantKey" parameterType="com.panda.sport.merchant.common.vo.merchant.MerchantKeyVO">
+        INSERT INTO t_merchant_key
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test='null != merchantCode'>
+                merchant_code,
+            </if>
+            <if test='null != keyStatus'>
+                status,
+            </if>
+            <if test='null != enableTime'>
+                enable_time,
+            </if>
+            <if test='null != createTime'>
+                create_time,
+            </if>
+            <if test='null != createdBy'>
+                create_by,
+            </if>
+            <if test='null != updateTime'>
+                update_time,
+            </if>
+            <if test='null != updatedBy'>
+                update_by
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test='null != merchantCode'>
+                #{merchantCode},
+            </if>
+            <if test='null != keyStatus'>
+                #{keyStatus},
+            </if>
+            <if test='null != enableTime'>
+                #{enableTime},
+            </if>
+            <if test='null != createTime'>
+                #{createTime},
+            </if>
+            <if test='null != createdBy'>
+                #{createdBy},
+            </if>
+            <if test='null != updateTime'>
+                #{updateTime},
+            </if>
+            <if test='null != updatedBy'>
+                #{updatedBy}
+            </if>
+        </trim>
+    </insert>
+
+    <select id="getKey" resultType="java.lang.String">
+        select
+            <if test='null != keyLabel and keyLabel == "0"'>
+                m.`key`
+            </if>
+            <if test='null != keyLabel and keyLabel == "1"'>
+                tk.second_merchant_key
+            </if>
+        from t_merchant m
+        left join t_merchant_key tk
+        on m.merchant_code = tk.merchant_code
+        where m.merchant_code = #{merchantCode}
+    </select>
+
+    <update id="updateChildrenSecondKey">
+        UPDATE t_merchant_key
+        SET second_merchant_key = #{key},
+            second_history_key = #{secondHistoryKey},
+            update_time = unix_timestamp(now()) * 1000,
+            update_by = #{modifier}
+        WHERE
+            merchant_code in
+        <foreach collection="codeList" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+
+    <select id="selectMerchantKey" resultType="com.panda.sport.merchant.common.vo.merchant.MerchantKeyVO">
+        SELECT
+            m.merchant_code merchantCode,
+            m.`key` merchantKey,
+            m.history_key historyKey,
+            tk.STATUS status,
+            tk.enable_time enableTime,
+            tk.second_merchant_key secondMerchantKey,
+            tk.second_history_key secondHistoryKey,
+            tk.second_status secondStatus,
+            tk.second_enable_time secondEnableTime
+        FROM
+            t_merchant m
+                LEFT JOIN t_merchant_key tk ON m.merchant_code = tk.merchant_code
+        WHERE
+            m.merchant_code = #{merchantCode}
+    </select>
+
+    <update id="updateMerchantKey" parameterType="com.panda.sport.merchant.common.vo.merchant.MerchantKeyVO">
+        UPDATE t_merchant_key
+        SET second_merchant_key = #{secondMerchantKey},
+            second_history_key = #{secondHistoryKey},
+            second_status = #{secondStatus},
+            second_enable_time = #{secondEnableTime},
+            update_by = #{updatedBy},
+            update_time = #{updateTime}
+        WHERE
+            merchant_code = #{merchantCode}
+    </update>
+
+    <update id="enableMerchantKey" parameterType="com.panda.sport.merchant.common.vo.merchant.MerchantKeyVO">
+        UPDATE t_merchant_key
+        <set>
+            <if test='null != keyStatus'>
+                `status` = #{keyStatus},
+            </if>
+            <if test='null != enableTime'>
+                enable_time = #{enableTime},
+            </if>
+            <if test='null != secondStatus'>
+                second_status = #{secondStatus},
+            </if>
+            <if test='null != secondEnableTime'>
+                second_enable_time = #{secondEnableTime},
+            </if>
+            <if test='null != updateTime'>
+                update_time = #{updateTime},
+            </if>
+            <if test='null != updatedBy'>
+                update_by = #{updatedBy}
+            </if>
+        </set>
+        WHERE
+            merchant_code = #{merchantCode}
+    </update>
+
+    <select id="getMerchantKeyPo" resultType="com.panda.sport.merchant.common.po.bss.TMerchantKey">
+        SELECT
+            m.`key`,
+            tk.`status` keyStatus,
+            tk.second_merchant_key secondMerchantKey,
+            tk.second_status secondStatus,
+            m.start_time startTime,
+            m.end_time endTime
+        FROM
+            t_merchant m
+            left join t_merchant_key tk
+            on m.merchant_code = tk.merchant_code
+        WHERE
+            m.merchant_code = #{merchantCode}
+    </select>
+
+    <select id="queryMerchantKeyInfo" resultType="com.panda.sport.merchant.common.vo.merchant.MerchantKeyVO">
+        SELECT
+            t.id id,
+            t.merchant_code merchantCode,
+            t.second_merchant_key secondMerchantKey,
+            t.second_history_key second_history_key,
+            t.second_status secondStatus,
+            t.`status` keyStatus,
+            t.enable_time enableTime,
+            t.second_enable_time secondEnableTime,
+            t.create_time createTime,
+            t.create_by createdBy,
+            t.update_time updateTime,
+            t.update_by updatedBy
+        FROM
+            t_merchant_key t
+        WHERE
+            t.merchant_code = #{merchantCode}
+    </select>
+
+</mapper>

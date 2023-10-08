@@ -1,0 +1,121 @@
+DROP PROCEDURE IF EXISTS p_r_merchant_sport_order_week;
+DELIMITER //
+CREATE PROCEDURE p_r_merchant_sport_order_week(in str_date varchar(100))
+BEGIN
+    /*声明日志信息*/
+    DECLARE task_type INT(2) DEFAULT 19;
+    DECLARE result_code CHAR(5) DEFAULT '0';
+    DECLARE start_time VARCHAR(30) DEFAULT get_cur_ymdhms();
+    DECLARE end_time VARCHAR(30);
+    DECLARE result INT(2) DEFAULT 1;
+    DECLARE exce_msg VARCHAR(512) DEFAULT 'p_r_merchant_sport_order_week成功';
+    DECLARE msg TEXT;
+    DECLARE execute_date date;
+/*异常处理*/
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN
+        GET DIAGNOSTICS CONDITION 1 result_code = RETURNED_SQLSTATE, msg = MESSAGE_TEXT;
+        SET end_time = get_cur_ymdhms();
+        SET exce_msg = CONCAT("错误码：", result_code, " p_r_merchant_sport_order_week错误信息：", msg);
+        SET result = 2;
+        CALL p_add_task_event_log(task_type, start_time, end_time, result, exce_msg);
+    END;
+    SET execute_date = str_to_date(str_date, '%Y-%m-%d');
+/*sql开始*/
+    REPLACE INTO r_merchant_sport_order_week
+    SELECT a.id,
+           a.sport_id,
+           a.merchant_code,
+           a.merchant_name,
+           a.time,
+           a.merchant_level,
+           a.add_user,
+           a.registerAmount,
+           b.betUser / a.registerAmount,
+           a.profit,
+           a.profit_rate,
+           a.return_rate,
+           a.return_amount,
+           a.bet_amount,
+           a.order_sum,
+           b.betUser,
+           a.first_bet_user_sum,
+           b.settleUser / a.registerAmount,
+           a.settle_profit,
+           a.settle_return,
+           a.settle_return_rate,
+           a.settle_bet_amount,
+           a.settle_order_num,
+           UNIX_TIMESTAMP(CURRENT_TIMESTAMP(3)),
+           a.parent_code,
+           a.parent_name,
+           IFNULL(b.settleUser, 0) AS settleUsers
+    FROM (select s.*,
+                 b.add_user,
+                 b.first_bet_user_sum,
+                 b.registerAmount
+          from (SELECT Concat(t.merchant_code, t.sport_id, t.WEEK) AS id,
+                       t.sport_id,
+                       t.merchant_code,
+                       min(t.merchant_name)                           merchant_name,
+                       t.WEEK                                      AS time,
+                       min(t.merchant_level)                          merchant_level,
+                       sum(t.profit)                                  profit,
+                       ifnull(SUM(t.profit) / IF(SUM(t.bet_amount) = '0', NULL, SUM(t.bet_amount)),
+                              0)                                   AS profit_rate,
+                       ifnull(SUM(t.return_amount) / IF(SUM(t.bet_amount) = '0', NULL, SUM(t.bet_amount)),
+                              0)                                   AS return_rate,
+                       sum(t.return_amount)                        AS return_amount,
+                       sum(t.bet_amount)                              bet_amount,
+                       sum(t.order_sum)                               order_sum,
+
+                       sum(t.settle_profit)                        AS settle_profit,
+                       sum(t.settle_return)                        AS settle_return,
+                       ifnull(SUM(t.settle_return) /
+                              IF(SUM(t.settle_bet_amount) = '0', NULL, SUM(t.settle_bet_amount)),
+                              0)                                   AS settle_return_rate,
+                       sum(t.settle_bet_amount)                       settle_bet_amount,
+                       sum(t.settle_order_num)                        settle_order_num,
+                       t.`week`,
+                       max(t.parent_code)                          as parent_code,
+                       max(t.parent_name)                          as parent_name
+                FROM (SELECT *,
+                             DATE_FORMAT(date_add(execute_date, INTERVAL -1 day), '%Y%U') AS 'week'
+                      FROM r_merchant_sport_order_day
+                      WHERE time >=
+                            DATE_FORMAT(date_sub(execute_date, INTERVAL WEEKDAY(execute_date) - 0 DAY), '%Y%m%d')
+                        AND time <=
+                            DATE_FORMAT(date_sub(execute_date, INTERVAL WEEKDAY(execute_date) - 6 DAY), '%Y%m%d')
+                     ) t
+                GROUP BY t.merchant_code,
+                         t.sport_id,
+                         t.`week`
+               ) s
+                   LEFT JOIN (SELECT sum(add_user)                add_user,
+                                     max(register_total_user_sum) registerAmount,
+                                     sum(first_bet_user_sum)      first_bet_user_sum,
+                                     merchant_code
+                              FROM r_merchant_sport_order_day
+                              WHERE time >= DATE_FORMAT(date_sub(execute_date, INTERVAL WEEKDAY(execute_date) - 0 DAY),
+                                                        '%Y%m%d')
+                                AND time <= DATE_FORMAT(date_sub(execute_date, INTERVAL WEEKDAY(execute_date) - 6 DAY),
+                                                        '%Y%m%d')
+                              GROUP BY merchant_code) b ON s.merchant_code = b.merchant_code
+         ) a
+             LEFT JOIN (SELECT merchant_code,
+                               sport_id,
+                               time,
+                               COUNT(CASE WHEN bet_amount > 0 THEN user_id END)          AS betUser,
+                               COUNT(CASE WHEN settle_order_amount > 0 THEN user_id END) AS settleUser
+                        FROM r_user_sport_order_week
+                        WHERE time = DATE_FORMAT(execute_date, '%Y%U')
+                        GROUP BY merchant_code, time, sport_id) b
+                       ON a.merchant_code = b.merchant_code AND a.time = b.time AND a.sport_id = b.sport_id;
+
+    SET end_time = get_cur_ymdhms();
+
+    SET exce_msg = CONCAT(execute_date, " p_r_merchant_sport_order_week success!");
+
+    CALL p_add_task_event_log(task_type, start_time, end_time, result, exce_msg);
+
+END//
+DELIMITER ;

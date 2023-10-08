@@ -1,0 +1,1 @@
+update tybss_new.t_order set user_level=1 where create_time<=1599579796000 and uid=191430734590177280;
